@@ -55,7 +55,7 @@ export const AppRoutes: React.FC = () => {
       <Route 
         path="/app" 
         element={
-          <ProtectedRoute allowedRoles={['subscriber', 'admin', 'editor', 'finance']} requireProfile>
+          <ProtectedRoute allowedRoles={['subscriber', 'admin', 'editor', 'finance']} requiresProfile>
             <SubscriberLayout />
           </ProtectedRoute>
         }
@@ -72,7 +72,7 @@ export const AppRoutes: React.FC = () => {
       <Route 
         path="/app/assistir/:id" 
         element={
-          <ProtectedRoute allowedRoles={['subscriber', 'admin', 'editor', 'finance']} requireProfile>
+          <ProtectedRoute allowedRoles={['subscriber', 'admin', 'editor', 'finance']} requiresProfile>
             <WatchPage />
           </ProtectedRoute>
         } 
@@ -96,6 +96,14 @@ export const AppRoutes: React.FC = () => {
         } 
       />
       <Route 
+        path="/admin/assinantes" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'finance']}>
+            <AdminPageWrapper tab="assinantes" />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
         path="/admin/conteudos" 
         element={
           <ProtectedRoute allowedRoles={['admin', 'editor']}>
@@ -112,10 +120,66 @@ export const AppRoutes: React.FC = () => {
         } 
       />
       <Route 
+        path="/admin/temporadas" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'editor']}>
+            <AdminPageWrapper tab="temporadas" />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin/episodios" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'editor']}>
+            <AdminPageWrapper tab="episodios" />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin/uploads" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'editor']}>
+            <AdminPageWrapper tab="uploads" />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
         path="/admin/financeiro" 
         element={
           <ProtectedRoute allowedRoles={['admin', 'finance']}>
             <AdminPageWrapper tab="financeiro" />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin/planos" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'finance']}>
+            <AdminPageWrapper tab="planos" />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin/banners" 
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <AdminPageWrapper tab="banners" />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin/relatorios" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'finance']}>
+            <AdminPageWrapper tab="relatorios" />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin/configuracoes" 
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <AdminPageWrapper tab="configuracoes" />
           </ProtectedRoute>
         } 
       />

@@ -15,15 +15,31 @@ import {
 import { 
   Users, Film, CreditCard, UploadCloud, Settings, Database, 
   Plus, Edit2, Trash2, CheckCircle, AlertTriangle, ShieldCheck, 
-  DollarSign, BarChart2, ListCollapse, Play, Sparkles, FolderPlus, Download, Check, X, LogOut, Search 
+  DollarSign, BarChart2, ListCollapse, Play, Sparkles, FolderPlus, Download, Check, X, LogOut, Search,
+  Compass, LayoutGrid, Calendar, Video, Image, FileText, ToggleLeft, Activity, Eye, ShieldAlert
 } from 'lucide-react';
+
+type AdminPanelTab = 
+  | 'dashboard' 
+  | 'usuarios' 
+  | 'assinantes' 
+  | 'conteudo' 
+  | 'series' 
+  | 'temporadas' 
+  | 'episodios' 
+  | 'uploads' 
+  | 'financeiro' 
+  | 'planos' 
+  | 'banners' 
+  | 'relatorios' 
+  | 'configuracoes';
 
 interface AdminPanelProps {
   currentUser: User;
   onLogout: () => void;
   onNavigateToUserApp: () => void;
-  activeTabOverride?: 'dashboard' | 'usuarios' | 'conteudo' | 'series' | 'uploads' | 'financeiro' | 'planos';
-  onTabChange?: (tab: 'dashboard' | 'usuarios' | 'conteudo' | 'series' | 'uploads' | 'financeiro' | 'planos') => void;
+  activeTabOverride?: AdminPanelTab;
+  onTabChange?: (tab: AdminPanelTab) => void;
 }
 
 export default function AdminPanel({ 
@@ -46,7 +62,7 @@ export default function AdminPanel({
   const [plans, setPlans] = useState<Plan[]>([]);
 
   // Navigation tabs
-  const [activeTab, setActiveTabInternal] = useState<'dashboard' | 'usuarios' | 'conteudo' | 'series' | 'uploads' | 'financeiro' | 'planos'>(activeTabOverride || 'dashboard');
+  const [activeTab, setActiveTabInternal] = useState<AdminPanelTab>(activeTabOverride || 'dashboard');
 
   useEffect(() => {
     if (activeTabOverride && activeTabOverride !== activeTab) {
@@ -54,7 +70,7 @@ export default function AdminPanel({
     }
   }, [activeTabOverride]);
 
-  const setActiveTab = (tab: 'dashboard' | 'usuarios' | 'conteudo' | 'series' | 'uploads' | 'financeiro' | 'planos') => {
+  const setActiveTab = (tab: AdminPanelTab) => {
     setActiveTabInternal(tab);
     if (onTabChange) {
       onTabChange(tab);
@@ -65,6 +81,64 @@ export default function AdminPanel({
   const [crmSearch, setCrmSearch] = useState('');
   const [crmPlanFilter, setCrmPlanFilter] = useState('all');
   const [crmStatusFilter, setCrmStatusFilter] = useState('all');
+
+  // Subscriber CRM Filters & Detail state
+  const [subscriberSearch, setSubscriberSearch] = useState('');
+  const [subscriberPlanFilter, setSubscriberPlanFilter] = useState('all');
+  const [subscriberStatusFilter, setSubscriberStatusFilter] = useState('all');
+  const [selectedSubscriberForDetail, setSelectedSubscriberForDetail] = useState<User | null>(null);
+
+  // Seasons Management States
+  const [selectedSeriesIdForSeasonFilter, setSelectedSeriesIdForSeasonFilter] = useState('all');
+  const [editingSeason, setEditingSeason] = useState<Season | null>(null);
+  const [showSeasonModal, setShowSeasonModal] = useState(false);
+  const [seasonForm, setSeasonForm] = useState({ id: '', seriesId: '', number: 1, title: '', status: 'published' as 'published' | 'hidden' });
+
+  // Episodes Management States
+  const [selectedSeriesIdForEpisodeFilter, setSelectedSeriesIdForEpisodeFilter] = useState('all');
+  const [selectedSeasonIdForEpisodeFilter, setSelectedSeasonIdForEpisodeFilter] = useState('all');
+  const [editingEpisode, setEditingEpisode] = useState<Episode | null>(null);
+  const [showEpisodeModal, setShowEpisodeModal] = useState(false);
+  const [episodeForm, setEpisodeForm] = useState({ id: '', seriesId: '', seasonId: '', number: 1, title: '', duration: '', description: '', thumbnailUrl: '', videoUrl: '', status: 'published' as 'published' | 'hidden' });
+
+  // Banners Management States
+  const [banners, setBanners] = useState<{ id: string; title: string; subtitle: string; imageUrl: string; linkUrl: string; type: 'public' | 'subscriber'; active: boolean; order: number }[]>(() => {
+    try {
+      const saved = localStorage.getItem('f5_banners_live');
+      if (saved) return JSON.parse(saved);
+    } catch (_) {}
+    return [
+      { id: 'b1', title: 'Conexão F5: Guerra Cibernética', subtitle: 'Novos episódios imperdíveis todas as quartas', imageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200', linkUrl: '#', type: 'subscriber', active: true, order: 1 },
+      { id: 'b2', title: 'F5 Arena Debate Especial', subtitle: 'Assista hoje a mesa redonda sobre os playoffs', imageUrl: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=1200', linkUrl: '#', type: 'public', active: true, order: 2 }
+    ];
+  });
+  const [editingBanner, setEditingBanner] = useState<{ id: string; title: string; subtitle: string; imageUrl: string; linkUrl: string; type: 'public' | 'subscriber'; active: boolean; order: number } | null>(null);
+  const [showBannerModal, setShowBannerModal] = useState(false);
+  const [bannerForm, setBannerForm] = useState({ id: '', title: '', subtitle: '', imageUrl: '', linkUrl: '', type: 'subscriber' as 'public' | 'subscriber', active: true, order: 1 });
+
+  // Platform Config States
+  const [platformConfig, setPlatformConfig] = useState(() => {
+    try {
+      const saved = localStorage.getItem('f5_platform_config');
+      if (saved) return JSON.parse(saved);
+    } catch (_) {}
+    return {
+      appName: 'F5 TV',
+      primaryColor: '#ef4444',
+      warningNotice: 'Aviso: Versão de Demonstração de Conceito MVP. Todos os dados financeiros são simulados offline.',
+      paymentMockSuccess: true,
+      maintenanceMode: false,
+      footerLinks: 'Termos de Uso, Política de Privacidade, FAQ, Fale Conosco'
+    };
+  });
+
+  useEffect(() => {
+    localStorage.setItem('f5_banners_live', JSON.stringify(banners));
+  }, [banners]);
+
+  useEffect(() => {
+    localStorage.setItem('f5_platform_config', JSON.stringify(platformConfig));
+  }, [platformConfig]);
 
   // Form Modals Active states
   const [editingUser, setEditingUser] = useState<User | null>(null);
@@ -93,9 +167,9 @@ export default function AdminPanel({
   // Series modals states
   const [showSeriesModal, setShowSeriesModal] = useState(false);
   const [seriesForm, setSeriesForm] = useState({ title: '', description: '', genre: '', coverUrl: '', bannerUrl: '' });
-  const [showEpisodeModal, setShowEpisodeModal] = useState(false);
+  const [showSeriesEpisodeModal, setShowSeriesEpisodeModal] = useState(false);
   const [selectedSeriesIdForEpisode, setSelectedSeriesIdForEpisode] = useState('');
-  const [episodeForm, setEpisodeForm] = useState({ title: '', number: 1, seasonId: '', description: '', duration: '45m', thumbnailUrl: '', videoUrl: '' });
+  const [seriesEpisodeForm, setSeriesEpisodeForm] = useState({ title: '', number: 1, seasonId: '', description: '', duration: '45m', thumbnailUrl: '', videoUrl: '' });
 
   // Upload simulation states
   const [selectedUploadFile, setSelectedUploadFile] = useState<File | null>(null);
@@ -124,8 +198,8 @@ export default function AdminPanel({
   // Roles verification rules
   const canAccess = (tab: typeof activeTab) => {
     if (currentUser.role === 'admin') return true;
-    if (currentUser.role === 'editor' && ['dashboard', 'conteudo', 'series', 'uploads'].includes(tab)) return true;
-    if (currentUser.role === 'finance' && ['dashboard', 'financeiro', 'planos'].includes(tab)) return true;
+    if (currentUser.role === 'editor' && ['dashboard', 'conteudo', 'series', 'temporadas', 'episodios', 'uploads'].includes(tab)) return true;
+    if (currentUser.role === 'finance' && ['dashboard', 'financeiro', 'planos', 'assinantes', 'relatorios'].includes(tab)) return true;
     return false;
   };
 
@@ -153,21 +227,40 @@ export default function AdminPanel({
     { name: 'Maio (Ativo)', Assinantes: totalSubscribers, Receita: totalRevenue },
   ];
 
-  // Filtered Users CRM list
+  // Filtered Users CRM list (Staff & Professionals only, non-subscribers)
   const filteredUsers = users.filter((u) => {
+    if (u.role === 'subscriber') return false;
+
     const matchesSearch = crmSearch 
       ? u.name.toLowerCase().includes(crmSearch.toLowerCase()) || 
         u.email.toLowerCase().includes(crmSearch.toLowerCase()) ||
         (u.phone && u.phone.includes(crmSearch))
       : true;
 
-    const matchesPlan = crmPlanFilter === 'all'
-      ? true
-      : u.planId === crmPlanFilter;
-
     const matchesStatus = crmStatusFilter === 'all'
       ? true
       : u.status === crmStatusFilter;
+
+    return matchesSearch && matchesStatus;
+  });
+
+  // Filtered Subscribers list (role === 'subscriber' only)
+  const filteredSubscribers = users.filter((u) => {
+    if (u.role !== 'subscriber') return false;
+
+    const matchesSearch = subscriberSearch 
+      ? u.name.toLowerCase().includes(subscriberSearch.toLowerCase()) || 
+        u.email.toLowerCase().includes(subscriberSearch.toLowerCase()) ||
+        (u.phone && u.phone.includes(subscriberSearch))
+      : true;
+
+    const matchesPlan = subscriberPlanFilter === 'all'
+      ? true
+      : u.planId === subscriberPlanFilter;
+
+    const matchesStatus = subscriberStatusFilter === 'all'
+      ? true
+      : u.status === subscriberStatusFilter;
 
     return matchesSearch && matchesPlan && matchesStatus;
   });
@@ -185,6 +278,68 @@ export default function AdminPanel({
     const link = document.createElement('a');
     link.setAttribute('href', url);
     link.setAttribute('download', 'relatorio_usuarios_crm_f5_tv.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // Subscribers CRM Operations
+  const handleToggleBlockSubscriber = (userId: string) => {
+    const updated = users.map(u => {
+      if (u.id === userId) {
+        const newStatus: UserStatus = u.status === 'blocked' ? 'active' : 'blocked';
+        return { ...u, status: newStatus };
+      }
+      return u;
+    });
+    setUsers(updated);
+    db.setUsers(updated);
+    if (selectedSubscriberForDetail && selectedSubscriberForDetail.id === userId) {
+      const match = updated.find(u => u.id === userId);
+      if (match) setSelectedSubscriberForDetail(match);
+    }
+  };
+
+  const handleChangeSubscriberPlan = (userId: string, newPlanId: string) => {
+    const updated = users.map(u => {
+      if (u.id === userId) {
+        return { ...u, planId: newPlanId };
+      }
+      return u;
+    });
+    setUsers(updated);
+    db.setUsers(updated);
+
+    const currentSubs = db.getSubscriptions();
+    const updatedSubs = currentSubs.map(s => {
+      if (s.userId === userId) {
+        return { ...s, planId: newPlanId };
+      }
+      return s;
+    });
+    setSubscriptions(updatedSubs);
+    db.setSubscriptions(updatedSubs);
+
+    if (selectedSubscriberForDetail && selectedSubscriberForDetail.id === userId) {
+      const match = updated.find(u => u.id === userId);
+      if (match) setSelectedSubscriberForDetail(match);
+    }
+  };
+
+  const handleExportSubscribersCSV = () => {
+    let csvContent = '\uFEFFID,Nome,Email,Telefone,Plano,Status,Proxima Cobrança,Data de Criação\n';
+    filteredSubscribers.forEach(u => {
+      const planName = u.planId ? plans.find(p => p.id === u.planId)?.name || 'N/A' : 'N/A';
+      const sub = subscriptions.find(s => s.userId === u.id);
+      const nextBilling = sub ? sub.nextBillingDate : 'N/A';
+      csvContent += `"${u.id}","${u.name}","${u.email}","${u.phone || 'N/A'}","${planName}","${u.status}","${nextBilling}","${u.createdAt || 'N/A'}"\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'relatorio_assinantes_crm_f5_tv.csv');
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -247,6 +402,228 @@ export default function AdminPanel({
 
   const handleResetPasswordSimulated = (email: string) => {
     alert(`Link de reset de credenciais simulado disparado para: ${email}`);
+  };
+
+  // Seasons Operations
+  const handleOpenSeasonModal = (season: Season | null = null) => {
+    if (season) {
+      setEditingSeason(season);
+      setSeasonForm({
+        id: season.id,
+        seriesId: season.seriesId,
+        number: season.number,
+        title: season.title,
+        status: season.status || 'published'
+      });
+    } else {
+      setEditingSeason(null);
+      setSeasonForm({
+        id: '',
+        seriesId: series[0]?.id || '',
+        number: seasons.length + 1,
+        title: `Temporada ${seasons.length + 1}`,
+        status: 'published'
+      });
+    }
+    setShowSeasonModal(true);
+  };
+
+  const handleSaveSeason = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!seasonForm.seriesId || !seasonForm.title) return;
+
+    const currentSeasons = db.getSeasons();
+    if (editingSeason) {
+      const updated = currentSeasons.map(s => {
+        if (s.id === editingSeason.id) {
+          return {
+            ...s,
+            seriesId: seasonForm.seriesId,
+            number: Number(seasonForm.number),
+            title: seasonForm.title,
+            status: seasonForm.status as 'published' | 'hidden'
+          };
+        }
+        return s;
+      });
+      setSeasons(updated);
+      db.setSeasons(updated);
+    } else {
+      const newSeason: Season = {
+        id: `season-${Date.now()}`,
+        seriesId: seasonForm.seriesId,
+        number: Number(seasonForm.number),
+        title: seasonForm.title,
+        status: seasonForm.status as 'published' | 'hidden'
+      };
+      const updated = [...currentSeasons, newSeason];
+      setSeasons(updated);
+      db.setSeasons(updated);
+    }
+    setShowSeasonModal(false);
+    setEditingSeason(null);
+  };
+
+  const handleDeleteSeason = (id: string) => {
+    if (confirm('Tem certeza que deseja remover esta temporada? Todos os episódios associados permanecerão órfãos.')) {
+      const currentSeasons = db.getSeasons();
+      const updated = currentSeasons.filter(s => s.id !== id);
+      setSeasons(updated);
+      db.setSeasons(updated);
+    }
+  };
+
+  // Episodes Operations
+  const handleOpenEpisodeModal = (episode: Episode | null = null) => {
+    if (episode) {
+      setEditingEpisode(episode);
+      setEpisodeForm({
+        id: episode.id,
+        seriesId: seasons.find(seas => seas.id === episode.seasonId)?.seriesId || (series[0]?.id || ''),
+        seasonId: episode.seasonId,
+        number: episode.number,
+        title: episode.title,
+        duration: episode.duration || '45m',
+        description: episode.description || '',
+        thumbnailUrl: episode.thumbnailUrl || '',
+        videoUrl: episode.videoUrl || '',
+        status: episode.status || 'published'
+      });
+    } else {
+      setEditingEpisode(null);
+      setEpisodeForm({
+        id: '',
+        seriesId: series[0]?.id || '',
+        seasonId: seasons[0]?.id || '',
+        number: episodes.length + 1,
+        title: `Episódio ${episodes.length + 1}`,
+        duration: '45m',
+        description: '',
+        thumbnailUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400',
+        videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4',
+        status: 'published'
+      });
+    }
+    setShowEpisodeModal(true);
+  };
+
+  const handleSaveEpisode = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!episodeForm.seriesId || !episodeForm.seasonId || !episodeForm.title) return;
+
+    const currentEpisodes = db.getEpisodes();
+    if (editingEpisode) {
+      const updated = currentEpisodes.map(ep => {
+        if (ep.id === editingEpisode.id) {
+          return {
+            ...ep,
+            seasonId: episodeForm.seasonId,
+            number: Number(episodeForm.number),
+            title: episodeForm.title,
+            duration: episodeForm.duration || '45m',
+            description: episodeForm.description,
+            thumbnailUrl: episodeForm.thumbnailUrl || 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400',
+            videoUrl: episodeForm.videoUrl || 'https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4',
+            status: episodeForm.status as 'published' | 'hidden'
+          };
+        }
+        return ep;
+      });
+      setEpisodes(updated);
+      db.setEpisodes(updated);
+    } else {
+      const newEp: Episode = {
+        id: `episode-${Date.now()}`,
+        seasonId: episodeForm.seasonId,
+        number: Number(episodeForm.number),
+        title: episodeForm.title,
+        duration: episodeForm.duration || '45m',
+        description: episodeForm.description,
+        thumbnailUrl: episodeForm.thumbnailUrl || 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400',
+        videoUrl: episodeForm.videoUrl || 'https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4',
+        status: episodeForm.status as 'published' | 'hidden',
+        viewsCount: 0
+      };
+      const updated = [...currentEpisodes, newEp];
+      setEpisodes(updated);
+      db.setEpisodes(updated);
+    }
+    setShowEpisodeModal(false);
+    setEditingEpisode(null);
+  };
+
+  const handleDeleteEpisode = (id: string) => {
+    if (confirm('Tem certeza que deseja remover este episódio?')) {
+      const currentEpisodes = db.getEpisodes();
+      const updated = currentEpisodes.filter(e => e.id !== id);
+      setEpisodes(updated);
+      db.setEpisodes(updated);
+    }
+  };
+
+  // Banners Operations
+  const handleOpenBannerModal = (banner: typeof banners[0] | null = null) => {
+    if (banner) {
+      setEditingBanner(banner);
+      setBannerForm({
+        id: banner.id,
+        title: banner.title,
+        subtitle: banner.subtitle,
+        imageUrl: banner.imageUrl,
+        linkUrl: banner.linkUrl,
+        type: banner.type,
+        active: banner.active,
+        order: banner.order
+      });
+    } else {
+      setEditingBanner(null);
+      setBannerForm({
+        id: '',
+        title: '',
+        subtitle: '',
+        imageUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200',
+        linkUrl: '#',
+        type: 'subscriber',
+        active: true,
+        order: banners.length + 1
+      });
+    }
+    setShowBannerModal(true);
+  };
+
+  const handleSaveBanner = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!bannerForm.title || !bannerForm.imageUrl) return;
+
+    if (editingBanner) {
+      const updated = banners.map(b => {
+        if (b.id === editingBanner.id) {
+          return { ...b, ...bannerForm };
+        }
+        return b;
+      });
+      setBanners(updated);
+    } else {
+      const newBanner = {
+        ...bannerForm,
+        id: `banner-${Date.now()}`
+      };
+      setBanners([...banners, newBanner]);
+    }
+    setShowBannerModal(false);
+    setEditingBanner(null);
+  };
+
+  const handleDeleteBanner = (id: string) => {
+    if (confirm('Deseja realmente remover este banner?')) {
+      const updated = banners.filter(b => b.id !== id);
+      setBanners(updated);
+    }
+  };
+
+  const handleToggleBannerActive = (id: string) => {
+    const updated = banners.map(b => b.id === id ? { ...b, active: !b.active } : b);
+    setBanners(updated);
   };
 
   // Content Operations
@@ -382,19 +759,19 @@ export default function AdminPanel({
     const newEp: Episode = {
       id: 'ep-' + Math.random().toString(36).substring(2, 9),
       seasonId: targetSeasonId,
-      number: Number(episodeForm.number),
-      title: episodeForm.title,
-      description: episodeForm.description,
-      duration: episodeForm.duration,
-      videoUrl: episodeForm.videoUrl || 'https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4',
-      thumbnailUrl: episodeForm.thumbnailUrl || 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=450',
+      number: Number(seriesEpisodeForm.number),
+      title: seriesEpisodeForm.title,
+      description: seriesEpisodeForm.description,
+      duration: seriesEpisodeForm.duration,
+      videoUrl: seriesEpisodeForm.videoUrl || 'https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4',
+      thumbnailUrl: seriesEpisodeForm.thumbnailUrl || 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=450',
       status: 'published',
       viewsCount: 0
     };
 
     db.setEpisodes([...episodes, newEp]);
-    setShowEpisodeModal(false);
-    setEpisodeForm({ title: '', number: 1, seasonId: '', description: '', duration: '45m', thumbnailUrl: '', videoUrl: '' });
+    setShowSeriesEpisodeModal(false);
+    setSeriesEpisodeForm({ title: '', number: 1, seasonId: '', description: '', duration: '45m', thumbnailUrl: '', videoUrl: '' });
     reloadAll();
   };
 
@@ -481,8 +858,8 @@ export default function AdminPanel({
             </span>
           </div>
 
-          <div className="flex items-center gap-2.5 p-3 bg-zinc-900 border border-zinc-850 rounded-xl relative">
-            <div className="w-8 h-8 rounded-full bg-red-650 flex items-center justify-center font-bold text-sm text-white shrink-0">
+          <div className="flex items-center gap-2.5 p-3 bg-zinc-900 border border-zinc-800 rounded-xl relative">
+            <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center font-bold text-sm text-white shrink-0">
               {currentUser.name.charAt(0)}
             </div>
             <div className="flex flex-col">
@@ -492,100 +869,184 @@ export default function AdminPanel({
           </div>
 
           {/* Nav Items */}
-          <nav className="flex flex-col gap-1 text-sm font-medium">
+          <nav className="flex flex-col gap-1 text-xs font-semibold max-h-[60vh] overflow-y-auto pr-1">
             <button 
               id="tab-dashboard"
               onClick={() => setActiveTab('dashboard')}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-left transition ${
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg text-left transition cursor-pointer ${
                 activeTab === 'dashboard' ? 'bg-[#ef4444] text-white shadow-md shadow-red-900/10' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
               }`}
             >
-              <BarChart2 className="w-4 h-4" />
+              <BarChart2 className="w-4 h-4 shrink-0" />
               <span>Dashboard Geral</span>
             </button>
 
             <button 
               id="tab-usuarios"
               onClick={() => setActiveTab('usuarios')}
-              className={`flex items-center justify-between px-4 py-3 rounded-lg text-left transition ${
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition cursor-pointer ${
                 activeTab === 'usuarios' ? 'bg-[#ef4444] text-white shadow' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
               }`}
             >
               <div className="flex items-center gap-3">
-                <Users className="w-4 h-4" />
+                <ShieldCheck className="w-4 h-4 shrink-0" />
+                <span>Profissionais & Staff</span>
+              </div>
+              {!canAccess('usuarios') && <span className="text-[9px] font-mono text-zinc-600 uppercase">Bloq</span>}
+            </button>
+
+            <button 
+              id="tab-assinantes"
+              onClick={() => setActiveTab('assinantes')}
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition cursor-pointer relative ${
+                activeTab === 'assinantes' ? 'bg-[#ef4444] text-white shadow' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Users className="w-4 h-4 shrink-0" />
                 <span>Assinantes & CRM</span>
               </div>
-              {!canAccess('usuarios') && <span className="text-[9px] font-mono text-zinc-650 uppercase">Bloq</span>}
+              {!canAccess('assinantes') && <span className="text-[9px] font-mono text-zinc-600 uppercase">Bloq</span>}
             </button>
 
             <button 
               id="tab-conteudo"
               onClick={() => setActiveTab('conteudo')}
-              className={`flex items-center justify-between px-4 py-3 rounded-lg text-left transition ${
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition cursor-pointer ${
                 activeTab === 'conteudo' ? 'bg-[#ef4444] text-white shadow' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
               }`}
             >
               <div className="flex items-center gap-3">
-                <Film className="w-4 h-4" />
-                <span>Vídeos e Programas</span>
+                <Film className="w-4 h-4 shrink-0" />
+                <span>Vídeos e Catálogo</span>
               </div>
-              {!canAccess('conteudo') && <span className="text-[9px] font-mono text-zinc-650 uppercase">Bloq</span>}
+              {!canAccess('conteudo') && <span className="text-[9px] font-mono text-zinc-600 uppercase">Bloq</span>}
             </button>
 
             <button 
               id="tab-series"
               onClick={() => setActiveTab('series')}
-              className={`flex items-center justify-between px-4 py-3 rounded-lg text-left transition ${
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition cursor-pointer ${
                 activeTab === 'series' ? 'bg-[#ef4444] text-white shadow' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
               }`}
             >
               <div className="flex items-center gap-3">
-                <ListCollapse className="w-4 h-4" />
-                <span>Séries e Capítulos</span>
+                <ListCollapse className="w-4 h-4 shrink-0" />
+                <span>Séries Governança</span>
               </div>
-              {!canAccess('series') && <span className="text-[9px] font-mono text-zinc-650 uppercase">Bloq</span>}
+              {!canAccess('series') && <span className="text-[9px] font-mono text-zinc-600 uppercase">Bloq</span>}
+            </button>
+
+            <button 
+              id="tab-temporadas"
+              onClick={() => setActiveTab('temporadas')}
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition cursor-pointer ${
+                activeTab === 'temporadas' ? 'bg-[#ef4444] text-white shadow' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Calendar className="w-4 h-4 shrink-0" />
+                <span>Temporadas</span>
+              </div>
+              {!canAccess('temporadas') && <span className="text-[9px] font-mono text-zinc-600 uppercase">Bloq</span>}
+            </button>
+
+            <button 
+              id="tab-episodios"
+              onClick={() => setActiveTab('episodios')}
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition cursor-pointer ${
+                activeTab === 'episodios' ? 'bg-[#ef4444] text-white shadow' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Video className="w-4 h-4 shrink-0" />
+                <span>Episódios</span>
+              </div>
+              {!canAccess('episodios') && <span className="text-[9px] font-mono text-zinc-600 uppercase">Bloq</span>}
             </button>
 
             <button 
               id="tab-uploads"
               onClick={() => setActiveTab('uploads')}
-              className={`flex items-center justify-between px-4 py-3 rounded-lg text-left transition ${
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition cursor-pointer ${
                 activeTab === 'uploads' ? 'bg-[#ef4444] text-white shadow' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
               }`}
             >
               <div className="flex items-center gap-3">
-                <UploadCloud className="w-4 h-4" />
+                <UploadCloud className="w-4 h-4 shrink-0" />
                 <span>Upload de Mídia</span>
               </div>
-              {!canAccess('uploads') && <span className="text-[9px] font-mono text-zinc-650 uppercase">Bloq</span>}
+              {!canAccess('uploads') && <span className="text-[9px] font-mono text-zinc-600 uppercase">Bloq</span>}
             </button>
 
             <button 
               id="tab-financeiro"
               onClick={() => setActiveTab('financeiro')}
-              className={`flex items-center justify-between px-4 py-3 rounded-lg text-left transition ${
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition cursor-pointer ${
                 activeTab === 'financeiro' ? 'bg-[#ef4444] text-white shadow' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
               }`}
             >
               <div className="flex items-center gap-3">
-                <CreditCard className="w-4 h-4" />
+                <CreditCard className="w-4 h-4 shrink-0" />
                 <span>Contabilidade & Caixa</span>
               </div>
-              {!canAccess('financeiro') && <span className="text-[9px] font-mono text-zinc-650 uppercase">Bloq</span>}
+              {!canAccess('financeiro') && <span className="text-[9px] font-mono text-zinc-600 uppercase">Bloq</span>}
             </button>
 
             <button 
               id="tab-planos"
               onClick={() => setActiveTab('planos')}
-              className={`flex items-center justify-between px-4 py-3 rounded-lg text-left transition ${
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition cursor-pointer ${
                 activeTab === 'planos' ? 'bg-[#ef4444] text-white shadow' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
               }`}
             >
               <div className="flex items-center gap-3">
-                <Settings className="w-4 h-4" />
-                <span>Configurar Planos</span>
+                <Settings className="w-4 h-4 shrink-0" />
+                <span>Planos</span>
               </div>
-              {!canAccess('planos') && <span className="text-[9px] font-mono text-zinc-650 uppercase">Bloq</span>}
+              {!canAccess('planos') && <span className="text-[9px] font-mono text-zinc-600 uppercase">Bloq</span>}
+            </button>
+
+            <button 
+              id="tab-banners"
+              onClick={() => setActiveTab('banners')}
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition cursor-pointer ${
+                activeTab === 'banners' ? 'bg-[#ef4444] text-white shadow' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Image className="w-4 h-4 shrink-0" />
+                <span>Banners Slider</span>
+              </div>
+              {!canAccess('banners') && <span className="text-[9px] font-mono text-zinc-600 uppercase">Bloq</span>}
+            </button>
+
+            <button 
+              id="tab-relatorios"
+              onClick={() => setActiveTab('relatorios')}
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition cursor-pointer ${
+                activeTab === 'relatorios' ? 'bg-[#ef4444] text-white shadow' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Activity className="w-4 h-4 shrink-0" />
+                <span>Gráficos & Relatórios</span>
+              </div>
+              {!canAccess('relatorios') && <span className="text-[9px] font-mono text-zinc-600 uppercase">Bloq</span>}
+            </button>
+
+            <button 
+              id="tab-configuracoes"
+              onClick={() => setActiveTab('configuracoes')}
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition cursor-pointer ${
+                activeTab === 'configuracoes' ? 'bg-[#ef4444] text-white shadow' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Database className="w-4 h-4 shrink-0" />
+                <span>Configurações</span>
+              </div>
+              {!canAccess('configuracoes') && <span className="text-[9px] font-mono text-zinc-600 uppercase">Bloq</span>}
             </button>
           </nav>
         </div>
@@ -1013,7 +1474,7 @@ export default function AdminPanel({
                           return;
                         }
                         setSelectedSeriesIdForEpisode(series[0].id);
-                        setShowEpisodeModal(true);
+                        setShowSeriesEpisodeModal(true);
                       }}
                       className="bg-[#ef4444] hover:bg-red-700 text-white font-bold px-3 py-2 rounded-lg text-xs flex items-center gap-1.5 cursor-pointer"
                     >
@@ -1266,7 +1727,7 @@ export default function AdminPanel({
 
             {/* TAB CONTENT: 7. CONFIGURAÇÃO DE PLANOS */}
             {activeTab === 'planos' && (
-              <section className="flex flex-col gap-6 animate-fade-in">
+              <section className="flex flex-col gap-6 animate-fade-in text-white">
                 <div className="border-b border-zinc-900 pb-5">
                   <span className="text-xs font-mono font-bold text-zinc-500 uppercase">DADOS DE NEGÓCIO</span>
                   <h1 className="text-2xl font-black mt-1">Configurações de Pacotes de Planos</h1>
@@ -1289,7 +1750,7 @@ export default function AdminPanel({
                         
                         <div className="border-t border-zinc-900 pt-3 flex flex-col gap-1.5 mt-2">
                           {p.features.map((f, i) => (
-                            <span key={i} className="text-xs text-zinc-455 text-zinc-400 flex gap-1.5 items-start">
+                            <span key={i} className="text-xs text-zinc-400 flex gap-1.5 items-start">
                               <span className="text-[#ef4444] font-bold">•</span>
                               <span className="leading-snug">{f}</span>
                             </span>
@@ -1335,6 +1796,1050 @@ export default function AdminPanel({
                   </button>
                 </div>
 
+              </section>
+            )}
+
+            {/* TAB CONTENT: 8. ASSINANTES & CRM */}
+            {activeTab === 'assinantes' && (
+              <section className="flex flex-col gap-6 animate-fade-in text-white text-left">
+                <div className="flex justify-between items-center border-b border-zinc-900 pb-5">
+                  <div>
+                    <span className="text-xs font-mono font-bold text-zinc-500 uppercase">GESTÃO DE CLIENTES</span>
+                    <h1 className="text-2xl font-black mt-1">Controle de Assinantes</h1>
+                  </div>
+                  <button 
+                    onClick={handleExportSubscribersCSV}
+                    className="bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-bold px-4 py-2 rounded-lg text-xs flex items-center gap-1.5 cursor-pointer transition"
+                  >
+                    <Download className="w-4 h-4 text-[#ef4444]" />
+                    <span>Exportar Assinantes (CSV)</span>
+                  </button>
+                </div>
+
+                {/* Filters */}
+                <div className="bg-zinc-950 border border-zinc-905 p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center justify-between">
+                  <div className="flex flex-wrap gap-3.5 items-center w-full md:w-auto">
+                    <div className="relative w-full sm:w-64">
+                      <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        placeholder="Buscar assinante por nome, e-mail..."
+                        value={subscriberSearch}
+                        onChange={(e) => setSubscriberSearch(e.target.value)}
+                        className="bg-zinc-900 border border-zinc-800 focus:border-[#ef4444] rounded-lg pl-9 pr-3 py-2 text-xs text-zinc-200 outline-none w-full font-medium"
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-1.5 w-full sm:w-auto">
+                      <span className="text-[10px] font-mono font-bold text-zinc-500 uppercase">Plano:</span>
+                      <select
+                        value={subscriberPlanFilter}
+                        onChange={(e) => setSubscriberPlanFilter(e.target.value)}
+                        className="bg-zinc-900 border border-zinc-800 text-xs text-zinc-300 rounded-lg px-2 py-1 outline-none cursor-pointer"
+                      >
+                        <option value="all">TODOS</option>
+                        {plans.map(p => (
+                          <option key={p.id} value={p.id}>{p.name.toUpperCase()}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 w-full sm:w-auto">
+                      <span className="text-[10px] font-mono font-bold text-zinc-500 uppercase">Status:</span>
+                      <select
+                        value={subscriberStatusFilter}
+                        onChange={(e) => setSubscriberStatusFilter(e.target.value)}
+                        className="bg-zinc-900 border border-zinc-800 text-xs text-zinc-300 rounded-lg px-2 py-1 outline-none cursor-pointer"
+                      >
+                        <option value="all">TODOS</option>
+                        <option value="active">ATIVO</option>
+                        <option value="pending">PENDENTE</option>
+                        <option value="blocked">BLOQUEADO</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <span className="text-[10px] font-mono text-zinc-500 uppercase font-bold">
+                    {filteredSubscribers.length} de {users.filter(u => u.role === 'subscriber').length} assinantes
+                  </span>
+                </div>
+
+                {/* Table */}
+                <div className="bg-zinc-950 border border-zinc-900 rounded-xl overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs text-zinc-400">
+                      <thead>
+                        <tr className="bg-zinc-900/60 border-b border-zinc-800 text-white font-mono uppercase text-[10px]">
+                          <th className="p-4">Assinante</th>
+                          <th className="p-4">E-mail</th>
+                          <th className="p-4">Telefone</th>
+                          <th className="p-4">Plano Vinculado</th>
+                          <th className="p-4">Status</th>
+                          <th className="p-4">Próxima Cobrança</th>
+                          <th className="p-4 text-center">Ações</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-zinc-900 font-medium">
+                        {filteredSubscribers.map(sub => {
+                          const associatedSub = subscriptions.find(s => s.userId === sub.id);
+                          return (
+                            <tr key={sub.id} className="hover:bg-zinc-900/20">
+                              <td className="p-4 text-zinc-200 font-bold">{sub.name}</td>
+                              <td className="p-4 font-mono text-zinc-400">{sub.email}</td>
+                              <td className="p-4 text-zinc-400">{sub.phone || 'Não informado'}</td>
+                              <td className="p-4 text-[#ef4444] font-black font-mono">
+                                {sub.planId ? plans.find(p => p.id === sub.planId)?.name : 'Sem Plano'}
+                              </td>
+                              <td className="p-4">
+                                <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase ${
+                                  sub.status === 'active' ? 'bg-emerald-950 text-emerald-400 border border-emerald-900' :
+                                  sub.status === 'blocked' ? 'bg-red-950 text-red-400 border border-red-900' : 'bg-amber-950 text-amber-400 border border-amber-900'
+                                }`}>
+                                  {sub.status}
+                                </span>
+                              </td>
+                              <td className="p-4 font-mono text-zinc-400">
+                                {associatedSub ? associatedSub.nextBillingDate : 'N/A'}
+                              </td>
+                              <td className="p-4 text-center">
+                                <div className="flex gap-2 justify-center">
+                                  <button
+                                    onClick={() => setSelectedSubscriberForDetail(sub)}
+                                    className="px-2.5 py-1 text-[10px] uppercase font-mono font-bold bg-zinc-905 hover:bg-zinc-800 border border-zinc-800 rounded transition cursor-pointer text-zinc-300 hover:text-white"
+                                  >
+                                    Ver Detalhes
+                                  </button>
+                                  <button
+                                    onClick={() => handleToggleBlockSubscriber(sub.id)}
+                                    className={`px-2.5 py-1 text-[10px] uppercase font-mono font-bold border rounded transition cursor-pointer ${
+                                      sub.status === 'blocked'
+                                        ? 'bg-emerald-950 hover:bg-emerald-900 text-emerald-400 border-emerald-900'
+                                        : 'bg-rose-950 hover:bg-rose-900 text-red-400 border-rose-900'
+                                    }`}
+                                  >
+                                    {sub.status === 'blocked' ? 'Reativar' : 'Bloquear'}
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Sub Detail Slide-Over Modal */}
+                {selectedSubscriberForDetail && (
+                  <div className="fixed inset-0 bg-black/85 backdrop-blur-xs flex justify-end z-[60] animate-fade-in text-white/90">
+                    <div className="bg-zinc-950 w-full max-w-xl border-l border-zinc-850 h-full p-8 overflow-y-auto flex flex-col gap-6 relative shadow-2xl">
+                      <button 
+                        onClick={() => setSelectedSubscriberForDetail(null)}
+                        className="absolute top-6 right-6 p-2 hover:bg-zinc-905 rounded-full transition cursor-pointer"
+                      >
+                        <X className="w-5 h-5 text-zinc-400 hover:text-white" />
+                      </button>
+
+                      <div className="border-b border-zinc-900 pb-5">
+                        <span className="text-[10px] font-mono text-zinc-550 uppercase">PAINEL DO ASSINANTE</span>
+                        <h2 className="text-2xl font-black mt-1 text-white">{selectedSubscriberForDetail.name}</h2>
+                        <span className="text-xs text-zinc-500 font-mono">{selectedSubscriberForDetail.email}</span>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="bg-zinc-900/50 p-4 border border-zinc-850 rounded-xl">
+                          <span className="text-[10px] font-mono text-zinc-500">ID INTERNO</span>
+                          <p className="font-mono mt-1 text-xs truncate font-bold text-zinc-300">{selectedSubscriberForDetail.id}</p>
+                        </div>
+                        <div className="bg-zinc-900/50 p-4 border border-zinc-850 rounded-xl">
+                          <span className="text-[10px] font-mono text-zinc-500">DATA CADASTRO</span>
+                          <p className="font-mono mt-1 text-xs font-bold text-zinc-300">{selectedSubscriberForDetail.createdAt ? new Date(selectedSubscriberForDetail.createdAt).toLocaleDateString() : 'Não informada'}</p>
+                        </div>
+                      </div>
+
+                      <div className="bg-zinc-900/30 border border-zinc-900 p-5 rounded-xl flex flex-col gap-4 text-left">
+                        <h4 className="font-black text-sm text-zinc-200">Plano Vinculado & Estado</h4>
+                        
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                          <div className="flex flex-col">
+                            <span className="text-xs text-zinc-500">ALTERAR CATEGORIA DO PLANO</span>
+                            <select
+                              value={selectedSubscriberForDetail.planId || 'plano-premium'}
+                              onChange={(e) => handleChangeSubscriberPlan(selectedSubscriberForDetail.id, e.target.value)}
+                              className="bg-zinc-950 border border-zinc-800 text-xs font-bold mt-1.5 p-2 rounded outline-none"
+                            >
+                              {plans.map(p => (
+                                <option key={p.id} value={p.id}>{p.name.toUpperCase()} (R$ {p.price.toFixed(2)})</option>
+                              ))}
+                            </select>
+                          </div>
+
+                          <div className="flex flex-col text-right sm:items-end">
+                            <span className="text-xs text-zinc-500 block">ESTADO ATUAL</span>
+                            <span className={`px-3 py-1 mt-1 rounded text-xs font-mono font-bold uppercase inline-block ${
+                              selectedSubscriberForDetail.status === 'active' ? 'bg-emerald-950 text-emerald-400 border border-emerald-900' : 'bg-red-950 text-red-400 border border-red-900'
+                            }`}>
+                              {selectedSubscriberForDetail.status}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Financial History Resume */}
+                      <div className="flex flex-col gap-3">
+                        <h4 className="font-bold text-sm text-zinc-300 border-b border-zinc-900 pb-2">Histórico Financeiro Resumido</h4>
+                        <div className="flex flex-col gap-2 max-h-48 overflow-y-auto pr-1">
+                          {payments.filter(p => p.userId === selectedSubscriberForDetail.id).length === 0 ? (
+                            <p className="text-xs text-zinc-500 py-3 text-center">Nenhum pagamento registrado localmente no MVP para esta conta.</p>
+                          ) : (
+                            payments.filter(p => p.userId === selectedSubscriberForDetail.id).map(p => (
+                              <div key={p.id} className="p-3 bg-zinc-900/60 border border-zinc-850 rounded-lg flex items-center justify-between text-xs font-semibold">
+                                <div className="flex flex-col text-left">
+                                  <span className="font-mono text-[9px] text-[#ef4444]">{p.id} • {p.date || 'Hoje'}</span>
+                                  <span className="text-zinc-400 uppercase font-mono">{p.paymentMethod}</span>
+                                </div>
+                                <div className="text-right">
+                                  <span className="text-white font-mono block">R$ {p.value.toFixed(2)}</span>
+                                  <span className="text-emerald-500 font-mono uppercase text-[9px]">{p.status}</span>
+                                </div>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </section>
+            )}
+
+            {/* TAB CONTENT: 9. TEMPORADAS */}
+            {activeTab === 'temporadas' && (
+              <section className="flex flex-col gap-6 animate-fade-in text-white text-left">
+                <div className="flex justify-between items-center border-b border-zinc-900 pb-5">
+                  <div>
+                    <span className="text-xs font-mono font-bold text-zinc-500 uppercase">ESTRUTURA DE SÉRIES</span>
+                    <h1 className="text-2xl font-black mt-1">Gerenciador de Temporadas</h1>
+                  </div>
+                  <button 
+                    onClick={() => handleOpenSeasonModal()}
+                    className="bg-[#ef4444] hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg text-xs flex items-center gap-1.5 cursor-pointer transition shadow"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Adicionar Temporada</span>
+                  </button>
+                </div>
+
+                {/* Filter */}
+                <div className="bg-zinc-950 border border-zinc-900 p-4 rounded-xl flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-mono text-zinc-500 font-bold uppercase">Filtrar por Série:</span>
+                    <select
+                      value={selectedSeriesIdForSeasonFilter}
+                      onChange={(e) => setSelectedSeriesIdForSeasonFilter(e.target.value)}
+                      className="bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-350 p-2 rounded outline-none"
+                    >
+                      <option value="all">TODAS AS SÉRIES</option>
+                      {series.map(s => (
+                        <option key={s.id} value={s.id}>{s.title}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <span className="text-xs font-mono text-zinc-500">Exibindo {seasons.filter(seas => selectedSeriesIdForSeasonFilter === 'all' || seas.seriesId === selectedSeriesIdForSeasonFilter).length} registros</span>
+                </div>
+
+                {/* Table list */}
+                <div className="bg-zinc-950 border border-zinc-900 rounded-xl overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs text-zinc-400">
+                      <thead>
+                        <tr className="bg-zinc-900/60 border-b border-zinc-850 text-white font-mono uppercase text-[10px]">
+                          <th className="p-4">Série Correspondente</th>
+                          <th className="p-4">Nº Temporada</th>
+                          <th className="p-4">Título Exibido</th>
+                          <th className="p-4">Estado no Player</th>
+                          <th className="p-4 text-center">Ações</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-zinc-900 font-medium">
+                        {seasons.filter(seas => selectedSeriesIdForSeasonFilter === 'all' || seas.seriesId === selectedSeriesIdForSeasonFilter).map(seas => {
+                          const associatedSeries = series.find(s => s.id === seas.seriesId);
+                          return (
+                            <tr key={seas.id} className="hover:bg-zinc-900/20">
+                              <td className="p-4 font-bold text-zinc-200">{associatedSeries?.title || 'Série Não Localizada'}</td>
+                              <td className="p-4 font-mono font-extrabold text-[#ef4444]">Temporada {seas.number}</td>
+                              <td className="p-4 text-zinc-350">{seas.title}</td>
+                              <td className="p-4">
+                                <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
+                                  seas.status === 'published' ? 'bg-emerald-950 text-emerald-400 border border-emerald-900' : 'bg-red-950 text-red-400 border border-red-900'
+                                }`}>
+                                  {seas.status || 'published'}
+                                </span>
+                              </td>
+                              <td className="p-4 text-center">
+                                <div className="flex gap-2 justify-center">
+                                  <button
+                                    onClick={() => handleOpenSeasonModal(seas)}
+                                    className="p-1.5 hover:bg-zinc-900 border border-zinc-800 rounded text-zinc-300 hover:text-white transition cursor-pointer"
+                                  >
+                                    <Edit2 className="w-3.5 h-3.5" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteSeason(seas.id)}
+                                    className="p-1.5 hover:bg-rose-950 border border-zinc-800 hover:border-rose-900 rounded text-zinc-400 hover:text-red-500 transition cursor-pointer"
+                                  >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Season Create/Edit Modal */}
+                {showSeasonModal && (
+                  <div className="fixed inset-0 bg-black/80 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+                    <div className="bg-zinc-950 border border-zinc-805 rounded-xl max-w-md w-full p-6 relative">
+                      <button 
+                        onClick={() => setShowSeasonModal(false)}
+                        className="absolute top-4 right-4 text-zinc-400 hover:text-white cursor-pointer"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+
+                      <form onSubmit={handleSaveSeason} className="flex flex-col gap-4 text-left">
+                        <div className="border-b border-zinc-900 pb-3">
+                          <h3 className="text-lg font-black">{editingSeason ? 'Editar Temporada' : 'Adicionar Nova Temporada'}</h3>
+                          <span className="text-[10px] text-zinc-500 font-mono">Estrutura de dados serial do streaming</span>
+                        </div>
+
+                        <div className="flex flex-col gap-1.5 text-xs">
+                          <label className="text-zinc-400 font-bold uppercase font-mono">Vincular Série</label>
+                          <select
+                            value={seasonForm.seriesId}
+                            onChange={(e) => setSeasonForm({ ...seasonForm, seriesId: e.target.value })}
+                            className="bg-zinc-900 border border-zinc-800 text-xs font-bold p-2.5 rounded text-white"
+                          >
+                            {series.map(s => (
+                              <option key={s.id} value={s.id}>{s.title}</option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="flex flex-col gap-1.5 text-xs">
+                            <label className="text-zinc-400 font-bold uppercase font-mono">Nº Sequencial</label>
+                            <input
+                              type="number"
+                              required
+                              value={seasonForm.number}
+                              onChange={(e) => setSeasonForm({ ...seasonForm, number: Number(e.target.value) })}
+                              className="bg-zinc-900 border border-zinc-800 p-2.5 rounded text-white"
+                            />
+                          </div>
+
+                          <div className="flex flex-col gap-1.5 text-xs">
+                            <label className="text-zinc-400 font-bold uppercase font-mono">Estado</label>
+                            <select
+                              value={seasonForm.status}
+                              onChange={(e) => setSeasonForm({ ...seasonForm, status: e.target.value as 'published'|'draft' })}
+                              className="bg-zinc-900 border border-zinc-800 p-2.5 rounded text-white font-bold"
+                            >
+                              <option value="published">Publicado</option>
+                              <option value="draft">Rascunho</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col gap-1.5 text-xs">
+                          <label className="text-zinc-400 font-bold uppercase font-mono font-mono">Título Exibido</label>
+                          <input
+                            type="text"
+                            required
+                            value={seasonForm.title}
+                            onChange={(e) => setSeasonForm({ ...seasonForm, title: e.target.value })}
+                            placeholder="Ex: 1ª Temporada / Volume I"
+                            className="bg-zinc-900 border border-zinc-800 p-2.5 rounded text-white"
+                          />
+                        </div>
+
+                        <div className="flex gap-2 justify-end border-t border-zinc-900 pt-4 mt-2">
+                          <button
+                            type="button"
+                            onClick={() => setShowSeasonModal(false)}
+                            className="px-4 py-2 hover:bg-zinc-900 border border-transparent rounded text-xs font-mono font-bold uppercase text-zinc-400 hover:text-white"
+                          >
+                            Voltar
+                          </button>
+                          <button
+                            type="submit"
+                            className="px-5 py-2 bg-[#ef4444] hover:bg-red-700 text-white font-bold rounded text-xs font-mono uppercase tracking-widest"
+                          >
+                            Confirmar
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                )}
+              </section>
+            )}
+
+            {/* TAB CONTENT: 10. EPISODIOS */}
+            {activeTab === 'episodios' && (
+              <section className="flex flex-col gap-6 animate-fade-in text-white text-left">
+                <div className="flex justify-between items-center border-b border-zinc-900 pb-5">
+                  <div>
+                    <span className="text-xs font-mono font-bold text-zinc-500 uppercase">CAPÍTULOS STREAMING</span>
+                    <h1 className="text-2xl font-black mt-1">Gerenciador de Episódios</h1>
+                  </div>
+                  <button 
+                    onClick={() => handleOpenEpisodeModal()}
+                    className="bg-[#ef4444] hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg text-xs flex items-center gap-1.5 cursor-pointer transition shadow"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Adicionar Episódio</span>
+                  </button>
+                </div>
+
+                {/* Filters */}
+                <div className="bg-zinc-950 border border-zinc-900 p-4 rounded-xl flex flex-wrap gap-4 items-center justify-between">
+                  <div className="flex flex-wrap gap-3.5 items-center">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-mono text-zinc-500 font-bold">Série:</span>
+                      <select
+                        value={selectedSeriesIdForEpisodeFilter}
+                        onChange={(e) => setSelectedSeriesIdForEpisodeFilter(e.target.value)}
+                        className="bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-350 p-2 rounded outline-none"
+                      >
+                        <option value="all">TODAS OS CONTEÚDOS</option>
+                        {series.map(s => (
+                          <option key={s.id} value={s.id}>{s.title}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-mono text-zinc-500 font-bold">Temporada:</span>
+                      <select
+                        value={selectedSeasonIdForEpisodeFilter}
+                        onChange={(e) => setSelectedSeasonIdForEpisodeFilter(e.target.value)}
+                        className="bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-350 p-2 rounded outline-none"
+                      >
+                        <option value="all">TODOS</option>
+                        {seasons.map(seas => (
+                          <option key={seas.id} value={seas.id}>Temp {seas.number} • {(series.find(s=>s.id === seas.seriesId))?.title}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <span className="text-xs font-mono text-zinc-550 mr-2">Total local de capitulos: {episodes.length}</span>
+                </div>
+
+                {/* Grid Lists */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {episodes
+                    .filter(ep => {
+                      const associatedSeason = seasons.find(seas => seas.id === ep.seasonId);
+                      const assocSeriesId = associatedSeason ? associatedSeason.seriesId : '';
+                      return selectedSeriesIdForEpisodeFilter === 'all' || assocSeriesId === selectedSeriesIdForEpisodeFilter;
+                    })
+                    .filter(ep => selectedSeasonIdForEpisodeFilter === 'all' || ep.seasonId === selectedSeasonIdForEpisodeFilter)
+                    .map(ep => {
+                      const associatedSeason = seasons.find(seas => seas.id === ep.seasonId);
+                      const associatedSeries = associatedSeason ? series.find(s => s.id === associatedSeason.seriesId) : undefined;
+                      return (
+                        <div key={ep.id} className="bg-zinc-950 border border-zinc-900 p-4 rounded-xl flex gap-4 text-left relative overflow-hidden group">
+                          <img 
+                            src={ep.thumbnailUrl || 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400'} 
+                            alt={ep.title} 
+                            referrerPolicy="no-referrer"
+                            className="w-24 h-16 object-cover rounded-lg bg-zinc-900/60 border border-zinc-850 shrink-0"
+                          />
+                          <div className="flex flex-col justify-between flex-1 min-w-0">
+                            <div>
+                              <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-zinc-500">
+                                {associatedSeries?.title || 'F5 TV'} • Temp {associatedSeason?.number || 1} Ep {ep.number}
+                              </span>
+                              <h5 className="font-bold text-sm text-white truncate leading-snug">{ep.title}</h5>
+                              <p className="text-[10px] text-zinc-400 line-clamp-1 mt-0.5">{ep.description || 'Nenhuma sinopse disponível'}</p>
+                            </div>
+                            <span className="text-[10px] font-mono text-[#ef4444] font-semibold mt-1 inline-block">Duração: {ep.duration || 'N/A'}</span>
+                          </div>
+
+                          <div className="absolute right-4 top-4 flex gap-1 bg-zinc-950/80 p-1 border border-zinc-850 rounded backdrop-blur-xs">
+                            <button
+                              onClick={() => handleOpenEpisodeModal(ep)}
+                              className="p-1 hover:bg-zinc-900 text-zinc-400 hover:text-white rounded cursor-pointer"
+                              title="Editar Episódio"
+                            >
+                              <Edit2 className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteEpisode(ep.id)}
+                              className="p-1 hover:bg-zinc-900 text-zinc-400 hover:text-red-500 rounded cursor-pointer"
+                              title="Remover Episódio"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+
+                {/* Episode Modal Form */}
+                {showEpisodeModal && (
+                  <div className="fixed inset-0 bg-black/80 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+                    <div className="bg-zinc-950 border border-zinc-850 rounded-xl max-w-lg w-full p-6 relative">
+                      <button 
+                        onClick={() => setShowEpisodeModal(false)}
+                        className="absolute top-4 right-4 text-zinc-400 hover:text-white cursor-pointer"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+
+                      <form onSubmit={handleSaveEpisode} className="flex flex-col gap-4 text-left text-xs text-white">
+                        <div className="border-b border-zinc-900 pb-3">
+                          <h3 className="text-base font-black text-white">{editingEpisode ? 'Editar Episódio' : 'Adicionar Novo Episódio'}</h3>
+                          <span className="text-[10px] text-zinc-500 font-mono">Ficha técnica e links CDN simulados</span>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-zinc-400 font-bold uppercase font-mono">Vincular Série</label>
+                            <select
+                              value={episodeForm.seriesId}
+                              onChange={(e) => setEpisodeForm({ ...episodeForm, seriesId: e.target.value })}
+                              className="bg-zinc-900 border border-zinc-805 p-2 rounded text-white"
+                            >
+                              {series.map(s => (
+                                <option key={s.id} value={s.id}>{s.title}</option>
+                              ))}
+                            </select>
+                          </div>
+
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-zinc-400 font-bold uppercase font-mono">Vincular Temporada</label>
+                            <select
+                              value={episodeForm.seasonId}
+                              onChange={(e) => setEpisodeForm({ ...episodeForm, seasonId: e.target.value })}
+                              className="bg-zinc-900 border border-zinc-805 p-2 rounded text-white"
+                            >
+                              {seasons.map(seas => (
+                                <option key={seas.id} value={seas.id}>Temp {seas.number} • {(series.find(s=>s.id === seas.seriesId))?.title}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-4">
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-zinc-400 font-bold uppercase font-mono">Nº Sequencial</label>
+                            <input
+                              type="number"
+                              required
+                              value={episodeForm.number}
+                              onChange={(e) => setEpisodeForm({ ...episodeForm, number: Number(e.target.value) })}
+                              className="bg-zinc-900 border border-zinc-800 p-2.5 rounded text-white"
+                            />
+                          </div>
+
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-zinc-400 font-bold uppercase font-mono font-mono">Duração (Ex: 50m)</label>
+                            <input
+                              type="text"
+                              required
+                              value={episodeForm.duration}
+                              onChange={(e) => setEpisodeForm({ ...episodeForm, duration: e.target.value })}
+                              className="bg-zinc-900 border border-zinc-800 p-2.5 rounded text-white font-mono"
+                            />
+                          </div>
+
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-zinc-400 font-bold uppercase font-mono">Estado</label>
+                            <select
+                              value={episodeForm.status}
+                              onChange={(e) => setEpisodeForm({ ...episodeForm, status: e.target.value as 'published'|'draft' })}
+                              className="bg-zinc-900 border border-zinc-805 p-2 rounded text-white font-bold"
+                            >
+                              <option value="published">Publicado</option>
+                              <option value="draft">Rascunho</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-zinc-400 font-bold uppercase font-mono">Título do Capítulo</label>
+                          <input
+                            type="text"
+                            required
+                            value={episodeForm.title}
+                            onChange={(e) => setEpisodeForm({ ...episodeForm, title: e.target.value })}
+                            className="bg-zinc-900 border border-zinc-800 p-2.5 rounded text-white"
+                          />
+                        </div>
+
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-zinc-400 font-bold uppercase font-mono">Cartaz / Thumbnail (URL Unsplash)</label>
+                          <input
+                            type="text"
+                            required
+                            value={episodeForm.thumbnailUrl}
+                            onChange={(e) => setEpisodeForm({ ...episodeForm, thumbnailUrl: e.target.value })}
+                            className="bg-zinc-900 border border-zinc-800 p-2.5 rounded text-white font-mono text-[11px]"
+                          />
+                        </div>
+
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-zinc-400 font-bold uppercase font-mono">Vídeo CDN streaming file (URL MP4)</label>
+                          <input
+                            type="text"
+                            required
+                            value={episodeForm.videoUrl}
+                            onChange={(e) => setEpisodeForm({ ...episodeForm, videoUrl: e.target.value })}
+                            className="bg-zinc-900 border border-zinc-800 p-2.5 rounded text-white font-mono text-[11px]"
+                          />
+                        </div>
+
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-zinc-400 font-bold uppercase font-mono">Sinopse Breve do Episódio</label>
+                          <textarea
+                            value={episodeForm.description}
+                            rows={2}
+                            onChange={(e) => setEpisodeForm({ ...episodeForm, description: e.target.value })}
+                            className="bg-zinc-900 border border-zinc-800 p-2.5 rounded text-white resize-none"
+                          />
+                        </div>
+
+                        <div className="flex gap-2 justify-end border-t border-zinc-900 pt-3 mt-1">
+                          <button
+                            type="button"
+                            onClick={() => setShowEpisodeModal(false)}
+                            className="px-4 py-2 hover:bg-zinc-900 rounded font-bold font-mono text-zinc-400 hover:text-white uppercase"
+                          >
+                            Voltar
+                          </button>
+                          <button
+                            type="submit"
+                            className="px-5 py-2 bg-[#ef4444] hover:bg-red-700 text-white font-bold rounded font-mono uppercase tracking-widest"
+                          >
+                            Salvar
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                )}
+              </section>
+            )}
+
+            {/* TAB CONTENT: 11. BANNERS SLIDER */}
+            {activeTab === 'banners' && (
+              <section className="flex flex-col gap-6 animate-fade-in text-white text-left">
+                <div className="flex justify-between items-center border-b border-zinc-900 pb-5">
+                  <div>
+                    <span className="text-xs font-mono font-bold text-zinc-500 uppercase">PROPAGANDA & HIGHLIGHTS</span>
+                    <h1 className="text-2xl font-black mt-1">Banners Rotativos Slider</h1>
+                  </div>
+                  <button 
+                    onClick={() => handleOpenBannerModal()}
+                    className="bg-[#ef4444] hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg text-xs flex items-center gap-1.5 cursor-pointer transition shadow"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Adicionar Banner</span>
+                  </button>
+                </div>
+
+                {/* Banner list */}
+                <div className="grid grid-cols-1 gap-4">
+                  {banners.map(b => (
+                    <div key={b.id} className="bg-zinc-950 border border-zinc-900 p-5 rounded-2xl flex flex-col md:flex-row gap-6 justify-between items-start md:items-center text-left relative overflow-hidden group">
+                      <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-linear-to-r from-transparent to-black pointer-events-none opacity-50 block" />
+                      
+                      <div className="flex gap-5 items-center flex-1 min-w-0">
+                        <img 
+                          src={b.imageUrl} 
+                          alt={b.title} 
+                          referrerPolicy="no-referrer"
+                          className="w-32 h-20 object-cover rounded-xl border border-zinc-850 shrink-0 shadow-lg"
+                        />
+                        <div className="flex flex-col text-left min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-[10px] font-mono text-[#ef4444] font-bold">#{b.order}</span>
+                            <span className="text-[9px] font-mono font-extrabold uppercase bg-zinc-900/80 px-2 py-0.5 rounded border border-zinc-800 text-zinc-400">
+                              Visível: {b.type === 'subscriber' ? 'Plataforma Assinante' : 'Página Pública'}
+                            </span>
+                          </div>
+                          <h4 className="font-extrabold text-white text-base leading-snug truncate">{b.title}</h4>
+                          <p className="text-zinc-450 text-xs truncate max-w-sm mt-0.5 text-zinc-400">{b.subtitle}</p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4 items-center shrink-0 border-t md:border-t-0 border-zinc-900 pt-3 md:pt-0 w-full md:w-auto justify-between md:justify-end z-10">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs text-zinc-500 font-mono">Disponibilizado:</span>
+                          <button
+                            onClick={() => handleToggleBannerActive(b.id)}
+                            className={`px-3 py-1 rounded text-[10px] font-mono font-black uppercase inline-flex items-center gap-1 cursor-pointer transition ${
+                              b.active ? 'bg-emerald-950 text-emerald-400 border border-emerald-900' : 'bg-red-950 text-red-400 border border-red-900'
+                            }`}
+                          >
+                            <CheckCircle className="w-3 h-3" />
+                            <span>{b.active ? 'Ativo' : 'Pausado'}</span>
+                          </button>
+                        </div>
+
+                        <div className="flex gap-1.5 items-center">
+                          <button
+                            onClick={() => handleOpenBannerModal(b)}
+                            className="p-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-lg text-zinc-300 hover:text-white cursor-pointer"
+                            title="Editar Banner"
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteBanner(b.id)}
+                            className="p-2 bg-zinc-900 hover:bg-rose-950/20 border border-zinc-850 hover:border-rose-900 rounded-lg text-zinc-500 hover:text-red-400 cursor-pointer"
+                            title="Remover Banner"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Banner Creation/Edition Modal */}
+                {showBannerModal && (
+                  <div className="fixed inset-0 bg-black/80 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+                    <div className="bg-zinc-950 border border-zinc-850 rounded-xl p-6 max-w-md w-full relative">
+                      <button 
+                        onClick={() => setShowBannerModal(false)}
+                        className="absolute top-4 right-4 text-zinc-400 hover:text-white cursor-pointer"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+
+                      <form onSubmit={handleSaveBanner} className="flex flex-col gap-4 text-left text-xs text-white">
+                        <div className="border-b border-zinc-900 pb-3">
+                          <h3 className="text-base font-black">{editingBanner ? 'Editar Banner' : 'Adicionar Banner'}</h3>
+                          <span className="text-[10px] text-zinc-500 font-mono">Banners promocionais em alta definição</span>
+                        </div>
+
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-zinc-400 font-bold uppercase font-mono">Título Principal</label>
+                          <input
+                            type="text"
+                            required
+                            value={bannerForm.title}
+                            onChange={(e) => setBannerForm({ ...bannerForm, title: e.target.value })}
+                            placeholder="Ex: Novo Lançamento F5"
+                            className="bg-zinc-900 border border-zinc-800 p-2.5 rounded text-white"
+                          />
+                        </div>
+
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-zinc-400 font-bold uppercase font-mono">Subtítulo / Descrição</label>
+                          <input
+                            type="text"
+                            required
+                            value={bannerForm.subtitle}
+                            onChange={(e) => setBannerForm({ ...bannerForm, subtitle: e.target.value })}
+                            placeholder="Destaques, atores ou data de estreia"
+                            className="bg-zinc-900 border border-zinc-800 p-2.5 rounded text-white"
+                          />
+                        </div>
+
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-zinc-400 font-bold uppercase font-mono">Papel de Parede (URL Unsplash)</label>
+                          <input
+                            type="text"
+                            required
+                            value={bannerForm.imageUrl}
+                            onChange={(e) => setBannerForm({ ...bannerForm, imageUrl: e.target.value })}
+                            className="bg-zinc-900 border border-zinc-800 p-2.5 rounded text-white font-mono text-[11px]"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-zinc-400 font-bold uppercase font-mono">Vincular Link Redirecionamento</label>
+                            <input
+                              type="text"
+                              value={bannerForm.linkUrl}
+                              onChange={(e) => setBannerForm({ ...bannerForm, linkUrl: e.target.value })}
+                              placeholder="Filtro id, # ou URL"
+                              className="bg-zinc-900 border border-zinc-805 p-2 rounded text-white font-mono"
+                            />
+                          </div>
+
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-zinc-400 font-bold uppercase font-mono">Tipo de Audiência</label>
+                            <select
+                              value={bannerForm.type}
+                              onChange={(e) => setBannerForm({ ...bannerForm, type: e.target.value as 'public' | 'subscriber' })}
+                              className="bg-zinc-900 border border-zinc-805 p-2 rounded text-white font-bold"
+                            >
+                              <option value="subscriber">Área do Assinante (Dashboard)</option>
+                              <option value="public">Página Inicial Pública</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-zinc-400 font-bold uppercase font-mono">Ordem Sequencial</label>
+                            <input
+                              type="number"
+                              required
+                              value={bannerForm.order}
+                              onChange={(e) => setBannerForm({ ...bannerForm, order: Number(e.target.value) })}
+                              className="bg-zinc-900 border border-zinc-800 p-2 rounded text-white"
+                            />
+                          </div>
+
+                          <div className="flex flex-col gap-1.5">
+                            <label className="text-zinc-400 font-bold uppercase font-mono">Estado Inicial</label>
+                            <select
+                              value={bannerForm.active ? 'yes' : 'no'}
+                              onChange={(e) => setBannerForm({ ...bannerForm, active: e.target.value === 'yes' })}
+                              className="bg-zinc-900 border border-zinc-805 p-2 rounded text-white font-bold"
+                            >
+                              <option value="yes">Ativo imediato</option>
+                              <option value="no">Pausado temporariamente</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-2 justify-end border-t border-zinc-900 pt-3 mt-1">
+                          <button
+                            type="button"
+                            onClick={() => setShowBannerModal(false)}
+                            className="px-4 py-2 hover:bg-zinc-900 rounded font-bold font-mono text-zinc-400 hover:text-white uppercase"
+                          >
+                            Voltar
+                          </button>
+                          <button
+                            type="submit"
+                            className="px-5 py-2 bg-[#ef4444] hover:bg-red-700 text-white font-bold rounded font-mono uppercase tracking-widest"
+                          >
+                            Confirmar
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                )}
+              </section>
+            )}
+
+            {/* TAB CONTENT: 12. GRÁFICOS & RELATÓRIOS */}
+            {activeTab === 'relatorios' && (
+              <section className="flex flex-col gap-6 animate-fade-in text-white text-left">
+                <div className="border-b border-zinc-900 pb-5">
+                  <span className="text-xs font-mono font-bold text-zinc-500 uppercase">BI & ANALYTICS</span>
+                  <h1 className="text-2xl font-black mt-1">BI de Desempenho F5 TV</h1>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-zinc-950 border border-zinc-900 p-5 rounded-xl">
+                    <span className="text-zinc-500 text-[10px] font-mono tracking-widest uppercase block">FATURAMENTO INTEGRADO</span>
+                    <h3 className="text-2xl font-black text-white mt-1">R$ {totalRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h3>
+                    <p className="text-[10px] text-zinc-500 font-mono mt-1.5">• Total acumulado e processado no MVP</p>
+                  </div>
+                  
+                  <div className="bg-zinc-950 border border-zinc-900 p-5 rounded-xl">
+                    <span className="text-zinc-500 text-[10px] font-mono tracking-widest uppercase block">MENSAL RECORRENTE SIMULADO (MRR)</span>
+                    <h3 className="text-2xl font-black text-emerald-400 mt-1">R$ {monthlyRecurrentRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</h3>
+                    <p className="text-[10px] text-zinc-500 font-mono mt-1.5">• Carteira recorrente projetada localmente</p>
+                  </div>
+
+                  <div className="bg-zinc-950 border border-zinc-900 p-5 rounded-xl">
+                    <span className="text-zinc-500 text-[10px] font-mono tracking-widest uppercase block">TÍQUETE MÉDIO PROJETADO</span>
+                    <h3 className="text-2xl font-black text-white mt-1">
+                      R$ {totalSubscribers > 0 ? (monthlyRecurrentRevenue / totalSubscribers).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : '0,00'}
+                    </h3>
+                    <p className="text-[10px] text-zinc-500 font-mono mt-1.5">• Margem unitária por conta</p>
+                  </div>
+                </div>
+
+                {/* Growth and status grids */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="bg-zinc-950 border border-zinc-900 rounded-xl p-5 flex flex-col gap-4">
+                    <h4 className="font-bold text-sm text-zinc-300">Curva Demográfica de Assinaturas</h4>
+                    <div className="h-64">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={growthData}>
+                          <defs>
+                            <linearGradient id="colorAssinantesRel" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8}/>
+                              <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#27272a" opacity={0.3} />
+                          <XAxis dataKey="name" stroke="#52525b" fontSize={11} />
+                          <YAxis stroke="#52525b" fontSize={11} />
+                          <Tooltip contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a' }} />
+                          <Area type="monotone" dataKey="Assinantes" stroke="#ef4444" fillOpacity={1} fill="url(#colorAssinantesRel)" />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  <div className="bg-zinc-950 border border-zinc-900 rounded-xl p-5 flex flex-col gap-4 text-left">
+                    <h4 className="font-bold text-sm text-zinc-300">Auditoria de Audiência e Clieques no Player</h4>
+                    <div className="flex flex-col gap-2.5 max-h-64 overflow-y-auto pr-1">
+                      {contents.slice(0, 6).map((c, i) => (
+                        <div key={c.id} className="p-3 bg-zinc-900/40 border border-zinc-850 rounded-lg flex items-center justify-between text-xs">
+                          <div className="min-w-0 flex-1 pr-4">
+                            <span className="text-[9px] font-mono text-zinc-500">#{i + 1} • {c.genre.toUpperCase()}</span>
+                            <h5 className="font-bold text-white truncate">{c.title}</h5>
+                          </div>
+                          <span className="font-mono text-xs font-black text-emerald-400">{c.viewsCount.toLocaleString('pt-BR')} clicks</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Instant dynamic export ledger builder */}
+                <div className="bg-zinc-950 border border-zinc-900 p-6 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-left">
+                  <div className="flex flex-col">
+                    <span className="text-zinc-[#ef4444] font-bold text-xs font-mono uppercase flex items-center gap-1.5">
+                      <FileText className="w-4 h-4 text-[#ef4444]" />
+                      <span>Montador de Planilhas BI Corporativas</span>
+                    </span>
+                    <p className="text-zinc-500 text-xs mt-1 leading-normal max-w-xl">
+                      Configure e baixe instantaneamente planilhas prontas de auditoria contendo dados consolidados de usuários, assinantes, financeiros e todos os vídeos cadastrados no localStorage do MVP da F5 TV.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      let csv = '\uFEFF=== FATURAMENTO E RELATORIOS BI ===\n';
+                      csv += `Assinantes Ativos,${activeSubs}\n`;
+                      csv += `Assinantes Inadimplentes,${pendingSubs}\n`;
+                      csv += `Séries Cadastradas,${series.length}\n`;
+                      csv += `Capítulos Totais,${episodes.length}\n`;
+                      csv += `Faturamento Bruto,R$ ${totalRevenue.toFixed(2)}\n`;
+                      csv += `Faturamento Recorrente Mensal (MRR),R$ ${monthlyRecurrentRevenue.toFixed(2)}\n\n`;
+                      csv += '=== RANKING DE AUDIÊNCIA ===\n';
+                      csv += 'Categoria,Vídeo,Views\n';
+                      contents.forEach(c => {
+                        csv += `"${c.genre}","${c.title}","${c.viewsCount}"\n`;
+                      });
+
+                      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+                      const url = URL.createObjectURL(blob);
+                      const link = document.createElement('a');
+                      link.setAttribute('href', url);
+                      link.setAttribute('download', 'relator_consolidado_analytics_bi_f5_tv.csv');
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    }}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded text-xs uppercase font-mono tracking-widest cursor-pointer transition shrink-0"
+                  >
+                    Gerar e Baixar CSV Consolidado
+                  </button>
+                </div>
+              </section>
+            )}
+
+            {/* TAB CONTENT: 13. CONFIGURAÇÕES DA TV */}
+            {activeTab === 'configuracoes' && (
+              <section className="flex flex-col gap-6 animate-fade-in text-white text-left">
+                <div className="border-b border-zinc-900 pb-5">
+                  <span className="text-xs font-mono font-bold text-zinc-500 uppercase">CONFIGURAÇÕES GERAIS</span>
+                  <h1 className="text-2xl font-black mt-1">Preferências da Plataforma</h1>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="bg-zinc-950 border border-zinc-900 p-6 rounded-xl flex flex-col gap-4">
+                    <h4 className="font-bold text-sm text-zinc-300">Visual, Textos e Avisos do Player</h4>
+                    
+                    <div className="flex flex-col gap-1.5 text-xs">
+                      <label className="text-zinc-500 font-bold uppercase font-mono">Nome Oficial do Aplicativo</label>
+                      <input
+                        type="text"
+                        value={platformConfig.appName}
+                        onChange={(e) => setPlatformConfig({ ...platformConfig, appName: e.target.value })}
+                        className="bg-zinc-900 border border-zinc-800 p-2.5 rounded text-white"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5 text-xs">
+                      <label className="text-zinc-500 font-bold uppercase font-mono">Aviso Informativo Global (Footer Banner)</label>
+                      <textarea
+                        value={platformConfig.warningNotice}
+                        rows={3}
+                        onChange={(e) => setPlatformConfig({ ...platformConfig, warningNotice: e.target.value })}
+                        className="bg-zinc-900 border border-zinc-800 p-2.5 rounded text-white resize-none"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5 text-xs">
+                      <label className="text-zinc-500 font-bold uppercase font-mono">Links do Menu Rodapé (Separados por vírgula)</label>
+                      <input
+                        type="text"
+                        value={platformConfig.footerLinks}
+                        onChange={(e) => setPlatformConfig({ ...platformConfig, footerLinks: e.target.value })}
+                        className="bg-zinc-900 border border-zinc-800 p-2.5 rounded text-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="bg-zinc-950 border border-zinc-900 p-6 rounded-xl flex flex-col gap-5 text-left text-xs text-white">
+                    <h4 className="font-bold text-sm text-zinc-300">Sandbox, Cobrança & Manutenção</h4>
+
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center bg-zinc-900/40 p-3.5 border border-zinc-850 rounded-xl">
+                        <div className="flex flex-col">
+                          <span className="font-bold text-zinc-200">Simulador de Transações Pix/Cartão</span>
+                          <span className="text-[10px] text-zinc-500 mt-0.5">Define se novas assinaturas de teste faturam com sucesso</span>
+                        </div>
+                        <button
+                          onClick={() => setPlatformConfig({ ...platformConfig, paymentMockSuccess: !platformConfig.paymentMockSuccess })}
+                          className={`px-3 py-1.5 rounded font-mono font-bold text-[10px] uppercase cursor-pointer ${
+                            platformConfig.paymentMockSuccess ? 'bg-emerald-950 text-emerald-400 border border-emerald-900' : 'bg-red-950 text-red-500 border border-red-900'
+                          }`}
+                        >
+                          {platformConfig.paymentMockSuccess ? 'CONFIRMA AUTOMÁTICA_SIM' : 'FALHA AUTOMÁTICA_NÃO'}
+                        </button>
+                      </div>
+
+                      <div className="flex justify-between items-center bg-zinc-900/40 p-3.5 border border-zinc-850 rounded-xl">
+                        <div className="flex flex-col">
+                          <span className="font-bold text-zinc-200">Modo de Manutenção Estrito</span>
+                          <span className="text-[10px] text-zinc-500 mt-0.5">Simula indisponibilidade para assinantes normais</span>
+                        </div>
+                        <button
+                          onClick={() => setPlatformConfig({ ...platformConfig, maintenanceMode: !platformConfig.maintenanceMode })}
+                          className={`px-3 py-1.5 rounded font-mono font-bold text-[10px] uppercase cursor-pointer ${
+                            platformConfig.maintenanceMode ? 'bg-amber-950 text-amber-500 border border-amber-900' : 'bg-zinc-900 text-zinc-500 border border-zinc-800'
+                          }`}
+                        >
+                          {platformConfig.maintenanceMode ? 'ATIVADO (MANUTENÇÃO_SIM)' : 'DESATIVADO (NO AR)'}
+                        </button>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        alert('Configurações de sistema da F5 TV guardadas localmente no MVP com sucesso!');
+                      }}
+                      className="w-full bg-[#ef4444] hover:bg-red-700 py-3 rounded-lg text-xs font-mono font-bold uppercase tracking-wider transition cursor-pointer"
+                    >
+                      Salvar Definições de Plataforma
+                    </button>
+                  </div>
+                </div>
               </section>
             )}
 
@@ -1796,11 +3301,11 @@ export default function AdminPanel({
       )}
 
       {/* POPUP MODAL: NOVO EPISÓDIO CADASTRAR */}
-      {showEpisodeModal && (
+      {showSeriesEpisodeModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto select-none font-sans text-white">
           <div className="bg-zinc-950 border border-zinc-850 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl relative p-6 my-8">
             
-            <button onClick={() => setShowEpisodeModal(false)} className="absolute top-4 right-4 text-zinc-500 hover:text-white cursor-pointer"><X className="w-5 h-5" /></button>
+            <button onClick={() => setShowSeriesEpisodeModal(false)} className="absolute top-4 right-4 text-zinc-500 hover:text-white cursor-pointer"><X className="w-5 h-5" /></button>
 
             <form onSubmit={handleCreateEpisodeSubmit} className="flex flex-col gap-4 text-left">
               <div className="border-b border-zinc-900 pb-3 mb-1">
@@ -1827,8 +3332,8 @@ export default function AdminPanel({
                   <input
                     type="text"
                     required
-                    value={episodeForm.title}
-                    onChange={(e) => setEpisodeForm({ ...episodeForm, title: e.target.value })}
+                    value={seriesEpisodeForm.title}
+                    onChange={(e) => setSeriesEpisodeForm({ ...seriesEpisodeForm, title: e.target.value })}
                     placeholder="Ex: O Caso Sequestro Digital"
                     className="bg-zinc-900 border border-zinc-800 p-2 rounded"
                   />
@@ -1839,8 +3344,8 @@ export default function AdminPanel({
                   <input
                     type="number"
                     required
-                    value={episodeForm.number}
-                    onChange={(e) => setEpisodeForm({ ...episodeForm, number: Number(e.target.value) })}
+                    value={seriesEpisodeForm.number}
+                    onChange={(e) => setSeriesEpisodeForm({ ...seriesEpisodeForm, number: Number(e.target.value) })}
                     className="bg-zinc-900 border border-zinc-800 p-2 rounded text-center"
                   />
                 </div>
@@ -1852,8 +3357,8 @@ export default function AdminPanel({
                   <input
                     type="text"
                     required
-                    value={episodeForm.duration}
-                    onChange={(e) => setEpisodeForm({ ...episodeForm, duration: e.target.value })}
+                    value={seriesEpisodeForm.duration}
+                    onChange={(e) => setSeriesEpisodeForm({ ...seriesEpisodeForm, duration: e.target.value })}
                     placeholder="Ex: 45m"
                     className="bg-zinc-900 border border-zinc-800 p-2 rounded"
                   />
@@ -1863,8 +3368,8 @@ export default function AdminPanel({
                   <label className="text-zinc-400 font-bold uppercase font-mono">Versão Vídeo URL (Simulado)</label>
                   <input
                     type="text"
-                    value={episodeForm.videoUrl}
-                    onChange={(e) => setEpisodeForm({ ...episodeForm, videoUrl: e.target.value })}
+                    value={seriesEpisodeForm.videoUrl || ''}
+                    onChange={(e) => setSeriesEpisodeForm({ ...seriesEpisodeForm, videoUrl: e.target.value })}
                     placeholder="Cole mp4 ou deixe em branco"
                     className="bg-zinc-900 border border-zinc-800 p-2 rounded text-[10px] font-mono"
                   />
@@ -1876,8 +3381,8 @@ export default function AdminPanel({
                 <textarea
                   required
                   rows={2}
-                  value={episodeForm.description}
-                  onChange={(e) => setEpisodeForm({ ...episodeForm, description: e.target.value })}
+                  value={seriesEpisodeForm.description}
+                  onChange={(e) => setSeriesEpisodeForm({ ...seriesEpisodeForm, description: e.target.value })}
                   placeholder="Resumo do enredo do episódio corrente..."
                   className="bg-zinc-900 border border-zinc-800 p-2 rounded"
                 />
@@ -1887,15 +3392,15 @@ export default function AdminPanel({
                 <label className="text-zinc-400 font-bold uppercase font-mono">Thumbnail de Capa Macia URL</label>
                 <input
                   type="text"
-                  value={episodeForm.thumbnailUrl}
-                  onChange={(e) => setEpisodeForm({ ...episodeForm, thumbnailUrl: e.target.value })}
+                  value={seriesEpisodeForm.thumbnailUrl || ''}
+                  onChange={(e) => setSeriesEpisodeForm({ ...seriesEpisodeForm, thumbnailUrl: e.target.value })}
                   placeholder="Cole ou deixe em branco para simulação"
                   className="bg-zinc-900 border border-zinc-800 p-2 rounded text-[10px] font-mono"
                 />
               </div>
 
               <div className="flex gap-2 justify-end pt-3 text-xs border-t border-zinc-900">
-                <button type="button" onClick={() => setShowEpisodeModal(false)} className="bg-zinc-900 hover:bg-zinc-805 p-2 rounded">Cancelar</button>
+                <button type="button" onClick={() => setShowSeriesEpisodeModal(false)} className="bg-zinc-900 hover:bg-zinc-805 p-2 rounded">Cancelar</button>
                 <button type="submit" className="bg-[#ef4444] hover:bg-red-700 text-white font-bold py-2 px-3 rounded">Confirmar Capítulo</button>
               </div>
             </form>

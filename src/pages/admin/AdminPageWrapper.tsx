@@ -3,8 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import AdminPanel from '../../components/AdminPanel';
 
+type AdminTab = 
+  | 'dashboard' 
+  | 'usuarios' 
+  | 'assinantes' 
+  | 'conteudo' 
+  | 'series' 
+  | 'temporadas' 
+  | 'episodios' 
+  | 'uploads' 
+  | 'financeiro' 
+  | 'planos' 
+  | 'banners' 
+  | 'relatorios' 
+  | 'configuracoes';
+
 interface AdminPageWrapperProps {
-  tab: 'dashboard' | 'usuarios' | 'conteudo' | 'series' | 'uploads' | 'financeiro' | 'planos';
+  tab: AdminTab;
 }
 
 export const AdminPageWrapper: React.FC<AdminPageWrapperProps> = ({ tab }) => {
@@ -14,17 +29,17 @@ export const AdminPageWrapper: React.FC<AdminPageWrapperProps> = ({ tab }) => {
   if (!currentUser) return null;
 
   // Enforce correct permissions role checks
-  const canAccess = (t: string) => {
+  const canAccess = (t: AdminTab) => {
     if (currentUser.role === 'admin') return true;
-    if (currentUser.role === 'editor' && ['dashboard', 'conteudo', 'series', 'uploads'].includes(t)) return true;
-    if (currentUser.role === 'finance' && ['dashboard', 'financeiro', 'planos', 'usuarios'].includes(t)) return true;
+    if (currentUser.role === 'editor' && ['dashboard', 'conteudo', 'series', 'temporadas', 'episodios', 'uploads'].includes(t)) return true;
+    if (currentUser.role === 'finance' && ['dashboard', 'financeiro', 'planos', 'assinantes', 'relatorios'].includes(t)) return true;
     return false;
   };
 
   if (!canAccess(tab)) {
     return (
       <div className="min-h-screen bg-zinc-950 text-white flex flex-col items-center justify-center p-6 text-center select-none font-sans">
-        <div className="w-16 h-16 bg-red-950/20 border border-red-900 text-red-550 flex items-center justify-center rounded-full text-lg font-bold mb-4">
+        <div className="w-16 h-16 bg-red-950/20 border border-red-900 text-red-500 flex items-center justify-center rounded-full text-lg font-bold mb-4">
           !
         </div>
         <h2 className="text-xl font-black uppercase tracking-tight text-white mb-2">Acesso Restrito / Bloqueado</h2>
@@ -41,12 +56,20 @@ export const AdminPageWrapper: React.FC<AdminPageWrapperProps> = ({ tab }) => {
     );
   }
 
-  const handleTabChange = (newTab: 'dashboard' | 'usuarios' | 'conteudo' | 'series' | 'uploads' | 'financeiro' | 'planos') => {
+  const handleTabChange = (newTab: AdminTab) => {
     let path = '/admin';
     if (newTab === 'usuarios') path = '/admin/usuarios';
+    else if (newTab === 'assinantes') path = '/admin/assinantes';
     else if (newTab === 'conteudo') path = '/admin/conteudos';
     else if (newTab === 'series') path = '/admin/series';
+    else if (newTab === 'temporadas') path = '/admin/temporadas';
+    else if (newTab === 'episodios') path = '/admin/episodios';
+    else if (newTab === 'uploads') path = '/admin/uploads';
     else if (newTab === 'financeiro') path = '/admin/financeiro';
+    else if (newTab === 'planos') path = '/admin/planos';
+    else if (newTab === 'banners') path = '/admin/banners';
+    else if (newTab === 'relatorios') path = '/admin/relatorios';
+    else if (newTab === 'configuracoes') path = '/admin/configuracoes';
     navigate(path);
   };
 
@@ -60,7 +83,7 @@ export const AdminPageWrapper: React.FC<AdminPageWrapperProps> = ({ tab }) => {
       <AdminPanel
         currentUser={currentUser}
         activeTabOverride={tab}
-        onTabChange={handleTabChange}
+        onTabChange={handleTabChange as any}
         onNavigateToUserApp={() => navigate('/app')}
         onLogout={handleLogout}
       />
