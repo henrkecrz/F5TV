@@ -11,13 +11,21 @@ export const MyAccountPage: React.FC = () => {
   const { currentUser, currentProfile, updateUser, selectProfile, logout } = useAuth();
   const { plans, payments } = useData();
   const navigate = useNavigate();
+  const effectiveProfile = currentProfile || {
+    name: `${currentUser?.name?.split(' ')[0] || 'Staff'} (Admin)`,
+    avatarColor: 'bg-red-600'
+  };
 
   const [newPassword, setNewPassword] = useState('');
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [securitySuccess, setSecuritySuccess] = useState('');
   const [simulatedCancelSuccess, setSimulatedCancelSuccess] = useState(false);
 
-  if (!currentUser || !currentProfile) {
+  if (!currentUser) {
+    return null;
+  }
+
+  if (currentUser.role === 'subscriber' && !currentProfile) {
     return null;
   }
 
@@ -84,8 +92,8 @@ export const MyAccountPage: React.FC = () => {
           
           {/* User overview stats */}
           <div className="bg-zinc-950 border border-zinc-900 rounded-2xl p-6 text-center flex flex-col items-center gap-3">
-            <div className={`w-14 h-14 ${currentProfile.avatarColor || 'bg-red-600'} rounded-full text-xl font-black flex items-center justify-center uppercase shadow-lg border border-black`}>
-              {currentProfile.name ? currentProfile.name.charAt(0) : 'U'}
+            <div className={`w-14 h-14 ${effectiveProfile.avatarColor || 'bg-red-600'} rounded-full text-xl font-black flex items-center justify-center uppercase shadow-lg border border-black`}>
+              {effectiveProfile.name ? effectiveProfile.name.charAt(0) : 'U'}
             </div>
             
             <div className="flex flex-col">

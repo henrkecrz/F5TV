@@ -8,8 +8,13 @@ export const AppHomePage: React.FC = () => {
   const { currentProfile, currentUser } = useAuth();
   const { contents, series, categories, watchHistory, favorites, updateFavorites, updateWatchHistory } = useData();
   const navigate = useNavigate();
+  const profileId = currentProfile?.id || `staff-${currentUser?.id || 'guest'}`;
 
-  if (!currentUser || !currentProfile) {
+  if (!currentUser) {
+    return null;
+  }
+
+  if (currentUser.role === 'subscriber' && !currentProfile) {
     return null;
   }
 
@@ -17,20 +22,20 @@ export const AppHomePage: React.FC = () => {
   const featured = contents.find((c) => c.isFeatured && c.status === 'published') || contents.find(c => c.status === 'published');
 
   const isFavorited = (itemId: string) => {
-    return favorites.some(fav => fav.userId === currentUser.id && fav.profileId === currentProfile.id && fav.contentId === itemId);
+    return favorites.some(fav => fav.userId === currentUser.id && fav.profileId === profileId && fav.contentId === itemId);
   };
 
   const toggleFavorite = (itemId: string) => {
     let updated;
     if (isFavorited(itemId)) {
-      updated = favorites.filter(fav => !(fav.userId === currentUser.id && fav.profileId === currentProfile.id && fav.contentId === itemId));
+      updated = favorites.filter(fav => !(fav.userId === currentUser.id && fav.profileId === profileId && fav.contentId === itemId));
     } else {
       updated = [
         ...favorites,
         {
           id: `fav-${Date.now()}`,
           userId: currentUser.id,
-          profileId: currentProfile.id,
+          profileId,
           contentId: itemId,
           createdAt: new Date().toISOString()
         }
@@ -41,7 +46,7 @@ export const AppHomePage: React.FC = () => {
 
   const recordPlayHistory = (item: any) => {
     const existingIndex = watchHistory.findIndex(
-      (h) => h.userId === currentUser.id && h.profileId === currentProfile.id && h.contentId === item.id
+      (h) => h.userId === currentUser.id && h.profileId === profileId && h.contentId === item.id
     );
 
     let updatedHistory = [...watchHistory];
@@ -56,7 +61,7 @@ export const AppHomePage: React.FC = () => {
       updatedHistory.unshift({
         id: `wh-${Date.now()}`,
         userId: currentUser.id,
-        profileId: currentProfile.id,
+        profileId,
         contentId: item.id,
         episodeId: undefined,
         watchedPercent: 12,
@@ -68,7 +73,7 @@ export const AppHomePage: React.FC = () => {
 
   // Get only history of current user's profile
   const profileHistory = watchHistory.filter(
-    (h) => h.userId === currentUser.id && h.profileId === currentProfile.id
+    (h) => h.userId === currentUser.id && h.profileId === profileId
   );
 
   return (

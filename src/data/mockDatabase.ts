@@ -8,6 +8,61 @@ import {
   Series, Season, Episode, Upload, WatchHistory, Favorite, Notification, Review,
   Coupon, Channel, LiveSchedule, ConnectedDevice
 } from '../types';
+import cardConexaoF5 from './cards/Conexao F5.png';
+import cardExplorandoEstudios from './cards/Explorando os Novos Estudios F5.png';
+import cardF5EntrevistaEdicaoExclusiva from './cards/F5 Entrevista - Edicao Exclusiva.png';
+import cardF5EntrevistaGrandesIdeias from './cards/F5 Entrevista - Grandes Ideias e Inovacao.png';
+import cardF5TechDocs from './cards/F5 Tech Docs - Fronteira da IA.png';
+import cardMaratonaIA from './cards/F5 TV - Maratona Fronteiras da IA.png';
+import cardMenteSilicio from './cards/F5 TV - Sua Mente em Silicio.png';
+import cardInfiltracaoDarknet from './cards/Infiltracao na Darknet.png';
+import cardRastreadoresCriminais from './cards/Rastreadores Criminais.png';
+import cardRotaTrafico from './cards/TV F5 - A Rota do Trafico de Armas.png';
+import cardAventuraTurma from './cards/TV F5 - Aventura da Turma.png';
+import cardBastidoresCidade from './cards/TV F5 - Bastidores da Cidade.png';
+import cardCidadesSustentaveis from './cards/TV F5 - Cidades Sustentaveis.png';
+import cardCienciaAventura from './cards/TV F5 - Ciencia e Aventura.png';
+import cardGravidade from './cards/TV F5 - Gravidade - O Misterio da Gravidade.png';
+import cardHackersVsEstado from './cards/TV F5 - Hackers vs Estado.png';
+import cardJornalAoVivo from './cards/TV F5 - Jornal F5 Edicao Ao Vivo.png';
+import cardJornalDoDia from './cards/TV F5 - Jornal F5 Edicao do Dia.png';
+import cardJornalPrimeiraEdicao from './cards/TV F5 - Jornal F5 Primeira Edicao.png';
+import cardNoiteF5AcusticaContraste from './cards/TV F5 - Noite F5 Acustica - MPB em Alto Contraste.png';
+import cardNoiteF5Acustica from './cards/TV F5 - Noite F5 Acustica.png';
+import cardRansomware from './cards/TV F5 - Ransomware Detectado.png';
+import cardResenhaEsportes from './cards/TV F5 - Resenha F5 Esportes.png';
+import cardSubterraneoSP from './cards/TV F5 - Subterraneo de Sao Paulo.png';
+import cardSupercopaBase from './cards/TV F5 - Supercopa F5 Base.png';
+import cardSupercopaPaulista from './cards/TV F5 - Supercopa Paulista.png';
+
+const PROGRAM_TV_COVERS: string[] = [
+  cardConexaoF5,
+  cardExplorandoEstudios,
+  cardF5EntrevistaEdicaoExclusiva,
+  cardF5EntrevistaGrandesIdeias,
+  cardF5TechDocs,
+  cardMaratonaIA,
+  cardMenteSilicio,
+  cardInfiltracaoDarknet,
+  cardRastreadoresCriminais,
+  cardRotaTrafico,
+  cardAventuraTurma,
+  cardBastidoresCidade,
+  cardCidadesSustentaveis,
+  cardCienciaAventura,
+  cardGravidade,
+  cardHackersVsEstado,
+  cardJornalAoVivo,
+  cardJornalDoDia,
+  cardJornalPrimeiraEdicao,
+  cardNoiteF5AcusticaContraste,
+  cardNoiteF5Acustica,
+  cardRansomware,
+  cardResenhaEsportes,
+  cardSubterraneoSP,
+  cardSupercopaBase,
+  cardSupercopaPaulista
+];
 
 // Seed initial plans
 const INITIAL_PLANS: Plan[] = [
@@ -691,7 +746,7 @@ const OLD_INITIAL_CONTENTS: Content[] = [
     duration: '55m',
     cast: ['Juliana Beltrão', 'Prof. Miguel Archanjo'],
     directors: ['Karina Lemes'],
-    coverUrl: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?q=80&w=400',
+    coverUrl: cardF5EntrevistaGrandesIdeias,
     bannerUrl: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1200',
     trailerUrl: 'https://assets.mixkit.co/videos/preview/mixkit-business-team-in-a-conference-meeting-room-33924-large.mp4',
     videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-business-team-in-a-conference-meeting-room-33924-large.mp4',
@@ -1577,7 +1632,9 @@ Object.entries(COMPACT_CATALOG).forEach(([catId, items]) => {
     
     // Choose appropriate image urls
     const urls = CATEGORY_UNSPLASH[catId];
-    const coverUrl = urls ? urls[0] : 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400';
+    const coverUrl = catId === 'cat-programastv'
+      ? PROGRAM_TV_COVERS[idx % PROGRAM_TV_COVERS.length]
+      : (urls ? urls[0] : 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400');
     const bannerUrl = urls ? urls[1] : 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200';
 
     INITIAL_CONTENTS.push({

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, Profile } from '../types';
+import { db } from '../data/mockDatabase';
 
 interface AuthContextType {
   currentUser: User | null;
@@ -26,7 +27,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (storedUser) {
       try {
-        const u = JSON.parse(storedUser) as User;
+        const parsedUser = JSON.parse(storedUser) as User;
+        let u = parsedUser;
+        if (!parsedUser.role) {
+          const dbUser = db.getUsers().find(
+            (candidate) => candidate.id === parsedUser.id || candidate.email === parsedUser.email
+          );
+          if (dbUser) {
+            u = dbUser;
+            localStorage.setItem('f5_active_user', JSON.stringify(dbUser));
+          }
+        }
         setCurrentUser(u);
         if (storedProfile) {
           const p = JSON.parse(storedProfile) as Profile;

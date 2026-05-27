@@ -8,14 +8,19 @@ export const ContinueWatchingPage: React.FC = () => {
   const { currentUser, currentProfile } = useAuth();
   const { watchHistory, updateWatchHistory, contents, series } = useData();
   const navigate = useNavigate();
+  const profileId = currentProfile?.id || `staff-${currentUser?.id || 'guest'}`;
 
-  if (!currentUser || !currentProfile) {
+  if (!currentUser) {
+    return null;
+  }
+
+  if (currentUser.role === 'subscriber' && !currentProfile) {
     return null;
   }
 
   // Filter history belonging to current user and profile
   const myHistory = watchHistory.filter(
-    (h) => h.userId === currentUser.id && h.profileId === currentProfile.id
+    (h) => h.userId === currentUser.id && h.profileId === profileId
   );
 
   const handleRemoveHistory = (historyId: string, e: React.MouseEvent) => {

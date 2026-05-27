@@ -13,6 +13,7 @@ interface VideoPlayerProps {
   videoUrl: string;
   title: string;
   subtitle?: string; // e.g., "Temporada 1 - Episódio 1"
+  posterUrl?: string;
   onClose: () => void;
   onNextEpisode?: () => void;
   hasNextEpisode?: boolean;
@@ -22,6 +23,7 @@ export default function VideoPlayer({
   videoUrl, 
   title, 
   subtitle, 
+  posterUrl,
   onClose, 
   onNextEpisode, 
   hasNextEpisode = false 
@@ -165,10 +167,18 @@ export default function VideoPlayer({
       className="fixed inset-0 bg-black z-50 flex items-center justify-center select-none overflow-hidden text-white font-sans"
     >
       {/* Video Element */}
+      {posterUrl && (
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-25 blur-sm scale-105"
+          style={{ backgroundImage: `url(${posterUrl})` }}
+        />
+      )}
+      <div className="absolute inset-0 bg-black/35" />
       <video
         id="f5-html5-video"
         ref={videoRef}
         src={videoUrl || "https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4"}
+        poster={posterUrl}
         className="w-full h-full object-contain cursor-pointer"
         onClick={handlePlayPause}
         onTimeUpdate={handleTimeUpdate}

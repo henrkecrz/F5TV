@@ -22,7 +22,11 @@ export const SearchPage: React.FC = () => {
     setLocalSearch(searchQuery);
   }, [searchQuery]);
 
-  if (!currentUser || !currentProfile) {
+  if (!currentUser) {
+    return null;
+  }
+
+  if (currentUser.role === 'subscriber' && !currentProfile) {
     return null;
   }
 

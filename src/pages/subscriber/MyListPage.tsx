@@ -8,14 +8,19 @@ export const MyListPage: React.FC = () => {
   const { currentUser, currentProfile } = useAuth();
   const { favorites, updateFavorites, contents } = useData();
   const navigate = useNavigate();
+  const profileId = currentProfile?.id || `staff-${currentUser?.id || 'guest'}`;
 
-  if (!currentUser || !currentProfile) {
+  if (!currentUser) {
+    return null;
+  }
+
+  if (currentUser.role === 'subscriber' && !currentProfile) {
     return null;
   }
 
   // Filter user/profile favorites
   const myFavs = favorites.filter(
-    (f) => f.userId === currentUser.id && f.profileId === currentProfile.id
+    (f) => f.userId === currentUser.id && f.profileId === profileId
   );
 
   const favoritedContents = myFavs
@@ -25,7 +30,7 @@ export const MyListPage: React.FC = () => {
   const handleRemoveFavorite = (contentId: string, e: React.MouseEvent) => {
     e.stopPropagation(); // Avoid triggering card details routing
     const updated = favorites.filter(
-      (f) => !(f.userId === currentUser.id && f.profileId === currentProfile.id && f.contentId === contentId)
+      (f) => !(f.userId === currentUser.id && f.profileId === profileId && f.contentId === contentId)
     );
     updateFavorites(updated);
   };

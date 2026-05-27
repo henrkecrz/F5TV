@@ -21,6 +21,8 @@ export const ContentDetailsPage: React.FC = () => {
   const [userRating, setUserRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
   const [reviewSuccessMsg, setReviewSuccessMsg] = useState('');
+  const profileId = currentProfile?.id || `staff-${currentUser?.id || 'guest'}`;
+  const profileName = currentProfile?.name || currentUser?.name || 'Equipe F5';
 
   const currentContent = contents.find((c) => c.id === id);
 
@@ -28,7 +30,11 @@ export const ContentDetailsPage: React.FC = () => {
     window.scrollTo(0, 0);
   }, [id]);
 
-  if (!currentUser || !currentProfile) {
+  if (!currentUser) {
+    return null;
+  }
+
+  if (currentUser.role === 'subscriber' && !currentProfile) {
     return null;
   }
 
@@ -59,14 +65,14 @@ export const ContentDetailsPage: React.FC = () => {
   ).slice(0, 4);
 
   const isFavorited = favorites.some(
-    fav => fav.userId === currentUser.id && fav.profileId === currentProfile.id && fav.contentId === currentContent.id
+    fav => fav.userId === currentUser.id && fav.profileId === profileId && fav.contentId === currentContent.id
   );
 
   const toggleFavorite = () => {
     let updated;
     if (isFavorited) {
       updated = favorites.filter(
-        fav => !(fav.userId === currentUser.id && fav.profileId === currentProfile.id && fav.contentId === currentContent.id)
+        fav => !(fav.userId === currentUser.id && fav.profileId === profileId && fav.contentId === currentContent.id)
       );
     } else {
       updated = [
@@ -74,7 +80,7 @@ export const ContentDetailsPage: React.FC = () => {
         {
           id: `fav-${Date.now()}`,
           userId: currentUser.id,
-          profileId: currentProfile.id,
+          profileId,
           contentId: currentContent.id,
           createdAt: new Date().toISOString()
         }
@@ -85,7 +91,7 @@ export const ContentDetailsPage: React.FC = () => {
 
   const recordPlayHistory = (epId?: string) => {
     const existingIndex = watchHistory.findIndex(
-      (h) => h.userId === currentUser.id && h.profileId === currentProfile.id && h.contentId === currentContent.id
+      (h) => h.userId === currentUser.id && h.profileId === profileId && h.contentId === currentContent.id
     );
 
     let updatedHistory = [...watchHistory];
@@ -100,7 +106,7 @@ export const ContentDetailsPage: React.FC = () => {
       updatedHistory.unshift({
         id: `wh-${Date.now()}`,
         userId: currentUser.id,
-        profileId: currentProfile.id,
+        profileId,
         contentId: currentContent.id,
         episodeId: epId,
         watchedPercent: 15,
@@ -135,8 +141,8 @@ export const ContentDetailsPage: React.FC = () => {
     const newReview = {
       id: `rev-${Date.now()}`,
       userId: currentUser.id,
-      profileId: currentProfile.id,
-      profileName: currentProfile.name || currentUser.name,
+      profileId,
+      profileName,
       contentId: currentContent.id,
       rating: userRating,
       comment: reviewComment,

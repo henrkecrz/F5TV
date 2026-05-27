@@ -15,9 +15,18 @@ export const SubscriberLayout: React.FC = () => {
   const [showNotificationDrawer, setShowNotificationDrawer] = useState(false);
   const [searchVal, setSearchVal] = useState(searchParams.get('q') || '');
 
-  if (!currentUser || !currentProfile) {
+  if (!currentUser) {
     return null;
   }
+
+  if (currentUser.role === 'subscriber' && !currentProfile) {
+    return null;
+  }
+
+  const effectiveProfile = currentProfile || {
+    name: `${currentUser.name.split(' ')[0]} (Admin)`,
+    avatarColor: 'bg-red-600'
+  };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +48,7 @@ export const SubscriberLayout: React.FC = () => {
     navigate('/app');
   };
 
-  const profileChar = currentProfile.name ? currentProfile.name.charAt(0).toUpperCase() : 'U';
+  const profileChar = effectiveProfile.name ? effectiveProfile.name.charAt(0).toUpperCase() : 'U';
 
   const userNotifications = notifications.filter(n => !n.userId || n.userId === currentUser.id);
 
@@ -147,10 +156,10 @@ export const SubscriberLayout: React.FC = () => {
           {/* Profile Quick menu dropdown details */}
           <div className="relative group">
             <button className="flex items-center gap-2 p-1 bg-zinc-950 hover:bg-zinc-900 rounded-full border border-white/5 transition pr-3 select-none">
-              <div className={`w-7 h-7 ${currentProfile.avatarColor || 'bg-red-600'} rounded-full text-xs font-extrabold flex items-center justify-center uppercase text-white shadow shadow-black`}>
+              <div className={`w-7 h-7 ${effectiveProfile.avatarColor || 'bg-red-600'} rounded-full text-xs font-extrabold flex items-center justify-center uppercase text-white shadow shadow-black`}>
                 {profileChar}
               </div>
-              <span className="text-xs font-bold text-zinc-300 hidden sm:inline max-w-24 truncate">{currentProfile.name}</span>
+              <span className="text-xs font-bold text-zinc-300 hidden sm:inline max-w-24 truncate">{effectiveProfile.name}</span>
             </button>
 
             {/* Dropdown container */}

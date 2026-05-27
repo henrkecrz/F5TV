@@ -24,7 +24,15 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // Check roles permissions
   if (allowedRoles && allowedRoles.length > 0) {
-    const userRole = currentUser.role;
+    const userRole = currentUser.role || '';
+
+    // Session fallback: if role is missing/corrupted, force a clean login.
+    if (!userRole) {
+      localStorage.removeItem('f5_active_user');
+      localStorage.removeItem('f5_active_profile');
+      return <Navigate to="/login" state={{ from: location }} replace />;
+    }
+
     const hasPermission = allowedRoles.includes(userRole);
 
     if (!hasPermission) {
@@ -50,7 +58,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
             <button
               onClick={() => {
                 // Sane default: if subscriber, go to App, otherwise go to their designated Dashboard
-                window.location.href = userRole === 'subscriber' ? '/app' : '/admin';
+                window.location.assign(userRole === 'subscriber' ? '/app' : '/admin');
               }}
               className="w-full bg-[#ef4444] hover:bg-red-700 text-white text-xs font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 cursor-pointer transition uppercase tracking-wider font-mono shadow-md hover:shadow-red-900/10"
             >

@@ -12,7 +12,11 @@ export const WatchPage: React.FC = () => {
   const { currentUser, currentProfile } = useAuth();
   const { contents, episodes } = useData();
 
-  if (!currentUser || !currentProfile) {
+  if (!currentUser) {
+    return null;
+  }
+
+  if (currentUser.role === 'subscriber' && !currentProfile) {
     return null;
   }
 
@@ -36,6 +40,7 @@ export const WatchPage: React.FC = () => {
   let resolvedVideoUrl = currentContent.videoUrl;
   let resolvedTitle = currentContent.title;
   let resolvedSubtitle = '';
+  let resolvedPosterUrl = currentContent.coverUrl;
 
   if (isTrailer) {
     resolvedVideoUrl = currentContent.trailerUrl || currentContent.videoUrl;
@@ -45,6 +50,7 @@ export const WatchPage: React.FC = () => {
     if (ep) {
       resolvedVideoUrl = ep.videoUrl;
       resolvedSubtitle = `Episódio ${ep.number}: ${ep.title}`;
+      resolvedPosterUrl = ep.thumbnailUrl || currentContent.coverUrl;
     }
   }
 
@@ -75,6 +81,7 @@ export const WatchPage: React.FC = () => {
         videoUrl={resolvedVideoUrl}
         title={resolvedTitle}
         subtitle={resolvedSubtitle}
+        posterUrl={resolvedPosterUrl}
         onClose={handleClose}
         hasNextEpisode={hasNextEpisode}
         onNextEpisode={handleNextEpisode}
