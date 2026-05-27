@@ -4,61 +4,42 @@
 
 Plataforma MVP classe A para uma emissora digital com streaming sob demanda, transmissão ao vivo, grade de programação, assinaturas, checkout simulado, painel administrativo, financeiro, upload, biblioteca de mídia, avaliações e CRM de assinantes.
 
-Este repositório agora contém:
+Este repositório contém:
 
 - Frontend React + Vite + TypeScript + Tailwind CSS.
-- Backend Express em Node.js.
-- Banco de dados SQL real com PostgreSQL.
-- Schema completo em `database/schema.sql`.
-- Dados iniciais em `database/seed.sql`.
+- Banco SQL real em **MySQL/MariaDB**, compatível com Hostinger.
+- API PHP simples com PDO para hospedagem compartilhada.
+- Backend Node/Express mantido como alternativa para VPS/Node, mas o alvo principal de hospedagem compartilhada é PHP + MySQL.
 
 ---
 
-## Visão geral
-
-A F5 TV é uma plataforma de streaming para emissora, com foco em:
-
-- Jornalismo.
-- Séries originais.
-- Programas de TV.
-- Documentários.
-- Esportes.
-- Especiais.
-- Transmissão ao vivo.
-- Grade de programação.
-
-A área Kids não faz parte desta fase.
-
----
-
-## Tecnologias
+## Stack recomendada para Hostinger compartilhada
 
 ### Frontend
 
-- React 19
+- React
 - Vite
 - TypeScript
 - Tailwind CSS
-- React Router
-- Recharts
-- Lucide React
+- Build estático enviado para `public_html`
 
-### Backend
+### Backend Hostinger
 
-- Node.js
-- Express
-- PostgreSQL
-- `pg`
-- JWT para sessão da API
-- CORS
-- Morgan
-- dotenv
+- PHP 8+
+- PDO MySQL
+- MySQL/MariaDB pelo hPanel
+- API em arquivos PHP dentro de `public_html/api`
 
 ### Banco de dados
 
-- PostgreSQL 14+
-- `pgcrypto` para geração de IDs
-- Tabelas relacionais para usuários, planos, conteúdos, assinaturas, pagamentos, canais, programação, cupons, mídia e avaliações
+- MySQL 8+ ou MariaDB 10.6+
+- Charset `utf8mb4`
+- Arquivos principais:
+
+```text
+database/mysql-schema.sql
+database/mysql-seed.sql
+```
 
 ---
 
@@ -74,21 +55,21 @@ src/
   routes/
   types.ts
 
-server/
-  index.js
-  db.js
-  middleware/
-    auth.js
-  routes/
-    auth.js
-    catalog.js
-    live.js
-    billing.js
-    admin.js
+php-api/
+  _bootstrap.php
+  config.example.php
+  health.php
+  catalog.php
+  live.php
+  billing.php
 
 database/
-  schema.sql
-  seed.sql
+  mysql-schema.sql
+  mysql-seed.sql
+  schema.sql        # versão PostgreSQL mantida como referência
+  seed.sql          # versão PostgreSQL mantida como referência
+
+server/             # alternativa Node/Express para VPS
 ```
 
 ---
@@ -153,84 +134,73 @@ database/
 
 ---
 
-## Endpoints principais da API
+## Endpoints PHP para Hostinger
 
-Base local:
+Após copiar `php-api` para `public_html/api`, a base será:
 
 ```text
-http://localhost:4000/api
+https://seudominio.com/api
 ```
 
 ### Healthcheck
 
 ```text
-GET /api/health
-```
-
-### Auth
-
-```text
-POST /api/auth/login
-POST /api/auth/register
-GET  /api/auth/me
+GET /api/health.php
 ```
 
 ### Catálogo
 
 ```text
-GET  /api/catalog/categories
-GET  /api/catalog/contents
-GET  /api/catalog/contents/:id
-GET  /api/catalog/series
-GET  /api/catalog/series/:id/seasons
-POST /api/catalog/contents
+GET /api/catalog.php
+GET /api/catalog.php?action=categories
+GET /api/catalog.php?action=content&id=content-conexao-f5
+GET /api/catalog.php?action=series
+GET /api/catalog.php?q=jornalismo
+GET /api/catalog.php?type=documentary
 ```
 
 ### Ao vivo e programação
 
 ```text
-GET  /api/live/channels
-GET  /api/live/schedule
-POST /api/live/channels
-POST /api/live/schedule
+GET /api/live.php
+GET /api/live.php?action=schedule
+GET /api/live.php?action=schedule&date=2026-05-27
+GET /api/live.php?action=schedule&channel_id=channel-f5tv
 ```
 
-### Assinaturas e financeiro
+### Planos, cupom e checkout
 
 ```text
-GET  /api/billing/plans
-GET  /api/billing/coupons
-POST /api/billing/coupons/validate
-POST /api/billing/checkout
-GET  /api/billing/payments
+GET  /api/billing.php?action=plans
+POST /api/billing.php?action=validate-coupon
+POST /api/billing.php?action=checkout
 ```
 
-### Admin
+Exemplo de validação de cupom:
 
-```text
-GET   /api/admin/dashboard
-GET   /api/admin/users
-PATCH /api/admin/users/:id/status
-GET   /api/admin/media
-POST  /api/admin/media
-GET   /api/admin/reviews
-PATCH /api/admin/reviews/:id/status
+```json
+{
+  "code": "F5BEMVINDO",
+  "planId": "plano-premium"
+}
+```
+
+Exemplo de checkout:
+
+```json
+{
+  "userId": "user-assinante",
+  "planId": "plano-premium",
+  "paymentMethod": "pix",
+  "couponCode": "F5BEMVINDO"
+}
 ```
 
 ---
 
-## Banco SQL real
+## Banco MySQL/MariaDB
 
-O banco real está em PostgreSQL.
-
-### Arquivos
-
-```text
-database/schema.sql
-database/seed.sql
-```
-
-O schema cria tabelas para:
+O schema MySQL cria tabelas para:
 
 - plans
 - users
@@ -258,85 +228,154 @@ O schema cria tabelas para:
 
 ---
 
-## Como rodar localmente
+## Como configurar na Hostinger
 
-### 1. Instalar dependências
+### 1. Criar banco no hPanel
+
+No painel da Hostinger:
+
+```text
+Sites → Gerenciar → Bancos de Dados MySQL
+```
+
+Crie:
+
+```text
+Banco: uXXXXXXX_f5tv
+Usuário: uXXXXXXX_f5tv_user
+Senha: definida no painel
+Host: normalmente localhost
+```
+
+Guarde esses dados.
+
+### 2. Importar schema e seed
+
+No phpMyAdmin da Hostinger:
+
+1. Selecione o banco criado.
+2. Vá em **Importar**.
+3. Importe primeiro:
+
+```text
+database/mysql-schema.sql
+```
+
+4. Depois importe:
+
+```text
+database/mysql-seed.sql
+```
+
+### 3. Publicar API PHP
+
+Copie a pasta:
+
+```text
+php-api/
+```
+
+para:
+
+```text
+public_html/api/
+```
+
+Dentro de `public_html/api`, copie:
+
+```text
+config.example.php
+```
+
+para:
+
+```text
+config.php
+```
+
+Edite `config.php` com os dados reais do banco:
+
+```php
+return [
+    'db_host' => 'localhost',
+    'db_name' => 'uXXXXXXX_f5tv',
+    'db_user' => 'uXXXXXXX_f5tv_user',
+    'db_pass' => 'sua_senha_mysql',
+    'cors_origin' => '*',
+    'api_key' => 'uma_chave_privada_para_admin',
+];
+```
+
+### 4. Testar API
+
+Acesse no navegador:
+
+```text
+https://seudominio.com/api/health.php
+```
+
+Resposta esperada:
+
+```json
+{
+  "ok": true,
+  "service": "F5 TV PHP API",
+  "database": "online"
+}
+```
+
+Teste catálogo:
+
+```text
+https://seudominio.com/api/catalog.php
+```
+
+Teste canais ao vivo:
+
+```text
+https://seudominio.com/api/live.php
+```
+
+Teste planos:
+
+```text
+https://seudominio.com/api/billing.php?action=plans
+```
+
+---
+
+## Como publicar o frontend na Hostinger
+
+### 1. Configurar URL da API
+
+Crie `.env.production` localmente com:
+
+```bash
+VITE_API_URL=https://seudominio.com/api
+```
+
+### 2. Gerar build
 
 ```bash
 npm install
+npm run build
 ```
 
-### 2. Criar `.env.local`
+### 3. Enviar arquivos
 
-Copie o arquivo de exemplo:
-
-```bash
-cp .env.example .env.local
-```
-
-Configure pelo menos:
-
-```bash
-VITE_API_URL=http://localhost:4000/api
-API_PORT=4000
-CORS_ORIGIN=http://localhost:3000
-JWT_SECRET=replace_me_with_a_long_random_value
-DATABASE_URL=postgres://user:password@localhost:5432/f5tv
-DATABASE_SSL=false
-```
-
-### 3. Criar banco PostgreSQL
-
-Exemplo local:
-
-```bash
-createdb f5tv
-```
-
-### 4. Rodar schema e seed
-
-```bash
-npm run db:schema
-npm run db:seed
-```
-
-Ou resetar tudo:
-
-```bash
-npm run db:reset
-```
-
-### 5. Rodar backend
-
-```bash
-npm run dev:api
-```
-
-API local:
+Envie o conteúdo da pasta:
 
 ```text
-http://localhost:4000/api/health
+dist/
 ```
 
-### 6. Rodar frontend
-
-Em outro terminal:
-
-```bash
-npm run dev
-```
-
-Frontend local:
+para:
 
 ```text
-http://localhost:3000
+public_html/
 ```
 
-### 7. Rodar frontend e backend juntos
-
-```bash
-npm run dev:full
-```
+Se a API estiver em `public_html/api`, mantenha essa pasta junto com o build.
 
 ---
 
@@ -349,85 +388,43 @@ financeiro@f5tv.com.br
 henrikeaps@gmail.com
 ```
 
-A autenticação da API nesta fase está preparada como base de MVP e deve ser endurecida antes de produção com validação de senha, hashing obrigatório, refresh tokens e políticas de sessão.
+Na API PHP desta fase, o login completo ainda deve ser implementado de forma segura antes de produção. O banco já possui campo `password_hash` para isso.
 
 ---
 
-## Scripts npm
+## Scripts npm úteis
 
 ```bash
-npm run dev        # frontend Vite
-npm run dev:api    # backend Express
-npm run dev:full   # frontend + backend
-npm run build      # build do frontend
-npm run preview    # preview do frontend
-npm run lint       # TypeScript check
-npm run db:schema  # aplica schema SQL
-npm run db:seed    # insere dados iniciais
-npm run db:reset   # recria schema e aplica seed
+npm run dev        # frontend Vite local
+npm run build      # build estático para Hostinger
+npm run preview    # preview local do build
+npm run lint       # checagem TypeScript
 ```
 
----
-
-## Status do MVP
-
-### Já existe no frontend
-
-- Landing page
-- Login/cadastro
-- Área do assinante
-- Catálogo
-- Player
-- Ao vivo
-- Programação
-- Dispositivos
-- Checkout simulado
-- Admin completo visual
-- Conteúdos, séries, temporadas, episódios
-- Uploads
-- Mídia
-- Financeiro
-- Planos
-- Cupons
-- Banners
-- Avaliações
-- Relatórios
-- Configurações
-
-### Adicionado nesta etapa
-
-- Backend Express
-- PostgreSQL schema
-- Seed SQL
-- API de autenticação base
-- API de catálogo
-- API de programação ao vivo
-- API de billing/checkout
-- API administrativa
-- README completo
+Os scripts de PostgreSQL/Node foram mantidos no projeto, mas para Hostinger compartilhada use os arquivos `mysql-schema.sql`, `mysql-seed.sql` e `php-api`.
 
 ---
 
-## Próximos passos para produção
+## Próximos passos recomendados
 
-1. Conectar o frontend ao backend usando `VITE_API_URL`.
-2. Substituir gradualmente `mockDatabase/localStorage` por chamadas HTTP.
-3. Implementar autenticação completa:
-   - senha obrigatória;
-   - hash seguro;
-   - refresh token;
-   - recuperação de senha;
-   - expiração e rotação de sessão.
-4. Adicionar migrations versionadas.
-5. Adicionar storage real para vídeos, capas e trailers.
-6. Integrar gateway real de pagamento.
-7. Criar testes de API.
-8. Criar CI/CD.
-9. Deploy do banco e API em ambiente separado.
-10. Monitoramento, logs e backups.
+1. Conectar o frontend ao `VITE_API_URL` e trocar módulos mockados por chamadas PHP.
+2. Começar por:
+   - planos;
+   - catálogo;
+   - ao vivo;
+   - programação;
+   - checkout.
+3. Implementar login PHP seguro com:
+   - `password_hash`;
+   - `password_verify`;
+   - sessão/token;
+   - recuperação de senha.
+4. Criar endpoints PHP administrativos protegidos.
+5. Configurar uploads reais usando pasta segura ou storage externo.
+6. Integrar pagamento real depois do checkout simulado.
 
 ---
 
 ## Observação importante
 
-Este projeto é um MVP avançado. Ele agora possui uma fundação real de backend e banco SQL, mas o frontend ainda usa parte relevante de dados mockados. A migração completa deve ser feita por módulo, começando por planos, login, catálogo, checkout e ao vivo.
+Para Hostinger compartilhada, **PHP + MySQL/MariaDB** é a opção mais compatível. O backend Node/Express e PostgreSQL ficam como alternativa caso o projeto seja migrado futuramente para VPS, Render, Railway, Supabase ou outro ambiente com Node.
