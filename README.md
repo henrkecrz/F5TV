@@ -9,7 +9,31 @@ Este repositório contém:
 - Frontend React + Vite + TypeScript + Tailwind CSS.
 - Banco SQL real em **MySQL/MariaDB**, compatível com Hostinger.
 - API PHP simples com PDO para hospedagem compartilhada.
+- Cliente frontend `src/services/hostingerApi.ts` para consumir a API PHP.
 - Backend Node/Express mantido como alternativa para VPS/Node, mas o alvo principal de hospedagem compartilhada é PHP + MySQL.
+
+---
+
+## Status da integração Hostinger
+
+Já foi implementado:
+
+- Schema MySQL/MariaDB em `database/mysql-schema.sql`.
+- Seed MySQL/MariaDB em `database/mysql-seed.sql`.
+- API PHP pública em `php-api/`.
+- Cliente React em `src/services/hostingerApi.ts`.
+- `DataContext` com hidratação remota opcional usando `VITE_USE_HOSTINGER_API=true`.
+
+Quando a API Hostinger estiver ativada, o frontend tenta carregar do MySQL/PHP:
+
+- planos;
+- categorias;
+- conteúdos;
+- séries;
+- canais ao vivo;
+- programação ao vivo.
+
+Se a API estiver desligada ou indisponível, o sistema mantém fallback automático para os dados mockados/localStorage.
 
 ---
 
@@ -53,6 +77,8 @@ src/
   layouts/
   pages/
   routes/
+  services/
+    hostingerApi.ts
   types.ts
 
 php-api/
@@ -70,66 +96,6 @@ database/
   seed.sql          # versão PostgreSQL mantida como referência
 
 server/             # alternativa Node/Express para VPS
-```
-
----
-
-## Rotas principais do frontend
-
-### Públicas
-
-```text
-/
-/landing
-/login
-/cadastro
-/recuperar-senha
-/planos
-/sobre
-/contato
-/termos
-/privacidade
-```
-
-### Assinante
-
-```text
-/app
-/app/perfis
-/app/conteudo/:id
-/app/assistir/:id
-/app/minha-lista
-/app/continuar-assistindo
-/app/minha-conta
-/app/busca
-/app/ao-vivo
-/app/programacao
-/app/dispositivos
-/checkout
-/checkout/sucesso
-```
-
-### Administrativo
-
-```text
-/admin
-/admin/usuarios
-/admin/assinantes
-/admin/conteudos
-/admin/series
-/admin/temporadas
-/admin/episodios
-/admin/uploads
-/admin/programacao
-/admin/canais
-/admin/midia
-/admin/financeiro
-/admin/planos
-/admin/banners
-/admin/cupons
-/admin/avaliacoes
-/admin/relatorios
-/admin/configuracoes
 ```
 
 ---
@@ -174,26 +140,6 @@ GET /api/live.php?action=schedule&channel_id=channel-f5tv
 GET  /api/billing.php?action=plans
 POST /api/billing.php?action=validate-coupon
 POST /api/billing.php?action=checkout
-```
-
-Exemplo de validação de cupom:
-
-```json
-{
-  "code": "F5BEMVINDO",
-  "planId": "plano-premium"
-}
-```
-
-Exemplo de checkout:
-
-```json
-{
-  "userId": "user-assinante",
-  "planId": "plano-premium",
-  "paymentMethod": "pix",
-  "couponCode": "F5BEMVINDO"
-}
 ```
 
 ---
@@ -246,8 +192,6 @@ Usuário: uXXXXXXX_f5tv_user
 Senha: definida no painel
 Host: normalmente localhost
 ```
-
-Guarde esses dados.
 
 ### 2. Importar schema e seed
 
@@ -308,37 +252,10 @@ return [
 
 ### 4. Testar API
 
-Acesse no navegador:
-
 ```text
 https://seudominio.com/api/health.php
-```
-
-Resposta esperada:
-
-```json
-{
-  "ok": true,
-  "service": "F5 TV PHP API",
-  "database": "online"
-}
-```
-
-Teste catálogo:
-
-```text
 https://seudominio.com/api/catalog.php
-```
-
-Teste canais ao vivo:
-
-```text
 https://seudominio.com/api/live.php
-```
-
-Teste planos:
-
-```text
 https://seudominio.com/api/billing.php?action=plans
 ```
 
@@ -351,7 +268,14 @@ https://seudominio.com/api/billing.php?action=plans
 Crie `.env.production` localmente com:
 
 ```bash
+VITE_USE_HOSTINGER_API=true
 VITE_API_URL=https://seudominio.com/api
+```
+
+Para desenvolvimento local sem API PHP, deixe:
+
+```bash
+VITE_USE_HOSTINGER_API=false
 ```
 
 ### 2. Gerar build
@@ -405,23 +329,17 @@ Os scripts de PostgreSQL/Node foram mantidos no projeto, mas para Hostinger comp
 
 ---
 
-## Próximos passos recomendados
+## Próximos passos técnicos
 
-1. Conectar o frontend ao `VITE_API_URL` e trocar módulos mockados por chamadas PHP.
-2. Começar por:
-   - planos;
-   - catálogo;
-   - ao vivo;
-   - programação;
-   - checkout.
-3. Implementar login PHP seguro com:
+1. Conectar checkout 100% ao endpoint PHP em uma alteração dedicada.
+2. Implementar login PHP seguro com:
    - `password_hash`;
    - `password_verify`;
    - sessão/token;
    - recuperação de senha.
-4. Criar endpoints PHP administrativos protegidos.
-5. Configurar uploads reais usando pasta segura ou storage externo.
-6. Integrar pagamento real depois do checkout simulado.
+3. Criar endpoints PHP administrativos protegidos.
+4. Configurar uploads reais usando pasta segura ou storage externo.
+5. Integrar pagamento real depois do checkout simulado.
 
 ---
 
