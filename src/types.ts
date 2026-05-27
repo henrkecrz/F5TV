@@ -181,4 +181,53 @@ export interface Review {
   rating: number;
   comment: string;
   createdAt: string;
+  status?: 'published' | 'oculta' | 'denunciada';
 }
+
+export interface Coupon {
+  id: string;
+  code: string;
+  discountType: 'percent' | 'fixed';
+  discountValue: number;
+  expiresAt: string;
+  usageLimit: number;
+  usageCount: number;
+  applicablePlans: string[]; // Plan ids
+  status: 'active' | 'inactive';
+}
+
+export interface Channel {
+  id: string;
+  name: string;
+  description: string;
+  logoText: string;
+  streamUrl: string;
+  active: boolean;
+  status: 'online' | 'offline';
+  category: string;
+}
+
+export interface LiveSchedule {
+  id: string;
+  channelId: string;
+  title: string;
+  description: string;
+  host: string;
+  date: string; // YYYY-MM-DD
+  startTime: string; // HH:MM
+  endTime: string; // HH:MM
+  status: 'live' | 'premiere' | 'rerun' | 'scheduled' | 'ended';
+  imageUrl: string;
+  isFeatured?: boolean;
+}
+
+export interface ConnectedDevice {
+  id: string;
+  userId: string;
+  deviceName: string;
+  deviceType: 'browser' | 'mobile' | 'smart_tv' | 'desktop' | 'tablet';
+  lastActive: string;
+  location: string;
+  isActive: boolean;
+}
+

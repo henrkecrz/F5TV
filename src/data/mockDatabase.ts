@@ -5,7 +5,8 @@
 
 import { 
   User, Profile, Plan, Subscription, Payment, Content, Category, 
-  Series, Season, Episode, Upload, WatchHistory, Favorite, Notification, Review
+  Series, Season, Episode, Upload, WatchHistory, Favorite, Notification, Review,
+  Coupon, Channel, LiveSchedule, ConnectedDevice
 } from '../types';
 
 // Seed initial plans
@@ -986,6 +987,252 @@ const INITIAL_UPLOADS: Upload[] = [
   }
 ];
 
+const INITIAL_COUPONS: Coupon[] = [
+  {
+    id: 'cupom-1',
+    code: 'F5BEMVINDO',
+    discountType: 'percent',
+    discountValue: 20,
+    expiresAt: '2026-12-31',
+    usageLimit: 1000,
+    usageCount: 142,
+    applicablePlans: ['plano-basico', 'plano-familia', 'plano-premium'],
+    status: 'active'
+  },
+  {
+    id: 'cupom-2',
+    code: 'F5PREMIUM',
+    discountType: 'percent',
+    discountValue: 30,
+    expiresAt: '2026-08-31',
+    usageLimit: 500,
+    usageCount: 88,
+    applicablePlans: ['plano-premium'],
+    status: 'active'
+  },
+  {
+    id: 'cupom-3',
+    code: 'F5ANUAL',
+    discountType: 'fixed',
+    discountValue: 10.00,
+    expiresAt: '2026-12-31',
+    usageLimit: 2000,
+    usageCount: 520,
+    applicablePlans: ['plano-basico', 'plano-familia', 'plano-premium'],
+    status: 'active'
+  }
+];
+
+const INITIAL_CHANNELS: Channel[] = [
+  {
+    id: 'channel-f5-tv',
+    name: 'F5 TV Ao Vivo',
+    description: 'Canal principal do ecossistema F5 TV com jornalismo geral, talk-shows, documentários premiados e programas de auditório e especiais.',
+    logoText: 'F5 TV',
+    streamUrl: 'https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4',
+    active: true,
+    status: 'online',
+    category: 'Geral'
+  },
+  {
+    id: 'channel-f5-news',
+    name: 'F5 News',
+    description: 'Noticiário 24 horas por dia com análises financeiras, política, economia e correspondentes ao vivo em todo o mundo.',
+    logoText: 'F5 NEWS',
+    streamUrl: 'https://assets.mixkit.co/videos/preview/mixkit-camera-viewfinder-screen-recording-close-up-34304-large.mp4',
+    active: true,
+    status: 'online',
+    category: 'Jornalismo'
+  },
+  {
+    id: 'channel-f5-esportes',
+    name: 'F5 Esportes',
+    description: 'Cobertura esportiva com resenhas diárias, reportagens, transmissões automotivas e partidas de base regionais ao vivo.',
+    logoText: 'F5 SPORTS',
+    streamUrl: 'https://assets.mixkit.co/videos/preview/mixkit-stadium-lights-shining-brightly-over-the-field-28406-large.mp4',
+    active: true,
+    status: 'online',
+    category: 'Esportes'
+  },
+  {
+    id: 'channel-f5-docs',
+    name: 'F5 Documentários',
+    description: 'Maratonas de documentários sobre tecnologia profunda, ecossistemas, problemas sociais e história do Brasil.',
+    logoText: 'F5 DOCS',
+    streamUrl: 'https://assets.mixkit.co/videos/preview/mixkit-forest-fire-burning-at-night-42284-large.mp4',
+    active: true,
+    status: 'online',
+    category: 'Documentários'
+  }
+];
+
+const INITIAL_LIVE_SCHEDULES: LiveSchedule[] = [
+  // F5 TV Ao Vivo
+  {
+    id: 'live-p1',
+    channelId: 'channel-f5-tv',
+    title: 'Jornal F5 Primeira Edição',
+    description: 'Abertura do dia com notícias do trânsito, tempo e os principais fatos da manhã.',
+    host: 'Sandro Albuquerque',
+    date: '2026-05-27',
+    startTime: '07:00',
+    endTime: '08:30',
+    status: 'ended',
+    imageUrl: 'https://images.unsplash.com/photo-1495020689067-958852a6565d?q=80&w=400'
+  },
+  {
+    id: 'live-p2',
+    channelId: 'channel-f5-tv',
+    title: 'F5 Entrevista Especial',
+    description: 'Ronaldo Lemos discute as novas leis de direito digital para empresas que operam na nuvem.',
+    host: 'Juliana Beltrão',
+    date: '2026-05-27',
+    startTime: '13:00',
+    endTime: '14:30',
+    status: 'scheduled',
+    imageUrl: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?q=80&w=400'
+  },
+  {
+    id: 'live-p3',
+    channelId: 'channel-f5-tv',
+    title: 'Conexão F5 Ao Vivo',
+    description: 'Operações em tempo real sendo mostradas ao vivo com repórteres nas maiores rodovias de SP.',
+    host: 'Sandro Albuquerque',
+    date: '2026-05-27',
+    startTime: '18:00',
+    endTime: '19:30',
+    status: 'live',
+    imageUrl: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=400',
+    isFeatured: true
+  },
+  {
+    id: 'live-p4',
+    channelId: 'channel-f5-tv',
+    title: 'Noite F5 Acústica',
+    description: 'Show acústico ao vivo com convidados especiais da MPB cantando Caetano Veloso.',
+    host: 'Mariana Lessa',
+    date: '2026-05-27',
+    startTime: '21:00',
+    endTime: '22:30',
+    status: 'scheduled',
+    imageUrl: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400'
+  },
+
+  // F5 News (Jornalismo)
+  {
+    id: 'live-n1',
+    channelId: 'channel-f5-news',
+    title: 'Jornal F5: Edição do Dia',
+    description: 'Acompanhe as principais notícias do dia no Brasil e no mundo ao vivo com nossos comentaristas.',
+    host: 'Renata Vasconcelos',
+    date: '2026-05-27',
+    startTime: '12:00',
+    endTime: '13:30',
+    status: 'rerun',
+    imageUrl: 'https://images.unsplash.com/photo-1495020689067-958852a6565d?q=80&w=400'
+  },
+  {
+    id: 'live-n2',
+    channelId: 'channel-f5-news',
+    title: 'Plantão Reforma Tributária',
+    description: 'Boletim analítico extraordinário sobre a aprovação das novas alíquotas de impostos.',
+    host: 'Sandro Albuquerque',
+    date: '2026-05-27',
+    startTime: '18:15',
+    endTime: '19:45',
+    status: 'live',
+    imageUrl: 'https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?q=80&w=400'
+  },
+
+  // F5 Esportes
+  {
+    id: 'live-e1',
+    channelId: 'channel-f5-esportes',
+    title: 'Resenha F5 Esportes',
+    description: 'Comentários sobre a rodada do futebol paulista e as finais estaduais do final de semana.',
+    host: 'Kléber Machado',
+    date: '2026-05-27',
+    startTime: '11:00',
+    endTime: '12:00',
+    status: 'ended',
+    imageUrl: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=400'
+  },
+  {
+    id: 'live-e2',
+    channelId: 'channel-f5-esportes',
+    title: 'Supercopa F5 Base',
+    description: 'Transmissão ao vivo do clássico paulista sub-20 direto do estádio municipal.',
+    host: 'Narrado por Kléber Machado',
+    date: '2026-05-27',
+    startTime: '15:00',
+    endTime: '17:00',
+    status: 'premiere',
+    imageUrl: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=400'
+  },
+
+  // F5 Documentários
+  {
+    id: 'live-d1',
+    channelId: 'channel-f5-docs',
+    title: 'Maratona Fronteiras da I.A.',
+    description: 'Episódios em sequência dissecando o surgimento da inteligência geral artificial.',
+    host: 'Narração de Camila Pitanga',
+    date: '2026-05-27',
+    startTime: '20:00',
+    endTime: '22:00',
+    status: 'scheduled',
+    imageUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=400'
+  }
+];
+
+const INITIAL_DEVICES: ConnectedDevice[] = [
+  {
+    id: 'dev-1',
+    userId: 'user-normal1',
+    deviceName: 'Chrome no Windows (Atual)',
+    deviceType: 'browser',
+    lastActive: 'Hoje, ativo agora',
+    location: 'São Paulo, SP',
+    isActive: true
+  },
+  {
+    id: 'dev-2',
+    userId: 'user-normal1',
+    deviceName: 'Safari no iPhone 15 Pro',
+    deviceType: 'mobile',
+    lastActive: 'Hoje, 2 horas atrás',
+    location: 'Sorocaba, SP',
+    isActive: true
+  },
+  {
+    id: 'dev-3',
+    userId: 'user-normal1',
+    deviceName: 'Smart TV Samsung QLED 4K',
+    deviceType: 'smart_tv',
+    lastActive: 'Ontem, às 20:45',
+    location: 'São Paulo, SP',
+    isActive: true
+  },
+  {
+    id: 'dev-4',
+    userId: 'user-normal1',
+    deviceName: 'Android TV Mi Box',
+    deviceType: 'smart_tv',
+    lastActive: '2 dias atrás',
+    location: 'Mogi das Cruzes, SP',
+    isActive: true
+  },
+  {
+    id: 'dev-5',
+    userId: 'user-normal1',
+    deviceName: 'Microsoft Edge no Notebook',
+    deviceType: 'desktop',
+    lastActive: '3 dias atrás',
+    location: 'São Paulo, SP',
+    isActive: true
+  }
+];
+
 // Seed Watch history for the subscriber
 const INITIAL_WATCH_HISTORY: WatchHistory[] = [
   {
@@ -1406,7 +1653,19 @@ export const db = {
   setNotifications: (n: Notification[]) => setLocalStorageItem<Notification[]>('f5_notifications', n),
 
   getReviews: () => getLocalStorageItem<Review[]>('f5_reviews', INITIAL_REVIEWS),
-  setReviews: (r: Review[]) => setLocalStorageItem<Review[]>('f5_reviews', r)
+  setReviews: (r: Review[]) => setLocalStorageItem<Review[]>('f5_reviews', r),
+
+  getCoupons: () => getLocalStorageItem<Coupon[]>('f5_coupons', INITIAL_COUPONS),
+  setCoupons: (c: Coupon[]) => setLocalStorageItem<Coupon[]>('f5_coupons', c),
+
+  getChannels: () => getLocalStorageItem<Channel[]>('f5_channels', INITIAL_CHANNELS),
+  setChannels: (c: Channel[]) => setLocalStorageItem<Channel[]>('f5_channels', c),
+
+  getLiveSchedules: () => getLocalStorageItem<LiveSchedule[]>('f5_live_schedules', INITIAL_LIVE_SCHEDULES),
+  setLiveSchedules: (l: LiveSchedule[]) => setLocalStorageItem<LiveSchedule[]>('f5_live_schedules', l),
+
+  getConnectedDevices: () => getLocalStorageItem<ConnectedDevice[]>('f5_connected_devices', INITIAL_DEVICES),
+  setConnectedDevices: (d: ConnectedDevice[]) => setLocalStorageItem<ConnectedDevice[]>('f5_connected_devices', d)
 };
 
 // Seed utility to easily reload default state anytime
@@ -1426,5 +1685,9 @@ export function resetDBToDefault(): void {
   localStorage.removeItem('f5_favorites');
   localStorage.removeItem('f5_notifications');
   localStorage.removeItem('f5_reviews');
+  localStorage.removeItem('f5_coupons');
+  localStorage.removeItem('f5_channels');
+  localStorage.removeItem('f5_live_schedules');
+  localStorage.removeItem('f5_connected_devices');
   window.location.reload();
 }

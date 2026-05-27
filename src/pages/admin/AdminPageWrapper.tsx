@@ -16,7 +16,12 @@ type AdminTab =
   | 'planos' 
   | 'banners' 
   | 'relatorios' 
-  | 'configuracoes';
+  | 'configuracoes'
+  | 'programacao'
+  | 'canais'
+  | 'cupons'
+  | 'avaliacoes'
+  | 'midia';
 
 interface AdminPageWrapperProps {
   tab: AdminTab;
@@ -31,8 +36,8 @@ export const AdminPageWrapper: React.FC<AdminPageWrapperProps> = ({ tab }) => {
   // Enforce correct permissions role checks
   const canAccess = (t: AdminTab) => {
     if (currentUser.role === 'admin') return true;
-    if (currentUser.role === 'editor' && ['dashboard', 'conteudo', 'series', 'temporadas', 'episodios', 'uploads'].includes(t)) return true;
-    if (currentUser.role === 'finance' && ['dashboard', 'financeiro', 'planos', 'assinantes', 'relatorios'].includes(t)) return true;
+    if (currentUser.role === 'editor' && ['dashboard', 'conteudo', 'series', 'temporadas', 'episodios', 'uploads', 'programacao', 'canais', 'avaliacoes', 'midia'].includes(t)) return true;
+    if (currentUser.role === 'finance' && ['dashboard', 'financeiro', 'planos', 'assinantes', 'relatorios', 'cupons'].includes(t)) return true;
     return false;
   };
 
@@ -70,6 +75,11 @@ export const AdminPageWrapper: React.FC<AdminPageWrapperProps> = ({ tab }) => {
     else if (newTab === 'banners') path = '/admin/banners';
     else if (newTab === 'relatorios') path = '/admin/relatorios';
     else if (newTab === 'configuracoes') path = '/admin/configuracoes';
+    else if (newTab === 'programacao') path = '/admin/programacao';
+    else if (newTab === 'canais') path = '/admin/canais';
+    else if (newTab === 'cupons') path = '/admin/cupons';
+    else if (newTab === 'avaliacoes') path = '/admin/avaliacoes';
+    else if (newTab === 'midia') path = '/admin/midia';
     navigate(path);
   };
 

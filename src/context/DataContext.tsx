@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState } from 'react';
 import { 
   User, Profile, Plan, Content, Category, Series, Season, Episode, 
-  Subscription, Payment, Upload, WatchHistory, Favorite, Notification, Review 
+  Subscription, Payment, Upload, WatchHistory, Favorite, Notification, Review,
+  Coupon, Channel, LiveSchedule, ConnectedDevice
 } from '../types';
 import { db } from '../data/mockDatabase';
 
@@ -20,6 +21,10 @@ interface DataContextType {
   favorites: Favorite[];
   notifications: Notification[];
   reviews: Review[];
+  coupons: Coupon[];
+  channels: Channel[];
+  liveSchedules: LiveSchedule[];
+  connectedDevices: ConnectedDevice[];
   updateUsers: (newUsers: User[]) => void;
   updatePlans: (newPlans: Plan[]) => void;
   updateContents: (newContents: Content[]) => void;
@@ -34,6 +39,10 @@ interface DataContextType {
   updateFavorites: (newFavs: Favorite[]) => void;
   updateNotifications: (newNotifs: Notification[]) => void;
   updateReviews: (newReviews: Review[]) => void;
+  updateCoupons: (newCoupons: Coupon[]) => void;
+  updateChannels: (newChannels: Channel[]) => void;
+  updateLiveSchedules: (newSchedules: LiveSchedule[]) => void;
+  updateConnectedDevices: (newDevices: ConnectedDevice[]) => void;
   refreshAllData: () => void;
 }
 
@@ -54,6 +63,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [favorites, setFavorites] = useState<Favorite[]>(() => db.getFavorites());
   const [notifications, setNotifications] = useState<Notification[]>(() => db.getNotifications());
   const [reviews, setReviews] = useState<Review[]>(() => db.getReviews());
+  const [coupons, setCoupons] = useState<Coupon[]>(() => db.getCoupons());
+  const [channels, setChannels] = useState<Channel[]>(() => db.getChannels());
+  const [liveSchedules, setLiveSchedules] = useState<LiveSchedule[]>(() => db.getLiveSchedules());
+  const [connectedDevices, setConnectedDevices] = useState<ConnectedDevice[]>(() => db.getConnectedDevices());
 
   const updateUsers = (newUsers: User[]) => {
     db.setUsers(newUsers);
@@ -125,6 +138,26 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setReviews(newReviews);
   };
 
+  const updateCoupons = (newCoupons: Coupon[]) => {
+    db.setCoupons(newCoupons);
+    setCoupons(newCoupons);
+  };
+
+  const updateChannels = (newChannels: Channel[]) => {
+    db.setChannels(newChannels);
+    setChannels(newChannels);
+  };
+
+  const updateLiveSchedules = (newSchedules: LiveSchedule[]) => {
+    db.setLiveSchedules(newSchedules);
+    setLiveSchedules(newSchedules);
+  };
+
+  const updateConnectedDevices = (newDevices: ConnectedDevice[]) => {
+    db.setConnectedDevices(newDevices);
+    setConnectedDevices(newDevices);
+  };
+
   const refreshAllData = () => {
     setUsers(db.getUsers());
     setPlans(db.getPlans());
@@ -140,6 +173,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setFavorites(db.getFavorites());
     setNotifications(db.getNotifications());
     setReviews(db.getReviews());
+    setCoupons(db.getCoupons());
+    setChannels(db.getChannels());
+    setLiveSchedules(db.getLiveSchedules());
+    setConnectedDevices(db.getConnectedDevices());
   };
 
   return (
@@ -158,6 +195,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       favorites,
       notifications,
       reviews,
+      coupons,
+      channels,
+      liveSchedules,
+      connectedDevices,
       updateUsers,
       updatePlans,
       updateContents,
@@ -172,6 +213,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       updateFavorites,
       updateNotifications,
       updateReviews,
+      updateCoupons,
+      updateChannels,
+      updateLiveSchedules,
+      updateConnectedDevices,
       refreshAllData
     }}>
       {children}

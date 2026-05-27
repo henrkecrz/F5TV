@@ -3,7 +3,7 @@ import { Outlet, useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { 
-  Search, Heart, Bell, X, LogOut, Users, Settings, Grid, Play, AlertCircle 
+  Search, Heart, Bell, X, LogOut, Users, Settings, Grid, Play, AlertCircle, Tv
 } from 'lucide-react';
 
 export const SubscriberLayout: React.FC = () => {
@@ -64,10 +64,17 @@ export const SubscriberLayout: React.FC = () => {
             </span>
           </div>
 
-          {/* Menus matches: Início, Séries, Jornalismo, Documentários, Esportes, Minha Lista */}
-          <nav className="hidden lg:flex items-center gap-6 text-xs font-mono font-bold tracking-widest text-zinc-400 uppercase">
+          {/* Menus matches: Início, Ao Vivo, Programação, Séries, Jornalismo, Documentários, Esportes, Minha Lista */}
+          <nav className="hidden lg:flex items-center gap-5 text-xs font-mono font-bold tracking-widest text-zinc-400 uppercase">
             <Link to="/app" className="hover:text-white transition uppercase">
               Início
+            </Link>
+            <Link to="/app/ao-vivo" className="hover:text-red-400 transition uppercase text-[#ef4444] flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#ef4444] animate-pulse" />
+              Ao Vivo
+            </Link>
+            <Link to="/app/programacao" className="hover:text-white transition uppercase">
+              Programação
             </Link>
             <Link to="/app/busca?type=series" className="hover:text-white transition uppercase">
               Séries
@@ -162,6 +169,13 @@ export const SubscriberLayout: React.FC = () => {
                 <Users className="w-4 h-4" />
                 <span>Trocar Perfil</span>
               </Link>
+              <Link
+                to="/app/dispositivos"
+                className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-lg transition"
+              >
+                <Tv className="w-4 h-4" />
+                <span>Gerenciar Dispositivos</span>
+              </Link>
               <div className="h-px bg-zinc-900 my-1" />
               <button
                 onClick={() => {
@@ -203,18 +217,23 @@ export const SubscriberLayout: React.FC = () => {
       </div>
 
       {/* MOBILE LOWER NAVIGATION BAR */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/95 border-t border-zinc-900 py-3 px-4 flex justify-around text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/95 border-t border-zinc-900 py-2.5 px-2 flex justify-around text-[9px] font-mono font-bold uppercase tracking-wider text-zinc-400">
         <Link to="/app" className="flex flex-col items-center gap-1 hover:text-white">
           <Grid className="w-4 h-4" />
           <span>Início</span>
         </Link>
-        <Link to="/app/busca?type=series" className="flex flex-col items-center gap-1 hover:text-white">
-          <Play className="w-4 h-4" />
-          <span>Séries</span>
+        <Link to="/app/ao-vivo" className="flex flex-col items-center gap-1 text-red-500 hover:text-red-400 relative">
+          <span className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-red-600 rounded-full animate-ping" />
+          <Play className="w-4 h-4 fill-current text-red-500" />
+          <span>Ao Vivo</span>
         </Link>
-        <Link to="/app/minha-lista" className="flex flex-col items-center gap-1 hover:text-red-500">
-          <Heart className="w-4 h-4 fill-current" />
-          <span>Salvos</span>
+        <Link to="/app/programacao" className="flex flex-col items-center gap-1 hover:text-white">
+          <Grid className="w-4 h-4" />
+          <span>Agenda</span>
+        </Link>
+        <Link to="/app/minha-lista" className="flex flex-col items-center gap-1 hover:text-white">
+          <Heart className="w-4 h-4" />
+          <span>Lista</span>
         </Link>
         <Link to="/app/minha-conta" className="flex flex-col items-center gap-1 hover:text-white">
           <Settings className="w-4 h-4" />

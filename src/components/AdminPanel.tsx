@@ -16,8 +16,15 @@ import {
   Users, Film, CreditCard, UploadCloud, Settings, Database, 
   Plus, Edit2, Trash2, CheckCircle, AlertTriangle, ShieldCheck, 
   DollarSign, BarChart2, ListCollapse, Play, Sparkles, FolderPlus, Download, Check, X, LogOut, Search,
-  Compass, LayoutGrid, Calendar, Video, Image, FileText, ToggleLeft, Activity, Eye, ShieldAlert
+  Compass, LayoutGrid, Calendar, Video, Image, FileText, ToggleLeft, Activity, Eye, ShieldAlert,
+  Ticket, MessageSquare, Library, Radio, Tv
 } from 'lucide-react';
+
+import { AdminProgramacao } from './admin/AdminProgramacao';
+import { AdminCanais } from './admin/AdminCanais';
+import { AdminCupons } from './admin/AdminCupons';
+import { AdminAvaliacoes } from './admin/AdminAvaliacoes';
+import { AdminMidia } from './admin/AdminMidia';
 
 type AdminPanelTab = 
   | 'dashboard' 
@@ -32,7 +39,12 @@ type AdminPanelTab =
   | 'planos' 
   | 'banners' 
   | 'relatorios' 
-  | 'configuracoes';
+  | 'configuracoes'
+  | 'programacao'
+  | 'canais'
+  | 'cupons'
+  | 'avaliacoes'
+  | 'midia';
 
 interface AdminPanelProps {
   currentUser: User;
@@ -198,8 +210,8 @@ export default function AdminPanel({
   // Roles verification rules
   const canAccess = (tab: typeof activeTab) => {
     if (currentUser.role === 'admin') return true;
-    if (currentUser.role === 'editor' && ['dashboard', 'conteudo', 'series', 'temporadas', 'episodios', 'uploads'].includes(tab)) return true;
-    if (currentUser.role === 'finance' && ['dashboard', 'financeiro', 'planos', 'assinantes', 'relatorios'].includes(tab)) return true;
+    if (currentUser.role === 'editor' && ['dashboard', 'conteudo', 'series', 'temporadas', 'episodios', 'uploads', 'programacao', 'canais', 'avaliacoes', 'midia'].includes(tab)) return true;
+    if (currentUser.role === 'finance' && ['dashboard', 'financeiro', 'planos', 'assinantes', 'relatorios', 'cupons'].includes(tab)) return true;
     return false;
   };
 
@@ -980,6 +992,48 @@ export default function AdminPanel({
             </button>
 
             <button 
+              id="tab-programacao"
+              onClick={() => setActiveTab('programacao')}
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition cursor-pointer ${
+                activeTab === 'programacao' ? 'bg-[#ef4444] text-white shadow' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Calendar className="w-4 h-4 shrink-0" />
+                <span>Grade Ao Vivo</span>
+              </div>
+              {!canAccess('programacao') && <span className="text-[9px] font-mono text-zinc-600 uppercase">Bloq</span>}
+            </button>
+
+            <button 
+              id="tab-canais"
+              onClick={() => setActiveTab('canais')}
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition cursor-pointer ${
+                activeTab === 'canais' ? 'bg-[#ef4444] text-white shadow' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Radio className="w-4 h-4 shrink-0" />
+                <span>Canais ao Vivo</span>
+              </div>
+              {!canAccess('canais') && <span className="text-[9px] font-mono text-zinc-600 uppercase">Bloq</span>}
+            </button>
+
+            <button 
+              id="tab-midia"
+              onClick={() => setActiveTab('midia')}
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition cursor-pointer ${
+                activeTab === 'midia' ? 'bg-[#ef4444] text-white shadow' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Library className="w-4 h-4 shrink-0" />
+                <span>Biblioteca de Mídias</span>
+              </div>
+              {!canAccess('midia') && <span className="text-[9px] font-mono text-zinc-600 uppercase">Bloq</span>}
+            </button>
+
+            <button 
               id="tab-financeiro"
               onClick={() => setActiveTab('financeiro')}
               className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition cursor-pointer ${
@@ -991,6 +1045,34 @@ export default function AdminPanel({
                 <span>Contabilidade & Caixa</span>
               </div>
               {!canAccess('financeiro') && <span className="text-[9px] font-mono text-zinc-600 uppercase">Bloq</span>}
+            </button>
+
+            <button 
+              id="tab-cupons"
+              onClick={() => setActiveTab('cupons')}
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition cursor-pointer ${
+                activeTab === 'cupons' ? 'bg-[#ef4444] text-white shadow' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <Ticket className="w-4 h-4 shrink-0" />
+                <span>Cupons Oferta</span>
+              </div>
+              {!canAccess('cupons') && <span className="text-[9px] font-mono text-zinc-600 uppercase">Bloq</span>}
+            </button>
+
+            <button 
+              id="tab-avaliacoes"
+              onClick={() => setActiveTab('avaliacoes')}
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition cursor-pointer ${
+                activeTab === 'avaliacoes' ? 'bg-[#ef4444] text-white shadow' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <MessageSquare className="w-4 h-4 shrink-0" />
+                <span>Moderar Avaliações</span>
+              </div>
+              {!canAccess('avaliacoes') && <span className="text-[9px] font-mono text-zinc-600 uppercase">Bloq</span>}
             </button>
 
             <button 
@@ -2841,6 +2923,26 @@ export default function AdminPanel({
                   </div>
                 </div>
               </section>
+            )}
+
+            {activeTab === 'programacao' && (
+              <AdminProgramacao />
+            )}
+
+            {activeTab === 'canais' && (
+              <AdminCanais />
+            )}
+
+            {activeTab === 'cupons' && (
+              <AdminCupons />
+            )}
+
+            {activeTab === 'avaliacoes' && (
+              <AdminAvaliacoes />
+            )}
+
+            {activeTab === 'midia' && (
+              <AdminMidia />
             )}
 
           </>

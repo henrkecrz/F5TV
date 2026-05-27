@@ -23,6 +23,11 @@ import { MyListPage } from '../pages/subscriber/MyListPage';
 import { ContinueWatchingPage } from '../pages/subscriber/ContinueWatchingPage';
 import { MyAccountPage } from '../pages/subscriber/MyAccountPage';
 import { SearchPage } from '../pages/subscriber/SearchPage';
+import { AoVivoPage } from '../pages/subscriber/AoVivoPage';
+import { ProgramacaoPage } from '../pages/subscriber/ProgramacaoPage';
+import { DispositivosPage } from '../pages/subscriber/DispositivosPage';
+import { CheckoutPage } from '../pages/subscriber/CheckoutPage';
+import { CheckoutSucessoPage } from '../pages/subscriber/CheckoutSucessoPage';
 
 // Admin pages
 import { AdminPageWrapper } from '../pages/admin/AdminPageWrapper';
@@ -41,7 +46,25 @@ export const AppRoutes: React.FC = () => {
         <Route path="/planos" element={<PlansPage />} />
       </Route>
 
-      {/* 2. Subscriber Area Setup (Perfis) - Requires Authenticated User */}
+      {/* 2. Premium Live Gate & Simulated Checkout Paths */}
+      <Route 
+        path="/checkout" 
+        element={
+          <ProtectedRoute allowedRoles={['subscriber', 'admin', 'editor', 'finance']}>
+            <CheckoutPage />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/checkout/sucesso" 
+        element={
+          <ProtectedRoute allowedRoles={['subscriber', 'admin', 'editor', 'finance']}>
+            <CheckoutSucessoPage />
+          </ProtectedRoute>
+        } 
+      />
+
+      {/* 3. Subscriber Area Setup (Perfis) - Requires Authenticated User */}
       <Route 
         path="/app/perfis" 
         element={
@@ -51,7 +74,7 @@ export const AppRoutes: React.FC = () => {
         } 
       />
 
-      {/* 3. Fully Routed Subscriber Area (With SubscriberLayout) */}
+      {/* 4. Fully Routed Subscriber Area (With SubscriberLayout) */}
       <Route 
         path="/app" 
         element={
@@ -66,9 +89,12 @@ export const AppRoutes: React.FC = () => {
         <Route path="continuar-assistindo" element={<ContinueWatchingPage />} />
         <Route path="minha-conta" element={<MyAccountPage />} />
         <Route path="busca" element={<SearchPage />} />
+        <Route path="ao-vivo" element={<AoVivoPage />} />
+        <Route path="programacao" element={<ProgramacaoPage />} />
+        <Route path="dispositivos" element={<DispositivosPage />} />
       </Route>
 
-      {/* 4. Independent Watch Route (No Layout for Cinematic Fullscreen feel) */}
+      {/* 5. Independent Watch Route (No Layout for Cinematic Fullscreen feel) */}
       <Route 
         path="/app/assistir/:id" 
         element={
@@ -78,7 +104,7 @@ export const AppRoutes: React.FC = () => {
         } 
       />
 
-      {/* 5. Fully Routed Administrative Panel */}
+      {/* 6. Fully Routed Administrative Panel */}
       <Route 
         path="/admin" 
         element={
@@ -144,10 +170,42 @@ export const AppRoutes: React.FC = () => {
         } 
       />
       <Route 
+        path="/admin/programacao" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'editor']}>
+            <AdminPageWrapper tab="programacao" />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin/canais" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'editor']}>
+            <AdminPageWrapper tab="canais" />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin/midia" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'editor']}>
+            <AdminPageWrapper tab="midia" />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
         path="/admin/financeiro" 
         element={
           <ProtectedRoute allowedRoles={['admin', 'finance']}>
             <AdminPageWrapper tab="financeiro" />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin/plans" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'finance']}>
+            <AdminPageWrapper tab="planos" />
           </ProtectedRoute>
         } 
       />
@@ -164,6 +222,22 @@ export const AppRoutes: React.FC = () => {
         element={
           <ProtectedRoute allowedRoles={['admin']}>
             <AdminPageWrapper tab="banners" />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin/cupons" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'finance']}>
+            <AdminPageWrapper tab="cupons" />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin/avaliacoes" 
+        element={
+          <ProtectedRoute allowedRoles={['admin', 'editor']}>
+            <AdminPageWrapper tab="avaliacoes" />
           </ProtectedRoute>
         } 
       />
