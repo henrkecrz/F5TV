@@ -22,9 +22,17 @@ interface AdminPanelProps {
   currentUser: User;
   onLogout: () => void;
   onNavigateToUserApp: () => void;
+  activeTabOverride?: 'dashboard' | 'usuarios' | 'conteudo' | 'series' | 'uploads' | 'financeiro' | 'planos';
+  onTabChange?: (tab: 'dashboard' | 'usuarios' | 'conteudo' | 'series' | 'uploads' | 'financeiro' | 'planos') => void;
 }
 
-export default function AdminPanel({ currentUser, onLogout, onNavigateToUserApp }: AdminPanelProps) {
+export default function AdminPanel({ 
+  currentUser, 
+  onLogout, 
+  onNavigateToUserApp, 
+  activeTabOverride, 
+  onTabChange 
+}: AdminPanelProps) {
   // DB States
   const [users, setUsers] = useState<User[]>([]);
   const [contents, setContents] = useState<Content[]>([]);
@@ -38,7 +46,20 @@ export default function AdminPanel({ currentUser, onLogout, onNavigateToUserApp 
   const [plans, setPlans] = useState<Plan[]>([]);
 
   // Navigation tabs
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'usuarios' | 'conteudo' | 'series' | 'uploads' | 'financeiro' | 'planos'>('dashboard');
+  const [activeTab, setActiveTabInternal] = useState<'dashboard' | 'usuarios' | 'conteudo' | 'series' | 'uploads' | 'financeiro' | 'planos'>(activeTabOverride || 'dashboard');
+
+  useEffect(() => {
+    if (activeTabOverride && activeTabOverride !== activeTab) {
+      setActiveTabInternal(activeTabOverride);
+    }
+  }, [activeTabOverride]);
+
+  const setActiveTab = (tab: 'dashboard' | 'usuarios' | 'conteudo' | 'series' | 'uploads' | 'financeiro' | 'planos') => {
+    setActiveTabInternal(tab);
+    if (onTabChange) {
+      onTabChange(tab);
+    }
+  };
 
   // CRM Filters States
   const [crmSearch, setCrmSearch] = useState('');
