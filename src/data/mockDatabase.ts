@@ -289,6 +289,36 @@ const INITIAL_SERIES: Series[] = [
     genre: 'Urbanismo & Sociedade',
     status: 'published',
     viewsCount: 9320
+  },
+  {
+    id: 'series-rastreadores',
+    title: 'Rastreadores Criminais',
+    description: 'Acompanhe de perto as operações táticas da polícia civil e federal brasileira no combate a crimes organizados de colarinho branco e facções de fronteiras.',
+    coverUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400&auto=format&fit=crop',
+    bannerUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=1200',
+    genre: 'Ação & Investigação Policial',
+    status: 'published',
+    viewsCount: 16500
+  },
+  {
+    id: 'series-fronteira-ia',
+    title: 'F5 Tech Docs: Fronteira da I.A.',
+    description: 'Uma expedição pelos laboratórios de ponta no Brasil e Vale do Silício para entender a inteligência artificial, bioengenharia, computação quântica e o impacto no desemprego tecnológico.',
+    coverUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=400',
+    bannerUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200',
+    genre: 'Tecnologia & Futuro',
+    status: 'published',
+    viewsCount: 21900
+  },
+  {
+    id: 'series-pequenos-exploradores',
+    title: 'Pequenos Exploradores',
+    description: 'Como funciona um vulcão? Por que chove? O que é gravidade? Aventuras animadas de forma lúdica em 3D, respondendo às maiores dúvidas de mentes mirins brilhantes.',
+    coverUrl: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=400',
+    bannerUrl: 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=1200',
+    genre: 'Infantil / Educação Científica',
+    status: 'published',
+    viewsCount: 11050
   }
 ];
 
@@ -297,7 +327,10 @@ const INITIAL_SEASONS: Season[] = [
   { id: 'season-conexao-s1', seriesId: 'series-conexao-f5', number: 1, title: 'Temporada 1: Ciber-ameaças', status: 'published' },
   { id: 'season-conexao-s2', seriesId: 'series-conexao-f5', number: 2, title: 'Temporada 2: Crimes Ambientais', status: 'published' },
   { id: 'season-kids-s1', seriesId: 'series-mundo-kids', number: 1, title: 'Temporada 1: Letras e Cores', status: 'published' },
-  { id: 'season-bastidores-s1', seriesId: 'series-bastidores', number: 1, title: 'Temporada 1: O Coração de Ferro', status: 'published' }
+  { id: 'season-bastidores-s1', seriesId: 'series-bastidores', number: 1, title: 'Temporada 1: O Coração de Ferro', status: 'published' },
+  { id: 'season-rastreadores-s1', seriesId: 'series-rastreadores', number: 1, title: 'Temporada 1: Na Linha de Frente', status: 'published' },
+  { id: 'season-fronteira-s1', seriesId: 'series-fronteira-ia', number: 1, title: 'Temporada 1: A Nova Era Cognitiva', status: 'published' },
+  { id: 'season-exploradores-s1', seriesId: 'series-pequenos-exploradores', number: 1, title: 'Temporada 1: Mistérios da Ciência', status: 'published' }
 ];
 
 // Seed episodes
@@ -389,11 +422,236 @@ const INITIAL_EPISODES: Episode[] = [
     thumbnailUrl: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=450',
     status: 'published',
     viewsCount: 9320
+  },
+  // Rastreadores Criminais
+  {
+    id: 'ep-rastro-1',
+    seasonId: 'season-rastreadores-s1',
+    number: 1,
+    title: 'A Rota do Tráfico de Armas',
+    description: 'Acompanhe investigadores do CORE em uma emboscada na divisa do Estado do Rio para interceptar cargas secretas de fuzis e munições trazidos de avião.',
+    duration: '46m',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=450',
+    status: 'published',
+    viewsCount: 5200
+  },
+  {
+    id: 'ep-rastro-2',
+    seasonId: 'season-rastreadores-s1',
+    number: 2,
+    title: 'O Rei do Colarinho Branco',
+    description: 'As escutas táticas autorizadas pela Justiça Federal que derrubaram a rede de postos de gasolina que lavava mais de R$ 300 milhões por mês.',
+    duration: '50m',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-matrix-style-code-scrolling-on-a-screen-23374-large.mp4',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=450',
+    status: 'published',
+    viewsCount: 4100
+  },
+  // Fronteira da I.A.
+  {
+    id: 'ep-front-1',
+    seasonId: 'season-fronteira-s1',
+    number: 1,
+    title: 'Sua Mente em Silício',
+    description: 'Mapeando as redes neurais artificiais de grandes modelos de linguagem brasileiras. Como a máquina aprende a simular empatia sob trilhas computacionais.',
+    duration: '52m',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-developer-working-on-different-screens-simultaneously-34290-large.mp4',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=450',
+    status: 'published',
+    viewsCount: 6300
+  },
+  {
+    id: 'ep-front-2',
+    seasonId: 'season-fronteira-s1',
+    number: 2,
+    title: 'A Bio-Impressora 3D de Órgãos',
+    description: 'Viajamos ao laboratório da USP onde cientistas imprimem válvulas cardíacas vivas usando células-tronco de pacientes reais.',
+    duration: '45m',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-hacker-typing-code-on-a-keyboard-34293-large.mp4',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=450',
+    status: 'published',
+    viewsCount: 5120
+  },
+  // Pequenos Exploradores
+  {
+    id: 'ep-expl-1',
+    seasonId: 'season-exploradores-s1',
+    number: 1,
+    title: 'De Onde Vem a Chuva?',
+    description: 'Guto e Bel embarcam em uma viagem mágica como gotinhas de água que flutuam até o céu para descobrir o ciclo das nuvens.',
+    duration: '18m',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-happy-toys-spinning-on-a-baby-crib-40156-large.mp4',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?q=80&w=450',
+    status: 'published',
+    viewsCount: 3800
+  },
+  {
+    id: 'ep-expl-2',
+    seasonId: 'season-exploradores-s1',
+    number: 2,
+    title: 'O Mistério da Gravidade',
+    description: 'Por que tudo o que sobe cai no chão? Uma deliciosa brincadeira de pular corda e lançar maçãs explica como a Terra nos puxa gentilmente.',
+    duration: '19m',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-children-running-together-in-the-garden-lightly-blurred-40154-large.mp4',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1485546246426-74dc88dec4d9?q=80&w=450',
+    status: 'published',
+    viewsCount: 4200
   }
 ];
 
 // Seed initial general metadata movie contents (films, live events, standalones etc)
-const INITIAL_CONTENTS: Content[] = [
+const OLD_INITIAL_CONTENTS: Content[] = [
+  {
+    id: 'content-series-conexao',
+    type: 'series',
+    title: 'Conexão F5',
+    shortDescription: 'A série jornalística investigativa que desvenda as maiores fraudes tecnológicas e ciber-ameaças.',
+    fullDescription: 'Descubra os mistérios do cibercrime brasileiro, fraudes financeiras e os crimes ambientais examinados com profundidade táctica.',
+    categoryId: 'cat-series',
+    genre: 'Jornalismo Investigativo',
+    ageRating: '12',
+    year: 2026,
+    duration: '2 Temporadas',
+    cast: ['Equipe F5 TV', 'Investigadores de Crimes Inteligentes'],
+    directors: ['Renata Vasconcelos'],
+    coverUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400',
+    bannerUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200',
+    trailerUrl: 'https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4',
+    status: 'published',
+    isFeatured: false,
+    isFree: false,
+    isExclusive: true,
+    publishDate: '2026-05-20',
+    tags: ['Cybersecurity', 'Fraudes', 'Investigação', 'F5'],
+    viewsCount: 12540
+  },
+  {
+    id: 'content-series-kids',
+    type: 'series',
+    title: 'Mundo F5 Kids',
+    shortDescription: 'Desenhos animados educativos, cores e rimas mágicas para divertir e educar crianças pequenas.',
+    fullDescription: 'Animações divertidas interativas criadas especialmente para o desenvolvimento cognitivo e noções ecológicas das mentes mirins.',
+    categoryId: 'cat-infantil',
+    genre: 'Infantil / Educativo',
+    ageRating: 'L',
+    year: 2026,
+    duration: '1 Temporada',
+    cast: ['Mundo Kids Voice Overs'],
+    directors: ['Mel e Leo'],
+    coverUrl: 'https://images.unsplash.com/photo-1485546246426-74dc88dec4d9?q=80&w=400',
+    bannerUrl: 'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?q=80&w=1200',
+    trailerUrl: 'https://assets.mixkit.co/videos/preview/mixkit-happy-toys-spinning-on-a-baby-crib-40156-large.mp4',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-happy-toys-spinning-on-a-baby-crib-40156-large.mp4',
+    status: 'published',
+    isFeatured: false,
+    isFree: true,
+    isExclusive: false,
+    publishDate: '2026-05-18',
+    tags: ['Kids', 'Animação', 'Aprender', 'Amigável'],
+    viewsCount: 8430
+  },
+  {
+    id: 'content-series-bastidores',
+    type: 'series',
+    title: 'Bastidores da Cidade',
+    shortDescription: 'Os segredos ocultos da infraestrutura invisível e vida noturna sob as grandes metrópoles.',
+    fullDescription: 'Entre sob os trilhos escuros dos metrôs, os túneis centenários e descubra a engrenagem tática invisível de profissionais trabalhando à meia-noite.',
+    categoryId: 'cat-bastidores',
+    genre: 'Urbanismo & Sociedade',
+    ageRating: '10',
+    year: 2026,
+    duration: '1 Temporada',
+    cast: ['Engenheiros do Metrô', 'Trabalhadores da Madrugada'],
+    directors: ['Gabriel Peixoto'],
+    coverUrl: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?q=80&w=400',
+    bannerUrl: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=1200',
+    trailerUrl: 'https://assets.mixkit.co/videos/preview/mixkit-futuristic-time-lapse-of-subway-station-lights-and-people-41002-large.mp4',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-futuristic-time-lapse-of-subway-station-lights-and-people-41002-large.mp4',
+    status: 'published',
+    isFeatured: false,
+    isFree: false,
+    isExclusive: true,
+    publishDate: '2026-05-15',
+    tags: ['Metrópole', 'História', 'Infraestrutura', 'Bastidores'],
+    viewsCount: 9320
+  },
+  {
+    id: 'content-series-rastreadores',
+    type: 'series',
+    title: 'Rastreadores Criminais',
+    shortDescription: 'Operações táticas das polícias no combate aos crimes de fronteira e colarinho branco.',
+    fullDescription: 'Acompanhe grampos táticos reais autorizados pela Justiça, emboscadas para deter tráfico de armas pesadas e de lavagem de dinheiro milionária.',
+    categoryId: 'cat-series',
+    genre: 'Ação & Investigação Policial',
+    ageRating: '14',
+    year: 2026,
+    duration: '1 Temporada',
+    cast: ['Investigadores CORE', 'Polícia Federal'],
+    directors: ['Wellington Prado'],
+    coverUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400&auto=format&fit=crop',
+    bannerUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=1200',
+    trailerUrl: 'https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4',
+    status: 'published',
+    isFeatured: false,
+    isFree: false,
+    isExclusive: true,
+    publishDate: '2026-05-22',
+    tags: ['Polícia', 'Ação', 'Tática', 'Crimes Real'],
+    viewsCount: 16500
+  },
+  {
+    id: 'content-series-fronteira',
+    type: 'series',
+    title: 'F5 Tech Docs: Fronteira da I.A.',
+    shortDescription: 'Uma reflexão profunda sobre inteligência artificial, bioengenharia, e computação quântica.',
+    fullDescription: 'Expedição exclusiva pelos laboratórios de ponta internacionais e nacionais focados no impacto da automação moderna na mente humana e na bio-impressora 3D.',
+    categoryId: 'cat-documentarios',
+    genre: 'Tecnologia & Futuro',
+    ageRating: '12',
+    year: 2026,
+    duration: '1 Temporada',
+    cast: ['Drs. em Inteligência Artificial', 'Bioengenheiros'],
+    directors: ['Gabriel Peixoto'],
+    coverUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=400',
+    bannerUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200',
+    trailerUrl: 'https://assets.mixkit.co/videos/preview/mixkit-developer-working-on-different-screens-simultaneously-34290-large.mp4',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-developer-working-on-different-screens-simultaneously-34290-large.mp4',
+    status: 'published',
+    isFeatured: false,
+    isFree: false,
+    isExclusive: true,
+    publishDate: '2026-05-24',
+    tags: ['Tecnologia', 'I.A.', 'Futuro', 'Computação'],
+    viewsCount: 21900
+  },
+  {
+    id: 'content-series-exploradores',
+    type: 'series',
+    title: 'Pequenos Exploradores',
+    shortDescription: 'Aventuras animadas em 3D explicando vulcões, chuva e gravidade de forma lúdica.',
+    fullDescription: 'Embarque com Guto e Bel para responder as maiores e mais instigantes dúvidas de mentes brilhantes de forma super amigável.',
+    categoryId: 'cat-infantil',
+    genre: 'Infantil / Educação Científica',
+    ageRating: 'L',
+    year: 2026,
+    duration: '1 Temporada',
+    cast: ['Guto', 'Bel'],
+    directors: ['Animação Brasileira'],
+    coverUrl: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=400',
+    bannerUrl: 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=1200',
+    trailerUrl: 'https://assets.mixkit.co/videos/preview/mixkit-happy-toys-spinning-on-a-baby-crib-40156-large.mp4',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-happy-toys-spinning-on-a-baby-crib-40156-large.mp4',
+    status: 'published',
+    isFeatured: false,
+    isFree: true,
+    isExclusive: true,
+    publishDate: '2026-05-26',
+    tags: ['Ciência', 'Astronomia', 'Infantil', 'Didático'],
+    viewsCount: 11050
+  },
   {
     id: 'content-jornal-f5',
     type: 'news',
@@ -543,6 +801,156 @@ const INITIAL_CONTENTS: Content[] = [
     publishDate: '2026-01-20',
     tags: ['Comédia', 'Risos', 'Adulto', 'Standup'],
     viewsCount: 11200
+  },
+  {
+    id: 'content-codigo-ferro',
+    type: 'documentary',
+    title: 'O Código de Ferro: Hackers vs Estado',
+    shortDescription: 'A guerra secreta por trás dos firewalls governamentais. Entenda como operam os grupos hackers estatais e como o Brasil se defende.',
+    fullDescription: 'Uma obra investigativa espetacular com especialistas em segurança cibernética militar revelando o dia a dia de ataques digitais massivos direcionados a hospitais, usinas de energia e dados confidenciais do governo.',
+    categoryId: 'cat-documentarios',
+    genre: 'Documentário de Tecnologia',
+    ageRating: '12',
+    year: 2026,
+    duration: '1h 15m',
+    cast: ['Consultores de Segurança GSI', 'Hacker Anonimizados'],
+    directors: ['Gabriel Peixoto'],
+    coverUrl: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=400',
+    bannerUrl: 'https://images.unsplash.com/photo-1510511459019-5dda7724fd87?q=80&w=1200',
+    trailerUrl: 'https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-hacker-typing-code-on-a-keyboard-34293-large.mp4',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-hacker-typing-code-on-a-keyboard-34293-large.mp4',
+    status: 'published',
+    isFeatured: true,
+    isFree: false,
+    isExclusive: true,
+    publishDate: '2026-05-15',
+    tags: ['Cybersecurity', 'Documentário', 'Militar', 'Hackers'],
+    viewsCount: 20450
+  },
+  {
+    id: 'content-box-interlagos',
+    type: 'sports',
+    title: 'F5 Esportes: Segredos nos Boxes de Interlagos',
+    shortDescription: 'Como engenheiros mudam 4 pneus, trocam asas e reabastecem a estratégia de corrida em menos de 2.0 segundos de pura adrenalina.',
+    fullDescription: 'Este documentário esportivo imersivo tático revela os bastidores de alta precisão que dão vitórias nas corridas de endurance e Fórmula em São Paulo, mostrando a dinâmica incrível dos mecânicos de elite.',
+    categoryId: 'cat-esportes',
+    genre: 'Formativa de Esporte',
+    ageRating: 'L',
+    year: 2026,
+    duration: '48m',
+    cast: ['Felipe Giaffone', 'Equipe Técnica de Box'],
+    directors: ['Karina Lemes'],
+    coverUrl: 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=400',
+    bannerUrl: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=1200',
+    trailerUrl: 'https://assets.mixkit.co/videos/preview/mixkit-sports-car-racing-on-a-track-31516-large.mp4',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-sports-car-racing-on-a-track-31516-large.mp4',
+    status: 'published',
+    isFeatured: false,
+    isFree: false,
+    isExclusive: true,
+    publishDate: '2026-04-18',
+    tags: ['Velocidade', 'Fórmula', 'Interlagos', 'Engenharia'],
+    viewsCount: 14200
+  },
+  {
+    id: 'content-f5-politica-urgente',
+    type: 'news',
+    title: 'F5 Plantão Especial: Reforma Tributária',
+    shortDescription: 'Análise tática minuto a minuto da votação histórica do novo regime fiscal brasileiro direto de Brasília.',
+    fullDescription: 'A bancada do Jornal F5 se reúne em edição especial de urgência conectada diretamente com os correspondentes de Brasília para explicar de forma simples e direta o impacto real que o novo imposto causará na sua vida financeira.',
+    categoryId: 'cat-jornalismo',
+    genre: 'Plantão Especial',
+    ageRating: 'L',
+    year: 2026,
+    duration: '1h 10m',
+    cast: ['Sandro Albuquerque', 'Renata Vasconcelos', 'Comentaristas Financeiros'],
+    directors: ['Gabriel Peixoto'],
+    coverUrl: 'https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?q=80&w=400',
+    bannerUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200',
+    trailerUrl: 'https://assets.mixkit.co/videos/preview/mixkit-camera-viewfinder-screen-recording-close-up-34304-large.mp4',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-camera-viewfinder-screen-recording-close-up-34304-large.mp4',
+    status: 'published',
+    isFeatured: false,
+    isFree: true,
+    isExclusive: false,
+    publishDate: '2026-05-26',
+    tags: ['Política', 'Dinheiro', 'Economia', 'Ao Vivo'],
+    viewsCount: 29850
+  },
+  {
+    id: 'content-pequeno-astronauta',
+    type: 'special',
+    title: 'O Pequeno Astronauta: Viagem à Lua',
+    shortDescription: 'Uma fantástica jornada para crianças aprenderem os segredos dos planetas, gravidade e as constelações com o cachorrinho Cosmo.',
+    fullDescription: 'Aventure-se no espaço sideral de forma extremamente interativa e visual! Aprenda de maneira dinâmica como funcionam os foguetes, por que flutuamos no espaço e de onde veio o vento solar, idealizado pela equipe infantil F5 TV.',
+    categoryId: 'cat-infantil',
+    genre: 'Animação Educativa',
+    ageRating: 'L',
+    year: 2026,
+    duration: '35m',
+    cast: ['Dubladores F5 Kids'],
+    directors: ['Karina Lemes'],
+    coverUrl: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=400',
+    bannerUrl: 'https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=1200',
+    trailerUrl: 'https://assets.mixkit.co/videos/preview/mixkit-happy-toys-spinning-on-a-baby-crib-40156-large.mp4',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-happy-toys-spinning-on-a-baby-crib-40156-large.mp4',
+    status: 'published',
+    isFeatured: false,
+    isFree: true,
+    isExclusive: true,
+    publishDate: '2026-04-20',
+    tags: ['Espaço', 'Estrelas', 'Infantil', 'Diversão'],
+    viewsCount: 9780
+  },
+  {
+    id: 'content-furious-waves',
+    type: 'sports',
+    title: 'Grandes Ondas: Nazaré & Saquarema',
+    shortDescription: 'Os melhores surfistas do planeta duelam em paredões líquidos com mais de 25 metros de altura desafiando todos os limites físicos.',
+    fullDescription: 'Sinta o frio na barriga acompanhando filmagens aéreas de altíssima definição 4K e câmeras de ação acopladas nas pranchas dos maiores atletas mundiais, enfrentando as lendárias ondas gigantes do circuito de surf.',
+    categoryId: 'cat-esportes',
+    genre: 'Esporte Radical',
+    ageRating: 'L',
+    year: 2025,
+    duration: '1h 05m',
+    cast: ['Medina', 'Lucas Chumbo', 'Maya Gabeira'],
+    directors: ['Wellington Prado'],
+    coverUrl: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?q=80&w=400',
+    bannerUrl: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?q=80&w=1200',
+    trailerUrl: 'https://assets.mixkit.co/videos/preview/mixkit-sunlight-on-dry-desert-soil-43282-large.mp4',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-sunlight-on-dry-desert-soil-43282-large.mp4',
+    status: 'published',
+    isFeatured: false,
+    isFree: false,
+    isExclusive: false,
+    publishDate: '2026-02-12',
+    tags: ['Surf', 'Aventura', 'Radical', 'Natureza'],
+    viewsCount: 18900
+  },
+  {
+    id: 'content-tecnologia-social-f5',
+    type: 'documentary',
+    title: 'Cidades Sustentáveis: O Futuro Urbano',
+    shortDescription: 'Como capitais da Europa e América do Sul resolveram o trânsito e transformaram detritos urbanos em energia barata e renovável.',
+    fullDescription: 'Projetos revolucionários mostram soluções inovadoras que podem ser adotadas nas nossas cidades hoje mesmo. Ciclovias integradas, edifícios verdes autofinanciados e transporte público 100% livre de emissões.',
+    categoryId: 'cat-documentarios',
+    genre: 'Documentário Ecológico',
+    ageRating: 'L',
+    year: 2026,
+    duration: '1h 10m',
+    cast: ['Arquitetos', 'Prefeitos Globais'],
+    directors: ['Benoit Camargo'],
+    coverUrl: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=400',
+    bannerUrl: 'https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=1200',
+    trailerUrl: 'https://assets.mixkit.co/videos/preview/mixkit-forest-fire-burning-at-night-42284-large.mp4',
+    videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-forest-fire-burning-at-night-42284-large.mp4',
+    status: 'published',
+    isFeatured: false,
+    isFree: true,
+    isExclusive: true,
+    publishDate: '2026-01-30',
+    tags: ['Arquitetura', 'Clima', 'Soluções', 'Metrópole'],
+    viewsCount: 16120
   }
 ];
 
@@ -635,7 +1043,27 @@ function getLocalStorageItem<T>(key: string, initialDefault: T): T {
       localStorage.setItem(key, JSON.stringify(initialDefault));
       return initialDefault;
     }
-    return JSON.parse(item) as T;
+    const parsed = JSON.parse(item);
+    
+    // Automatically merge missing default elements for our catalog datasets
+    if (Array.isArray(parsed) && Array.isArray(initialDefault)) {
+      let changed = false;
+      const merged = [...parsed];
+      for (const defItem of initialDefault) {
+        if (defItem && typeof defItem === 'object' && 'id' in defItem) {
+          const exists = parsed.some(p => p && p.id === defItem.id);
+          if (!exists) {
+            merged.push(defItem);
+            changed = true;
+          }
+        }
+      }
+      if (changed) {
+        localStorage.setItem(key, JSON.stringify(merged));
+        return merged as unknown as T;
+      }
+    }
+    return parsed as T;
   } catch (error) {
     console.error('LocalStorage error reading ' + key, error);
     return initialDefault;
@@ -649,6 +1077,245 @@ function setLocalStorageItem<T>(key: string, data: T): void {
     console.error('LocalStorage error writing ' + key, error);
   }
 }
+
+// Seed initial general metadata movie contents (films, live events, standalones etc) dynamically
+const COMPACT_CATALOG: Record<string, [string, string, string, string, string][]> = {
+  'cat-aovivo': [
+    ['F5 Debate: O Impacto da I.A. no Trabalho', 'Debate em tempo real com cientistas sociais e tecnólogos sobre automação e emprego legal no Brasil.', 'Debate,I.A.,Trabalho', 'Debate Ao Vivo', 'business'],
+    ['Copa Regional F5: Grande Final', 'A partida decisiva pelo troféu regional dita o ritmo do futebol amador de várzea paulista.', 'Futebol,Copa,Esportes', 'Festa Ao Vivo', 'soccer'],
+    ['F5 Tecnologia Summit 2026', 'Acompanhe as palestras principais sobre robótica avançada, biohacking e computação quântica.', 'Tecnologia,Summit,Hardware', 'Summit Tecnológico', 'computer'],
+    ['Grande Prêmio de Interlagos de Kart', 'Pilotos novos travam um duelo na tradicional e rápida pista de karts de São Paulo.', 'Corrida,Kart,Velocidade', 'Corrida Ao Vivo', 'car'],
+    ['Tribuna Livre: A Voz das Ruas', 'Repórteres entram ao vivo nas principais praças das capitais ouvindo opiniões populares.', 'Opinião,Sociedade,Cidades', 'Jornalismo Popular', 'street'],
+    ['F5 Festival de Jazz Ao Vivo', 'Apresentação intimista dos maiores nomes de jazz instrumental brasileiro.', 'Jazz,Música,Acústico', 'Musical Ao Vivo', 'music'],
+    ['Congresso de Biotecnologia Médica', 'Painéis científicos ao vivo expondo os avanços sobre sequenciamento genético e patologias.', 'Saúde,Medicina,Ciência', 'Congresso de Saúde', 'science'],
+    ['Boletim Econômico: Fechamento de Bolsa', 'Acompanhe a análise em tempo real do pregão financeiro e tendências para taxas de juros.', 'Finanças,Bolsa,Dinheiro', 'Boletim Ao Vivo', 'money'],
+    ['F5 Agro: O Futuro do Campo Ao Vivo', 'Transmissão focada na nova linha de tratores autónomos e defensivos bio-ecológicos.', 'Agro,Inovação,Negócios', 'Agroturismo', 'field'],
+    ['Show de Talentos F5 Universitários', 'A final da batalha musical congregando estudantes das principais faculdades públicas.', 'Música,Duelo,Universidade', 'Festival Ao Vivo', 'stage']
+  ],
+  'cat-jornalismo': [
+    ['Jornal F5: Edição Ao Vivo', 'As notícias cruciais do Brasil e do mundo, com comentários táticos, economia e reportagens de rua sem censura.', 'Notícias,Brasil,Urgente', 'Noticiário Diário', 'news'],
+    ['F5 Plantão Especial: Reforma Tributária', 'Análise tática minuto a minuto da votação histórica do novo regime fiscal brasileiro.', 'Política,Reforma,Dinheiro', 'Plantão Especial', 'business'],
+    ['A Crise da Água Doce', 'A investigação profunda sobre o esgotamento acelerado dos principais reservatórios de água.', 'Clima,Seca,Planeta', 'Jornalismo Investigativo', 'lake'],
+    ['Inflação no Prato: O Preço do Alimento', 'Repórteres analisam de perto por que as frutas e grãos essenciais atingiram o maior valor da década.', 'Inflação,Alimento,Dinheiro', 'Jornalismo Econômico', 'food'],
+    ['Fronteira Seca: Tráfico de Madeira', 'Câmeras escondidas mostram as rotas secretas de desmatamento ilegal exportando madeira nativa.', 'Desmatamento,Fronteira,Crimes', 'Jornalismo Investigativo', 'forest'],
+    ['Golpe da Falsa Central de Segurança', 'Investigação revela como operam quadrilhas telefônicas sofisticadas clonando apps de bancos.', 'Fraude,Segurança,Banco', 'Jornalismo Policial', 'phone'],
+    ['Trabalho Fantasma: Fraude do Home Office', 'Análise detalhando golpes corporativos onde robôs movem cursores simulando tarefas laborais.', 'Trabalho,Corporate,Denúncia', 'Jornalismo Investigativo', 'office'],
+    ['Dinastia do Lixo: Máfias Ecológicas', 'Cartéis clandestinos extorquem as grandes redes de reciclagem urbana travando o avanço ecológico.', 'Reciclagem,Máfia,Cidades', 'Jornalismo Investigativo', 'trash'],
+    ['Especial Pantanal: O Fogo Invisível', 'Por dentro das táticas militares e de brigadistas caçando incêndios que queimam sob as camadas do solo.', 'Pantanal,Fogo,Clima', 'Plantão Especial', 'fire'],
+    ['A Era do Remédio Falsificado', 'Laboratórios de remédios clandestinos na criminalidade farmacêutica adulterando quimioterápicos.', 'Saúde,Fraude,Polícia', 'Jornalismo Investigativo', 'pills']
+  ],
+  'cat-series': [
+    ['Conexão F5', 'A série jornalística investigativa que desvenda as maiores fraudes tecnológicas e ciber-ameaças.', 'Cyber,Segurança,Fraude', 'Jornalismo Investigativo', 'cyber'],
+    ['Rastreadores Criminais', 'Operações táticas das polícias no combate aos crimes de fronteira e colarinho branco.', 'Polícia,Ação,Fronteira', 'Ação Policial', 'police'],
+    ['O Cérebro Criminal', 'Uma série fascinante onde psiquiatras forenses dissecam os perfis dos mentores dos maiores roubos digitais.', 'Mente,Forense,Crime', 'Suspense Investigativo', 'brain'],
+    ['Hackers de Estado', 'Análise dramática de espionagem geopolítica onde agentes decifram ameaças sobre dados confidenciais.', 'Geopolítica,Defesa,Espiões', 'Suspense Político', 'code'],
+    ['Rotas Proibidas', 'Uma série tática dramática com a rotina de policiais investigando o contrabando de cargas.', 'Estrada,Carga,Polícia', 'Ação Investigativa', 'truck'],
+    ['Subsolo SP: Mistérios Sob Asfalto', 'Acompanhe as incríveis escavações do metrô de São Paulo e os resquícios arqueológicos soterrados.', 'Metrô,Arqueologia,História', 'Série de Aventura', 'underground'],
+    ['Código Vermelho: Ciberataque', 'As 24 horas dramáticas da equipe técnica de TI tentando salvar registros médicos quando o hospital principal é hackeado.', 'Hospital,Hackers,Ação', 'Suspense Tecnológico', 'server'],
+    ['Código Aberto: No princípio de Tudo', 'Uma crônica espetacular sobre os pioneiros do código brasileiro montando os primeiros computadores.', 'História,Software,Computador', 'Série Documental', 'keyboard'],
+    ['Agentes da Mata Atlântica', 'O dia a dia de guardas militares de floresta caçando desmatadores e gangues de caça ilegal.', 'Ecológico,Natureza,Polícia', 'Ação Ecológica', 'wood'],
+    ['Vigilância Máxima: Olhos da Cidade', 'Por dentro das câmeras e computadores municipais regulando emergências de trânsito e crimes em tempo real.', 'Câmeras,Cidades,Monitoramento', 'Rotina Urbana', 'camera']
+  ],
+  'cat-programastv': [
+    ['F5 Entrevista: Grandes Ideias', 'Conversas aprofundadas com cientistas, empresários e pensadores que estão desenhando nossa civilização.', 'Entrevista,Debate,Cultura', 'Talk Show', 'people'],
+    ['Sabores do Interior Rústico', 'Descubra a culinária caipira tradicional em panelas antigas de barro no interior paulista.', 'Cozinha,Comida,Interior', 'Culinária Rústica', 'food'],
+    ['F5 Garagem: Carros Clássicos', 'Restauradores renomados recuperam os carros icônicos da indústria automotiva nacional de 1970 a 1990.', 'Carros,Motores,Clássicos', 'Automobilismo', 'car'],
+    ['Desafio Empreendedor F5', 'Investidores avaliam propostas de negócios de startups de tecnologia e impacto social.', 'Business,Pitch,Aporte', 'Reality Show', 'office'],
+    ['Casas Autônomas e Conectadas', 'A simulação robótica e de painéis térmicos nas novas casas inteligentes e verdes pelo Brasil.', 'Decoração,Automação,Design', 'Estilo de Vida', 'house'],
+    ['Espaço Verde: Jardinagem', 'Dicas práticas de horta orgânica e paisagismo para espaços pequenos e sacadas de apartamento.', 'Horta,Plantas,Flores', 'Instrucional', 'garden'],
+    ['Química na Cozinha', 'Chefes de renome ensinam como a ciência ajuda na criação de emulsões e assados perfeitos.', 'Química,Cozinha,Gastronomia', 'Culinária Científica', 'baking'],
+    ['Mestres Cervejeiros F5', 'Uma divertida batalha de micro-cervejarias artesanais disputando a melhor receita de IPA.', 'Cerveja,Artesanal,Duelo', 'Reality Show', 'beer'],
+    ['F5 Arena Debate', 'Ex-atletas paulistas conversam em estúdio sobre desafios táticos dos campeonatos continentais.', 'Futebol,Resenha,Tática', 'Mesa Redonda', 'soccer'],
+    ['Arquitetura de Ideias', 'Entrevistas fantásticas com arquitetos e historiadores decifrando o desenho das capitais.', 'Cidades,Design,Urbanismo', 'Arquitetura', 'city']
+  ],
+  'cat-esportes': [
+    ['Supercopa F5: Semifinal Paulista', 'A decisão eletrizante por pênaltis entre os atletas que marcam a nova dinastia do futebol de base.', 'Futebol,Supercopa,Pênaltis', 'Transmissão Esportiva', 'soccer'],
+    ['F5 Esportes: Segredos nos Boxes de Interlagos', 'Como engenheiros fazem pit stops de menos de 2 segundos sob alta adrenalina.', 'Corrida,Interlagos,Fórmula', 'Documental Esportivo', 'car'],
+    ['Grandes Ondas: Nazaré & Saquarema', 'Os melhores surfistas do planeta duelam em paredões líquidos com mais de 25 metros de altura.', 'Surf,Ondas,Radical', 'Esporte Radical', 'sea'],
+    ['Ciclismo de Alta Montanha', 'A brutal subida e descida eletrizante por estradas íngremes na Serra da Mantiqueira.', 'Ciclismo,Serra,Mountain', 'Esporte Radical', 'bike'],
+    ['O Caminho do Tatame: Jiu-Jitsu', 'Investigue as grandes dinastias de lutadores e táticas de solo que fizeram do Brasil o berço da luta.', 'ArtesMarciais,JiuJitsu,Tática', 'Artes Marciais', 'martial'],
+    ['Basquete de Rua: O Jogo do Asfalto', 'Atletas paulistas mostram as manobras rápidas e a intensa cultura de basquete de rua.', 'Basquete,Streetball,Manobras', 'Esporte Urbano', 'basketball'],
+    ['Skate no Concreto Paulistano', 'Uma expedição pelas praças paulistanas e obstáculos urbanos com a elite do skate de rua.', 'Skate,Manobras,Sampa', 'Esporte Radical', 'skate'],
+    ['Guerreiros do Asfalto: Maratonas', 'A incrível resiliência mental e de oxigênio de corredores sob altas temperaturas de Sol.', 'Maratona,Atleta,Corrida', 'Atletismo', 'run'],
+    ['Triatlo Extremo das Montanhas', 'Do nascer ao pôr do sol, competidores nadam, pedalam e correm picos íngremes sob clima gelado.', 'Triatlo,Físico,Superação', 'Resistência Extrema', 'mountain'],
+    ['A Classe da Vela: Ventos Fortes', 'Táticas de iatismo e dinâmica das rajadas necessárias para navegar em embarcações olímpicas.', 'Vela,Navegação,Ventos', 'Iatismo', 'sail']
+  ],
+  'cat-documentarios': [
+    ['F5 Tech Docs: Fronteira da I.A.', 'Uma reflexão profunda sobre inteligência artificial, bioengenharia, e computação quântica.', 'I.A.,Robôs,Futuro', 'Ciência & Tecnologia', 'computer'],
+    ['Vozes do Brasil: Sertão Tecnológico', 'Como o semiárido nordestino está liderando a revolução de startups agrícolas e painéis solares.', 'Agro,Inovação,Nordeste', 'Socio-Documentário', 'field'],
+    ['O Código de Ferro: Hackers vs Estado', 'A guerra secreta por trás dos firewalls governamentais. Entenda como operam os grupos hackers.', 'Hackers,Invasão,Federal', 'Documentário Tecnológico', 'code'],
+    ['Cidades Sustentáveis: O Futuro Urbano', 'Como capitais resolveram o trânsito e transformaram detritos urbanos em energia barata e renovável.', 'Ecológico,Sociedade,Cidades', 'Urbanismo & Ecologia', 'city'],
+    ['O Império do Silício', 'Uma detalhada crônica sobre os monopólios de microchips, semicondutores e a ávida caçada por lítio.', 'Hardware,Semicondutor,Chip', 'Documentário de Ciência', 'board'],
+    ['Fusão Nuclear: A Criação do Sol', 'Como cientistas simulam as pressões do Sol na Terra para obter energia ilimitada eletrizante.', 'Física,Fusão,Energia', 'Ciência & Tecnologia', 'star'],
+    ['Arqueologia Amazônica: Mundos Perdidos', 'Drones equipados com sensores LiDAR mapeiam enormes vilas de milênios soterrados na floresta.', 'Arqueologia,Amazônia,História', 'Pesquisa Científica', 'jungle'],
+    ['A Rede Oculta das Florestas', 'A incrível e complexa biologia de fungos e líbens que carregam recursos de árvore em árvore.', 'Biologia,Plantas,Natureza', 'Natureza & Ecologia', 'tree'],
+    ['Parametrismo: Algoritmo das Linhas', 'A evolução do modernismo ao código de computadores modelando novos marcos arquitetônicos.', 'Design,Computação,Estrutura', 'Desenho Urbano', 'building'],
+    ['O Último Glaciar Andino', 'Cientistas escalam geleiras tropicais para registrar as drásticas mudanças do manto glacial.', 'Clima,Gelo,Andes', 'Pesquisa Científica', 'glacier']
+  ],
+  'cat-entretenimento': [
+    ['F5 Stand-up Show: Humor sem Filtro', 'O especial de comédia de standup nacional mais ácido do ano, desafiando tabus cotidianos.', 'Standup,Risos,Comédia', 'Humorismo', 'stage'],
+    ['Cinema de Calçada Independente', 'Reportagem cultural sobre exibições de curtas-metragens gratuitas armadas em praças de São Paulo.', 'Cinema,Pipoca,Lazer', 'Entretenimento Cultural', 'projector'],
+    ['F5 Stand-up Feminino: Elas dão o Ritmo', 'Comediantes consagradas tratam de casamento virtual, apps de paquera e rotina corporativa.', 'Standup,Humor,Mulheres', 'Humorismo', 'microphone'],
+    ['Mestres de Tabuleiro: A Nova Moda', 'O retorno dos jogos analógicos e tabuleiros de madeira como mercado bilionário de lazer tático.', 'Jogos,Lazer,Tabuleiros', 'Estilo de Vida', 'board'],
+    ['F5 Humor Instantâneo', 'Um compilado espetacular e hilário de sketches do dia a dia encenados pelos humoristas da F5 TV.', 'Sketches,Improviso,Humor', 'Comédia de Sketches', 'laugh'],
+    ['Batalhas de Rimas: Arena de Versos', 'A rítmica veloz e disputas de freestyle que moldam a juventude cultural das maiores periferias.', 'Rimas,Rap,Duelo', 'Batalha de Freestyle', 'streets'],
+    ['Festival do Riso: Rostos da Comédia', 'Comediantes amadores em testes hilários frente a jurados e plateia implacável da capital.', 'Duelo,Improviso,Risos', 'Humorismo', 'stage'],
+    ['Cinema de Guerrilha Nacional', 'Obras de ficção independentes de baixo custo ganhando repercussão e aclamação de festivais.', 'Indie,Cine,Ficção', 'Dramas Premiados', 'camera'],
+    ['Mágica de Calçada: Mentalistas', 'Mágicos paulistas lêem as mentes dos pedestres em praças públicas, decifrando dados ocultos.', 'Mágica,Ilusionismo,Mente', 'Mentalismo de Rua', 'cards'],
+    ['Os Reis da Tira: Desenhando Histórias', 'Ilustradores e cartunistas mostram o refinamento por trás de tirinhas ácidas e charges de fôlego.', 'HQ,Quadrinhos,Desenho', 'Arte & Ilustração', 'pencil']
+  ],
+  'cat-infantil': [
+    ['Mundo F5 Kids', 'Desenhos animados educativos, cores e rimas mágicas para divertir e educar crianças pequenas.', 'Desenho,Kids,Cores', 'Infantil / Educativo', 'kids'],
+    ['Pequenos Exploradores', 'Aventuras animadas em 3D explicando vulcões, chuva e gravidade de forma de forma lúdica.', 'Aprendizado,Dúvidas,Astronomia', 'Infantil / Educativo', 'baby'],
+    ['O Pequeno Astronauta: Viagem à Lua', 'Uma fantástica jornada para crianças aprenderem os segredos dos planetas com o cachorrinho Cosmo.', 'Espaço,Estrelas,Lua', 'Infantil / Educativo', 'moon'],
+    ['Abecedário de Animais', 'Canções fofas rimadas onde carismáticos animais introduzem letras, silabas e novos vocabulários brincando.', 'Letras,Animais,Sons', 'Musical Educativo', 'animal'],
+    ['Mil Cores de Mel & Leo', 'Duas crianças desenham objetos mágicos colorizando mundos cinzentos e apagados.', 'Desenho,Educação,Pintura', 'Animação Infantil', 'paint'],
+    ['Melodias para Banho Calmo', 'Composições suaves e vídeos engraçados ensinando práticas ecológicas e higiene corporal de forma leve.', 'Melodia,Banho,Higiene', 'Infantil / Educativo', 'soap'],
+    ['O Clube dos Insetos Cientistas', 'Insetos engenheiros reúnem blocos de folhas para resolver desafios lógicos com rimas.', 'Física,Lógica,Insetos', 'Animação lúdica', 'forest'],
+    ['Estrelinhas Azuis: Ninar', 'Sinfonias em piano suave e animações de fadinhas embaladas para acalmar os pequeninos no sono.', 'Sono,Ninar,Calmo', 'Dormir Bem', 'stars'],
+    ['A Liga dos Brinquedos Secretos', 'À noite, brinquedos ganham vida de detetives vasculhando o quarto para achar meias perdidas.', 'Brinquedos,Detetives,Aventura', 'Animação Infantil', 'toys'],
+    ['Rimas & Formas com Guto e Bel', 'Triângulos e esferas são apresentados de forma lúdica em rimas divertidas em português.', 'Formas,Lógica,Geometria', 'Aprendizado Lúdico', 'blocks']
+  ],
+  'cat-bastidores': [
+    ['Bastidores da Cidade', 'Os segredos ocultos da infraestrutura invisível e vida noturna sob as grandes metrópoles.', 'Logística,Cidade,Invisível', 'Urbanismo', 'city'],
+    ['Por Trás da Linha Virtual F5', 'A correria dos carpinteiros e editores virtuais programando os cenários 3D reais e telão LED.', 'F5,Cenário,Tecnologia', 'Bastidores de Estúdio', 'studio'],
+    ['A Engenharia dos Semáforos', 'Como o tráfego urbano é calculated em milésimos de segundo para evitar nós viários de rush.', 'Tráfego,Trânsito,Cidades', 'Engenharia de Tráfego', 'lights'],
+    ['Fios no Mar: Cabos Submarinos', 'Logística gigantesca de navios lançando milhares de quilômetros de cabos ópticos nas fossas.', 'Mar,Fibra,Internet', 'Infraestrutura Global', 'cable'],
+    ['Logística Colossal dos Correios', 'Por dentro dos scanners e esteiras ultra velozes que catalogam milhões de encomendas diárias.', 'Encomendas,Logística,Scanner', 'Automatização', 'shipment'],
+    ['Bastidores da Ópera Municipal', 'Equipes de ensaios curando cenários seculares, figurinos dourados e microfones para a estréia.', 'Teatro,Ópera,Ensaios', 'Nos Bastidores', 'opera'],
+    ['Ruídos Fantásticos: Foley Sound', 'Como artistas de estúdio simulam trovões de filmes usando chapas finas de metal e areia.', 'Áudio,Som,Cinema', 'Foley & Efeitos', 'sound'],
+    ['Logística de Solo de Aviões', 'Atletas de pista abastecendo e preparando jatos em minutos para pistas de alta rotatividade.', 'Aeroporto,Aviões,Trabalho', 'Logística Aérea', 'airport'],
+    ['Química da Restauração de Arte', 'Restauradores renomados removem poeira secular de pinturas antiga usando solventes químicos.', 'Restauração,Museu,Arte', 'Restauração Científica', 'paint'],
+    ['Guerreiros de Alta Voltagem', 'Eletricistas escalam torres energizadas de 45 metros sob temporais para restaurar a rede.', 'Energia,Trabalho,Risco', 'Engenharia Elétrica', 'power']
+  ],
+  'cat-especiais': [
+    ['Noite F5 Acústica: MPB em Alto Contraste', 'A reinterpretação intimista de clássicos da bossa e MPB por novos talentos brasileiros nos estúdios F5.', 'Música,Cultura,Show', 'Musical Acústico', 'guitar'],
+    ['Especial Sinfônico: Villa-Lobos', 'Orquestra paulistana relê clássicos em concerto gravado com microfones binaurais de alta definição.', 'Clássica,Sinfonia,Show', 'Sinfonietta', 'violin'],
+    ['Histórias Ocultas do Ontem', 'Especial jornalístico digitalizando notícias e gravações antigas das primeiras transmissões da TV.', 'História,Acervo,Imagens', 'Especial de Acervo', 'vintage'],
+    ['Música de Verão: Samba de Areia', 'Grandes sambistas reúnem-se nas dunas costeiras para cantar clássicos de violão acústico ao pôr do sol.', 'Samba,Verão,Show', 'Roda de Samba', 'beach'],
+    ['A Voz Humana: Coral Polifônico', 'Vinte cantores interpretam modinhas do século XIX acoplando técnicas acústicas de eco sintonizado.', 'Coral,Vozes,Acústico', 'Canto Coral', 'stage'],
+    ['F5 Masterclass: Escrita Novelesca', 'Novelistas de sucesso palestram sobre a formulação de ganchos táticos literários e roteiro dramático.', 'Escrita,Roteiro,Dicas', 'Masterclass F5', 'typewriter'],
+    ['Direção Fotográfica de Cinema', 'Os segredos das lentes anamórficas, ângulos de luz dramática e correção de cores para alta tela.', 'Cinema,Luzes,Lentes', 'Fotografia tática', 'lenses'],
+    ['Sons de Folha: Meditação Binaural', 'Duas horas imersivas de áudio ecológico coletado em florestas nativas para foco sereno e relaxamento.', 'Sons,Natureza,Meditação', 'Meditação Guiada', 'forest'],
+    ['Poesia Acústica sob Violoncelo', 'Poetas modernos recitam versos urbanos sob a suave e comovente melodia de violoncelistas convidados.', 'Poesia,Acústico,Música', 'Espetáculo Poético', 'cello'],
+    ['Fábulas de Acervo: Especial de Natal', 'Uma maravilhosa releitura de causos folclóricos e rimas típicas brasileiras encenadas no estúdio.', 'Nostalgia,Natal,Episódio', 'Teatro Especial', 'christmas']
+  ]
+};
+
+const INITIAL_CONTENTS: Content[] = [];
+
+const ID_MAP: Record<string, string> = {
+  'Conexão F5': 'content-series-conexao',
+  'Rastreadores Criminais': 'content-series-rastreadores',
+  'Mundo F5 Kids': 'content-series-kids',
+  'Pequenos Exploradores': 'content-series-exploradores',
+  'O Pequeno Astronauta: Viagem à Lua': 'content-pequeno-astronauta',
+  'Bastidores da Cidade': 'content-series-bastidores',
+  'F5 Tech Docs: Fronteira da I.A.': 'content-series-fronteira',
+  'Vozes do Brasil: Sertão Tecnológico': 'content-vozes-brasil',
+  'O Código de Ferro: Hackers vs Estado': 'content-codigo-ferro',
+  'Cidades Sustentáveis: O Futuro Urbano': 'content-tecnologia-social-f5',
+  'Jornal F5: Edição Ao Vivo': 'content-jornal-f5',
+  'F5 Plantão Especial: Reforma Tributária': 'content-f5-politica-urgente',
+  'F5 Entrevista: Grandes Ideias': 'content-f5-entrevista',
+  'Noite F5 Acústica: MPB em Alto Contraste': 'content-noite-f5',
+  'Supercopa F5: Semifinal Paulista': 'content-futebol-campeonato',
+  'F5 Esportes: Segredos nos Boxes de Interlagos': 'content-box-interlagos',
+  'Grandes Ondas: Nazaré & Saquarema': 'content-furious-waves',
+  'F5 Stand-up Show: Humor sem Filtro': 'content-comedia-standup'
+};
+
+const CATEGORY_UNSPLASH: Record<string, string[]> = {
+  'cat-aovivo': [
+    'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?q=80&w=400',
+    'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?q=80&w=1200'
+  ],
+  'cat-jornalismo': [
+    'https://images.unsplash.com/photo-1495020689067-958852a6565d?q=80&w=400',
+    'https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=1200'
+  ],
+  'cat-series': [
+    'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400',
+    'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200'
+  ],
+  'cat-programastv': [
+    'https://images.unsplash.com/photo-1541872703-74c5e44368f9?q=80&w=400',
+    'https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1200'
+  ],
+  'cat-esportes': [
+    'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=400',
+    'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=1200'
+  ],
+  'cat-documentarios': [
+    'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=400',
+    'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200'
+  ],
+  'cat-entretenimento': [
+    'https://images.unsplash.com/photo-1516280440614-37939bbacd6a?q=80&w=400',
+    'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1200'
+  ],
+  'cat-infantil': [
+    'https://images.unsplash.com/photo-1485546246426-74dc88dec4d9?q=80&w=400',
+    'https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?q=80&w=1200'
+  ],
+  'cat-bastidores': [
+    'https://images.unsplash.com/photo-1514565131-fce0801e5785?q=80&w=400',
+    'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=1200'
+  ],
+  'cat-especiais': [
+    'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400',
+    'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1200'
+  ]
+};
+
+Object.entries(COMPACT_CATALOG).forEach(([catId, items]) => {
+  items.forEach(([title, desc, tagsStr, genre, kw], idx) => {
+    let cType: Content['type'] = 'movie';
+    if (catId === 'cat-series') cType = 'series';
+    else if (catId === 'cat-jornalismo' || catId === 'cat-aovivo') cType = 'news';
+    else if (catId === 'cat-programastv') cType = 'tv_show';
+    else if (catId === 'cat-documentarios') cType = 'documentary';
+    else if (catId === 'cat-esportes') cType = 'sports';
+    else if (catId === 'cat-infantil') cType = 'special';
+    else if (catId === 'cat-bastidores') cType = 'documentary';
+    else if (catId === 'cat-especiais') cType = 'special';
+    else if (catId === 'cat-entretenimento') cType = 'special';
+
+    const tags = tagsStr.split(',');
+    const finalId = ID_MAP[title] || `content-cat-${catId}-${idx + 1}`;
+    
+    // Choose appropriate image urls
+    const urls = CATEGORY_UNSPLASH[catId];
+    const coverUrl = urls ? urls[0] : 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400';
+    const bannerUrl = urls ? urls[1] : 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200';
+
+    INITIAL_CONTENTS.push({
+      id: finalId,
+      type: cType,
+      title,
+      shortDescription: desc,
+      fullDescription: `${desc} Este conteúdo exclusivo da F5 TV apresenta reportagens detalhadas, investigações minuciosas, análises aprofundadas conduzidas com excelência e qualidade técnica, desenhando um retrato fiel dos fatos cruciais em alta resolução.`,
+      categoryId: catId,
+      genre,
+      ageRating: idx % 3 === 0 ? '12' : idx % 2 === 0 ? 'L' : '14',
+      year: 2026,
+      duration: idx % 2 === 0 ? '1h 10m' : '55m',
+      cast: ['Sandro Albuquerque', 'Renata Vasconcelos', 'Apresentadores F5 TV'],
+      directors: ['Gabriel Peixoto'],
+      coverUrl,
+      bannerUrl,
+      trailerUrl: 'https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4',
+      videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4',
+      status: 'published',
+      isFeatured: title === 'Jornal F5: Edição Ao Vivo' || title === 'O Código de Ferro: Hackers vs Estado',
+      isFree: idx % 3 === 0,
+      isExclusive: idx % 3 !== 0,
+      publishDate: `2026-05-${15 + (idx % 10)}`,
+      tags,
+      viewsCount: 12500 + idx * 850
+    });
+  });
+});
 
 // DB state loader
 export const db = {
