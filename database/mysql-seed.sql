@@ -1,0 +1,69 @@
+-- F5 TV Streaming Platform - MySQL/MariaDB seed data
+-- Run after database/mysql-schema.sql.
+
+INSERT INTO plans (id, name, price, features, active, max_screens, quality) VALUES
+('plano-basico', 'Básico', 19.90, JSON_ARRAY('Catálogo sob demanda', '1 tela', 'Qualidade HD'), 1, 1, 'HD'),
+('plano-familia', 'Família', 34.90, JSON_ARRAY('Catálogo completo', '3 telas', 'Full HD', 'Ao vivo'), 1, 3, 'Full HD'),
+('plano-premium', 'Premium', 49.90, JSON_ARRAY('Catálogo completo', '5 telas', 'Full HD/4K', 'Ao vivo', 'Estreias e especiais'), 1, 5, '4K');
+
+INSERT INTO users (id, name, email, phone, role, plan_id, status, password_hash) VALUES
+('user-admin', 'Administrador F5', 'admin@f5tv.com.br', '(11) 90000-0001', 'admin', NULL, 'active', NULL),
+('user-editor', 'Editor de Conteúdo', 'editor@f5tv.com.br', '(11) 90000-0002', 'editor', NULL, 'active', NULL),
+('user-finance', 'Diretor Financeiro', 'financeiro@f5tv.com.br', '(11) 90000-0003', 'finance', NULL, 'active', NULL),
+('user-assinante', 'Henrique Vasconcelos', 'henrikeaps@gmail.com', '(11) 99999-9999', 'subscriber', 'plano-premium', 'active', NULL);
+
+INSERT INTO profiles (id, user_id, name, avatar_color) VALUES
+('prof-henrique', 'user-assinante', 'Henrique', 'bg-red-600');
+
+INSERT INTO categories (id, name, slug) VALUES
+('cat-jornalismo', 'Jornalismo', 'jornalismo'),
+('cat-series', 'Séries', 'series'),
+('cat-documentarios', 'Documentários', 'documentarios'),
+('cat-esportes', 'Esportes', 'esportes'),
+('cat-entretenimento', 'Entretenimento', 'entretenimento'),
+('cat-especiais', 'Especiais', 'especiais');
+
+INSERT INTO contents (
+  id, type, title, short_description, full_description, category_id, genre, age_rating, year, duration,
+  cast_members, directors, cover_url, banner_url, trailer_url, video_url, status, is_featured, is_free, is_exclusive, publish_date, tags, views_count
+) VALUES
+('content-jornal-f5', 'news', 'Jornal F5', 'As principais notícias do dia.', 'Cobertura diária com análise, entrevistas e atualização em tempo real.', 'cat-jornalismo', 'Notícias', '10', 2026, '45m', JSON_ARRAY('Equipe F5'), JSON_ARRAY('Redação F5'), 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=600', 'https://images.unsplash.com/photo-1495020689067-958852a7765e?q=80&w=1400', NULL, 'https://assets.mixkit.co/videos/preview/mixkit-news-studio-background-screen-3045-large.mp4', 'published', 1, 0, 1, CURDATE(), JSON_ARRAY('jornalismo', 'ao vivo', 'notícias'), 2450),
+('content-conexao-f5', 'series', 'Conexão F5', 'Série original sobre tecnologia, poder e sociedade.', 'Uma série documental sobre bastidores da inovação, segurança digital e os impactos da tecnologia no Brasil.', 'cat-series', 'Tecnologia', '12', 2026, '50m', JSON_ARRAY('Equipe F5 Docs'), JSON_ARRAY('Produção F5'), 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600', 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?q=80&w=1400', NULL, 'https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-hacker-typing-code-on-a-keyboard-34293-large.mp4', 'published', 1, 0, 1, CURDATE(), JSON_ARRAY('série', 'tecnologia', 'documental'), 3210),
+('content-vozes-brasil', 'documentary', 'Vozes do Brasil', 'Histórias reais de transformação.', 'Documentário especial da F5 TV com personagens, entrevistas e cenas de impacto social.', 'cat-documentarios', 'Sociedade', '10', 2026, '1h 12m', JSON_ARRAY('Convidados especiais'), JSON_ARRAY('F5 Documentários'), 'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?q=80&w=600', 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1400', NULL, 'https://assets.mixkit.co/videos/preview/mixkit-group-of-people-walking-through-a-city-square-4436-large.mp4', 'published', 0, 0, 1, CURDATE(), JSON_ARRAY('documentário', 'brasil', 'histórias'), 1805);
+
+INSERT INTO series (id, title, description, cover_url, banner_url, genre, status, views_count) VALUES
+('series-conexao-f5', 'Conexão F5', 'Série original sobre tecnologia, poder e sociedade.', 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600', 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?q=80&w=1400', 'Tecnologia', 'published', 3210);
+
+INSERT INTO seasons (id, series_id, number, title, status) VALUES
+('season-conexao-1', 'series-conexao-f5', 1, 'Temporada 1', 'published');
+
+INSERT INTO episodes (id, season_id, number, title, description, duration, video_url, thumbnail_url, status, views_count) VALUES
+('ep-conexao-1', 'season-conexao-1', 1, 'Fronteira da I.A.', 'O impacto da inteligência artificial nos próximos anos.', '48m', 'https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-hacker-typing-code-on-a-keyboard-34293-large.mp4', 'https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=600', 'published', 1420),
+('ep-conexao-2', 'season-conexao-1', 2, 'Rastreadores Digitais', 'Investigação sobre segurança, dados e privacidade.', '51m', 'https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4', 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600', 'published', 1180);
+
+INSERT INTO subscriptions (id, user_id, plan_id, status, start_date, next_billing_date, payment_method) VALUES
+('sub-henrique-premium', 'user-assinante', 'plano-premium', 'active', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 30 DAY), 'pix');
+
+INSERT INTO payments (id, user_id, subscription_id, value, date, status, payment_method) VALUES
+('pay-henrique-001', 'user-assinante', 'sub-henrique-premium', 49.90, CURDATE(), 'paid', 'pix');
+
+INSERT INTO channels (id, name, description, logo_text, stream_url, active, status, category) VALUES
+('channel-f5tv', 'F5 TV Ao Vivo', 'Canal principal com programação da emissora em tempo real.', 'F5', 'https://assets.mixkit.co/videos/preview/mixkit-news-studio-background-screen-3045-large.mp4', 1, 'online', 'Geral'),
+('channel-f5news', 'F5 News', 'Jornalismo, entrevistas e análise ao vivo.', 'NEWS', 'https://assets.mixkit.co/videos/preview/mixkit-business-people-in-a-meeting-2868-large.mp4', 1, 'online', 'Jornalismo'),
+('channel-f5sports', 'F5 Esportes', 'Coberturas esportivas, debates e especiais.', 'SPORT', 'https://assets.mixkit.co/videos/preview/mixkit-people-in-a-stadium-cheering-4506-large.mp4', 1, 'online', 'Esportes');
+
+INSERT INTO live_schedules (id, channel_id, title, description, host, date, start_time, end_time, status, image_url, is_featured) VALUES
+('schedule-jornal-f5-live', 'channel-f5tv', 'Jornal F5', 'Notícias, análise e atualizações do dia.', 'Redação F5', CURDATE(), '18:00:00', '19:00:00', 'live', 'https://images.unsplash.com/photo-1495020689067-958852a7765e?q=80&w=1400', 1),
+('schedule-f5-entrevista', 'channel-f5tv', 'F5 Entrevista', 'Conversa especial com convidados da semana.', 'Equipe F5', CURDATE(), '20:00:00', '21:00:00', 'scheduled', 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1400', 0),
+('schedule-f5-esportes', 'channel-f5sports', 'F5 Esportes Debate', 'Mesa redonda e análise das rodadas.', 'F5 Esportes', CURDATE(), '21:00:00', '22:00:00', 'scheduled', 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=1400', 0);
+
+INSERT INTO coupons (id, code, discount_type, discount_value, expires_at, usage_limit, usage_count, applicable_plans, status) VALUES
+('coupon-bemvindo', 'F5BEMVINDO', 'percent', 15.00, DATE_ADD(CURDATE(), INTERVAL 90 DAY), 500, 0, JSON_ARRAY('plano-basico', 'plano-familia', 'plano-premium'), 'active'),
+('coupon-premium', 'F5PREMIUM', 'fixed', 10.00, DATE_ADD(CURDATE(), INTERVAL 60 DAY), 200, 0, JSON_ARRAY('plano-premium'), 'active');
+
+INSERT INTO connected_devices (id, user_id, device_name, device_type, last_active, location, is_active) VALUES
+('device-henrique-chrome', 'user-assinante', 'Chrome no Windows', 'desktop', NOW(), 'São Paulo, BR', 1),
+('device-henrique-tv', 'user-assinante', 'Smart TV Samsung', 'smart_tv', DATE_SUB(NOW(), INTERVAL 2 DAY), 'Sala principal', 1);
+
+INSERT INTO reviews (id, content_id, profile_id, profile_name, avatar_color, rating, comment, status) VALUES
+('review-conexao-1', 'content-conexao-f5', 'prof-henrique', 'Henrique', 'bg-red-600', 5, 'Produção excelente e tema muito atual.', 'published');
