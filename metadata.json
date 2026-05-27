@@ -1,0 +1,6 @@
+{
+  "name": "F5 TV",
+  "description": "Plataforma premium de streaming para a F5 TV com área de assinantes, player, painel de administração, gerenciamento financeiro e de conteúdo.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
