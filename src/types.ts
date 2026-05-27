@@ -171,3 +171,14 @@ export interface Notification {
   read: boolean;
   createdAt: string;
 }
+
+export interface Review {
+  id: string;
+  contentId: string;
+  profileId: string;
+  profileName: string;
+  avatarColor: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}

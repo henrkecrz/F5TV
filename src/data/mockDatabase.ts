@@ -5,7 +5,7 @@
 
 import { 
   User, Profile, Plan, Subscription, Payment, Content, Category, 
-  Series, Season, Episode, Upload, WatchHistory, Favorite, Notification
+  Series, Season, Episode, Upload, WatchHistory, Favorite, Notification, Review
 } from '../types';
 
 // Seed initial plans
@@ -1035,6 +1035,50 @@ const INITIAL_NOTIFICATIONS: Notification[] = [
   }
 ];
 
+// Seed Reviews
+const INITIAL_REVIEWS: Review[] = [
+  {
+    id: 'rev-1',
+    contentId: 'content-series-conexao',
+    profileId: 'prof-1',
+    profileName: 'Gisele Principal',
+    avatarColor: 'bg-red-600',
+    rating: 5,
+    comment: 'Série de investigação incrível! Esclarece pontos fundamentais com muita independência e dados precisos.',
+    createdAt: '2026-05-25T14:20:00Z'
+  },
+  {
+    id: 'rev-2',
+    contentId: 'content-series-conexao',
+    profileId: 'prof-3',
+    profileName: 'Julio (Amigo)',
+    avatarColor: 'bg-indigo-600',
+    rating: 4,
+    comment: 'Roteiro muito bem produzido e com condução ágil. Prende do começo ao fim!',
+    createdAt: '2026-05-26T18:15:00Z'
+  },
+  {
+    id: 'rev-3',
+    contentId: 'content-jornal-f5',
+    profileId: 'prof-4',
+    profileName: 'Arthur',
+    avatarColor: 'bg-amber-600',
+    rating: 5,
+    comment: 'Jornalismo sério e contundente. Uma lufada de ar fresco no cenário atual do streaming brasileiro.',
+    createdAt: '2026-05-26T09:12:00Z'
+  },
+  {
+    id: 'rev-4',
+    contentId: 'content-vozes-brasil',
+    profileId: 'prof-1',
+    profileName: 'Gisele Principal',
+    avatarColor: 'bg-red-600',
+    rating: 5,
+    comment: 'Trabalho de campo e captação de áudio surreais! Dá muito orgulho de assistir produções brasileiras desse kilate.',
+    createdAt: '2026-05-27T02:05:00Z'
+  }
+];
+
 // Local Storage Core helper
 function getLocalStorageItem<T>(key: string, initialDefault: T): T {
   try {
@@ -1359,7 +1403,10 @@ export const db = {
   setFavorites: (fav: Favorite[]) => setLocalStorageItem<Favorite[]>('f5_favorites', fav),
 
   getNotifications: () => getLocalStorageItem<Notification[]>('f5_notifications', INITIAL_NOTIFICATIONS),
-  setNotifications: (n: Notification[]) => setLocalStorageItem<Notification[]>('f5_notifications', n)
+  setNotifications: (n: Notification[]) => setLocalStorageItem<Notification[]>('f5_notifications', n),
+
+  getReviews: () => getLocalStorageItem<Review[]>('f5_reviews', INITIAL_REVIEWS),
+  setReviews: (r: Review[]) => setLocalStorageItem<Review[]>('f5_reviews', r)
 };
 
 // Seed utility to easily reload default state anytime
@@ -1378,5 +1425,6 @@ export function resetDBToDefault(): void {
   localStorage.removeItem('f5_watch_history');
   localStorage.removeItem('f5_favorites');
   localStorage.removeItem('f5_notifications');
+  localStorage.removeItem('f5_reviews');
   window.location.reload();
 }

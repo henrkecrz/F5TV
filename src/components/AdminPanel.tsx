@@ -15,7 +15,7 @@ import {
 import { 
   Users, Film, CreditCard, UploadCloud, Settings, Database, 
   Plus, Edit2, Trash2, CheckCircle, AlertTriangle, ShieldCheck, 
-  DollarSign, BarChart2, ListCollapse, Play, Sparkles, FolderPlus, Download, Check, X, LogOut 
+  DollarSign, BarChart2, ListCollapse, Play, Sparkles, FolderPlus, Download, Check, X, LogOut, Search 
 } from 'lucide-react';
 
 interface AdminPanelProps {
@@ -39,6 +39,11 @@ export default function AdminPanel({ currentUser, onLogout, onNavigateToUserApp 
 
   // Navigation tabs
   const [activeTab, setActiveTab] = useState<'dashboard' | 'usuarios' | 'conteudo' | 'series' | 'uploads' | 'financeiro' | 'planos'>('dashboard');
+
+  // CRM Filters States
+  const [crmSearch, setCrmSearch] = useState('');
+  const [crmPlanFilter, setCrmPlanFilter] = useState('all');
+  const [crmStatusFilter, setCrmStatusFilter] = useState('all');
 
   // Form Modals Active states
   const [editingUser, setEditingUser] = useState<User | null>(null);
@@ -126,6 +131,43 @@ export default function AdminPanel({ currentUser, onLogout, onNavigateToUserApp 
     { name: 'Abril', Assinantes: 260, Receita: 4800 },
     { name: 'Maio (Ativo)', Assinantes: totalSubscribers, Receita: totalRevenue },
   ];
+
+  // Filtered Users CRM list
+  const filteredUsers = users.filter((u) => {
+    const matchesSearch = crmSearch 
+      ? u.name.toLowerCase().includes(crmSearch.toLowerCase()) || 
+        u.email.toLowerCase().includes(crmSearch.toLowerCase()) ||
+        (u.phone && u.phone.includes(crmSearch))
+      : true;
+
+    const matchesPlan = crmPlanFilter === 'all'
+      ? true
+      : u.planId === crmPlanFilter;
+
+    const matchesStatus = crmStatusFilter === 'all'
+      ? true
+      : u.status === crmStatusFilter;
+
+    return matchesSearch && matchesPlan && matchesStatus;
+  });
+
+  // Simulated export users to CSV
+  const handleExportUsersCSV = () => {
+    let csvContent = '\uFEFFID,Nome,Email,Telefone,Função,Plano,Status,Data de Criação\n';
+    filteredUsers.forEach(u => {
+      const planName = u.planId ? plans.find(p => p.id === u.planId)?.name || 'N/A' : 'N/A';
+      csvContent += `"${u.id}","${u.name}","${u.email}","${u.phone || 'N/A'}","${u.role}","${planName}","${u.status}","${u.createdAt || 'N/A'}"\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'relatorio_usuarios_crm_f5_tv.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   // Users CRM Operations
   const handleOpenUserModal = (usr: User | null = null) => {
@@ -701,6 +743,68 @@ export default function AdminPanel({ currentUser, onLogout, onNavigateToUserApp 
                   </button>
                 </div>
 
+                {/* Advanced Filters and Export Bar */}
+                <div className="bg-zinc-950 border border-zinc-900 p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center justify-between">
+                  <div className="flex flex-wrap gap-3.5 items-center w-full md:w-auto">
+                    {/* Search box */}
+                    <div className="relative w-full sm:w-64">
+                      <Search className="w-3.5 h-3.5 text-zinc-550 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        placeholder="Buscar por nome, e-mail ou telefone..."
+                        value={crmSearch}
+                        onChange={(e) => setCrmSearch(e.target.value)}
+                        className="bg-zinc-900 border border-zinc-850 focus:border-[#ef4444] rounded-lg pl-9 pr-3 py-2 text-xs text-zinc-200 outline-none w-full font-medium"
+                      />
+                    </div>
+
+                    {/* Plan selection */}
+                    <div className="flex items-center gap-1.5 w-full sm:w-auto">
+                      <span className="text-[10px] font-mono font-bold text-zinc-500 uppercase shrink-0">Plano:</span>
+                      <select
+                        value={crmPlanFilter}
+                        onChange={(e) => setCrmPlanFilter(e.target.value)}
+                        className="bg-zinc-900 border border-zinc-850 focus:border-[#ef4444] text-xs text-zinc-300 rounded-lg px-2.5 py-1.5 font-bold outline-none cursor-pointer w-full sm:w-auto"
+                      >
+                        <option value="all">TODOS OS PLANOS</option>
+                        {plans.map(p => (
+                          <option key={p.id} value={p.id}>{p.name.toUpperCase()}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Status filter */}
+                    <div className="flex items-center gap-1.5 w-full sm:w-auto">
+                      <span className="text-[10px] font-mono font-bold text-zinc-500 uppercase shrink-0">Status:</span>
+                      <select
+                        value={crmStatusFilter}
+                        onChange={(e) => setCrmStatusFilter(e.target.value)}
+                        className="bg-zinc-900 border border-zinc-850 focus:border-[#ef4444] text-xs text-zinc-300 rounded-lg px-2.5 py-1.5 font-bold outline-none cursor-pointer w-full sm:w-auto"
+                      >
+                        <option value="all">TODOS OS STATUS</option>
+                        <option value="active">ATIVO</option>
+                        <option value="pending">PENDENTE</option>
+                        <option value="blocked">BLOQUEADO</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Actions column: count & export */}
+                  <div className="flex items-center justify-between md:justify-end gap-4 w-full md:w-auto shrink-0 border-t md:border-t-0 border-zinc-900 pt-3 md:pt-0">
+                    <span className="text-[10px] font-mono font-bold text-zinc-550 uppercase">
+                      {filteredUsers.length} de {users.length} cadastrados
+                    </span>
+                    
+                    <button
+                      onClick={handleExportUsersCSV}
+                      className="bg-[#0f0f10] hover:bg-zinc-904 border border-zinc-800 text-zinc-200 font-bold px-3.5 py-2 rounded-lg text-xs flex items-center gap-1.5 cursor-pointer transition uppercase tracking-wider font-mono"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Exportar CSV</span>
+                    </button>
+                  </div>
+                </div>
+
                 {/* Table list */}
                 <div className="bg-zinc-950 border border-zinc-900 rounded-xl overflow-hidden">
                   <div className="overflow-x-auto">
@@ -717,7 +821,7 @@ export default function AdminPanel({ currentUser, onLogout, onNavigateToUserApp 
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-zinc-900 font-medium">
-                        {users.map((u) => (
+                        {filteredUsers.map((u) => (
                           <tr key={u.id} className="hover:bg-zinc-900/20">
                             <td className="p-4 text-zinc-200 font-bold">{u.name}</td>
                             <td className="p-4 font-mono text-zinc-400">{u.email}</td>

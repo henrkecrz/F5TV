@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { User, Plan, Profile } from '../types';
 import { db } from '../data/mockDatabase';
-import { ShieldAlert, UserPlus, LogIn, Key, Mail, Phone, User as UserIcon, Plus, Check } from 'lucide-react';
+import { ShieldAlert, UserPlus, LogIn, Key, Mail, Phone, User as UserIcon, Plus, Check, Edit3, Trash2, Settings } from 'lucide-react';
 
 interface LoginScreenProps {
   onLoginSuccess: (user: User) => void;
@@ -553,6 +553,17 @@ export function ProfileSelectorScreen({ user, onSelectProfile, onNavigate }: Pro
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [newProfileName, setNewProfileName] = useState('');
   const [isAdding, setIsAdding] = useState(false);
+  
+  // Profile Management States
+  const [isManaging, setIsManaging] = useState(false);
+  const [editingProfile, setEditingProfile] = useState<Profile | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editColor, setEditColor] = useState('');
+
+  const AVAILABLE_COLORS = [
+    'bg-rose-600', 'bg-orange-600', 'bg-indigo-600', 'bg-emerald-600', 
+    'bg-purple-600', 'bg-sky-600', 'bg-amber-600', 'bg-pink-600'
+  ];
 
   React.useEffect(() => {
     // Read from DB filtered for active user
@@ -583,8 +594,7 @@ export function ProfileSelectorScreen({ user, onSelectProfile, onNavigate }: Pro
       return;
     }
 
-    const tailcolors = ['bg-indigo-600', 'bg-emerald-600', 'bg-purple-600', 'bg-orange-600', 'bg-pink-600', 'bg-rose-600', 'bg-sky-600', 'bg-amber-600'];
-    const randColor = tailcolors[Math.floor(Math.random() * tailcolors.length)];
+    const randColor = AVAILABLE_COLORS[Math.floor(Math.random() * AVAILABLE_COLORS.length)];
 
     const newProf: Profile = {
       id: 'prof-' + Math.random().toString(36).substring(2, 9),
@@ -601,6 +611,48 @@ export function ProfileSelectorScreen({ user, onSelectProfile, onNavigate }: Pro
     setIsAdding(false);
   };
 
+  const handleProfileClick = (p: Profile) => {
+    if (isManaging) {
+      setEditingProfile(p);
+      setEditName(p.name);
+      setEditColor(p.avatarColor || 'bg-red-655');
+    } else {
+      onSelectProfile(p);
+    }
+  };
+
+  const handleSaveEditProfile = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editName.trim() || !editingProfile) return;
+
+    const allP = db.getProfiles();
+    const updated = allP.map(p => {
+      if (p.id === editingProfile.id) {
+        return { ...p, name: editName, avatarColor: editColor };
+      }
+      return p;
+    });
+
+    db.setProfiles(updated);
+    setProfiles(updated.filter(p => p.userId === user.id));
+    setEditingProfile(null);
+  };
+
+  const handleDeleteProfile = () => {
+    if (!editingProfile) return;
+    if (profiles.length <= 1) {
+      alert('Sua assinatura precisa possuir no mínimo 1 perfil ativo para acessar a F5 TV.');
+      return;
+    }
+
+    if (confirm(`Tem certeza que deseja excluir permanentemente o perfil "${editingProfile.name}"? Historias de visualização e salvos deste perfil serão removidos.`)) {
+      const allP = db.getProfiles().filter(p => p.id !== editingProfile.id);
+      db.setProfiles(allP);
+      setProfiles(allP.filter(p => p.userId === user.id));
+      setEditingProfile(null);
+    }
+  };
+
   return (
     <div id="auth-profile-selector" className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-6 font-sans relative">
       <div className="absolute top-6 left-6 flex items-center gap-1.5">
@@ -611,8 +663,14 @@ export function ProfileSelectorScreen({ user, onSelectProfile, onNavigate }: Pro
 
       <div className="max-w-4xl w-full text-center flex flex-col items-center gap-10">
         <div className="flex flex-col gap-2">
-          <h1 className="text-2xl md:text-4xl font-black tracking-tight font-sans">Quem está assistindo agora na F5 TV?</h1>
-          <p className="text-zinc-500 text-sm font-medium">Cada perfil tem suas séries do peito, favoritos e histórico de reprodução individuais.</p>
+          <h1 className="text-2xl md:text-4xl font-black tracking-tight font-sans">
+            {isManaging ? 'Gerenciar Perfis da F5 TV' : 'Quem está assistindo agora na F5 TV?'}
+          </h1>
+          <p className="text-zinc-500 text-sm font-medium">
+            {isManaging 
+              ? 'Selecione qualquer perfil abaixo para editar o nome, escolher cores ou excluir.' 
+              : 'Cada perfil tem suas séries do peito, favoritos e histórico de reprodução individuais.'}
+          </p>
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-8">
@@ -621,20 +679,27 @@ export function ProfileSelectorScreen({ user, onSelectProfile, onNavigate }: Pro
             return (
               <div 
                 key={p.id}
-                onClick={() => onSelectProfile(p)}
-                className="group flex flex-col items-center gap-3 cursor-pointer select-none"
+                onClick={() => handleProfileClick(p)}
+                className="group flex flex-col items-center gap-3 cursor-pointer select-none relative"
               >
-                <div className={`w-28 h-28 ${p.avatarColor || 'bg-zinc-805'} border-3 border-transparent group-hover:border-white rounded-2xl flex items-center justify-center text-4xl font-extrabold text-white shadow-lg transition transform group-hover:scale-105 duration-200`}>
+                <div className={`w-28 h-28 ${p.avatarColor || 'bg-zinc-805'} border-3 border-transparent group-hover:border-white rounded-2xl flex items-center justify-center text-4xl font-extrabold text-white shadow-lg transition transform group-hover:scale-105 duration-200 relative overflow-hidden`}>
                   {firstLetter}
+                  
+                  {isManaging && (
+                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white transition duration-200">
+                      <Edit3 className="w-6 h-6 text-white" />
+                    </div>
+                  )}
                 </div>
-                <span className="text-sm font-bold text-zinc-400 group-hover:text-white transition duration-200">
-                  {p.name}
+                <span className="text-sm font-bold text-zinc-400 group-hover:text-white transition duration-200 flex items-center gap-1">
+                  <span>{p.name}</span>
+                  {isManaging && <Edit3 className="w-3 h-3 opacity-60" />}
                 </span>
               </div>
             );
           })}
 
-          {profiles.length < 6 && (
+          {!isManaging && profiles.length < 6 && (
             <div className="flex flex-col items-center gap-3 select-none">
               {isAdding ? (
                 <form onSubmit={handleAddProfile} className="w-28 h-28 bg-zinc-900 border border-zinc-800 rounded-2xl flex flex-col p-2.5 items-center justify-between text-xs font-normal">
@@ -679,16 +744,98 @@ export function ProfileSelectorScreen({ user, onSelectProfile, onNavigate }: Pro
           )}
         </div>
 
-        <button 
-          onClick={() => {
-            // Simulated logout
-            onNavigate('/');
-          }}
-          className="mt-6 border border-zinc-850 hover:bg-zinc-900/60 font-semibold text-xs py-2 px-6 rounded text-zinc-500 hover:text-zinc-300 transition uppercase tracking-wider font-mono cursor-pointer"
-        >
-          Sair da Conta Assinante
-        </button>
+        <div className="flex flex-col gap-4 mt-6">
+          <div className="flex gap-4 justify-center">
+            <button
+              onClick={() => setIsManaging(!isManaging)}
+              className="border border-[#ef4444] bg-red-955/10 text-[#ef4444] hover:bg-red-700 hover:text-white font-bold text-xs py-2.5 px-6 rounded transition uppercase tracking-wider font-mono cursor-pointer"
+            >
+              {isManaging ? 'Voltar para Seleção' : 'Gerenciar Perfis'}
+            </button>
+            
+            <button 
+              onClick={() => {
+                onNavigate('/');
+              }}
+              className="border border-zinc-850 hover:bg-zinc-900/60 font-semibold text-xs py-2.5 px-6 rounded text-zinc-500 hover:text-zinc-300 transition uppercase tracking-wider font-mono cursor-pointer"
+            >
+              Sair da Conta Assinante
+            </button>
+          </div>
+        </div>
       </div>
+
+      {/* Profile Modification Overlay Modal */}
+      {editingProfile && (
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div className="w-full max-w-sm bg-zinc-950 border border-zinc-900 rounded-2xl p-6 shadow-2xl relative text-left">
+            <h2 className="text-lg font-bold text-zinc-250 flex items-center gap-2 mb-1.5 uppercase tracking-wide font-mono">
+              <Settings className="w-5 h-5 text-red-600" />
+              <span>Configurações do Perfil</span>
+            </h2>
+            <p className="text-zinc-500 text-xs mb-5 font-semibold">Altere as credenciais visuais, cor e nome exclusivos de reprodução.</p>
+
+            <form onSubmit={handleSaveEditProfile} className="flex flex-col gap-5 text-sm">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-mono font-bold text-zinc-400 uppercase">Nome de Exibição</label>
+                <input
+                  type="text"
+                  required
+                  maxLength={15}
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  placeholder="Nome do perfil"
+                  className="w-full bg-zinc-900 border border-zinc-800 focus:border-[#ef4444] p-2.5 text-zinc-100 rounded-lg outline-none text-xs font-bold transition"
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-mono font-bold text-zinc-400 uppercase">Cor customizada do perfil</label>
+                <div className="grid grid-cols-4 gap-2.5">
+                  {AVAILABLE_COLORS.map((col) => (
+                    <button
+                      key={col}
+                      type="button"
+                      onClick={() => setEditColor(col)}
+                      className={`h-10 w-full ${col} rounded-xl border-2 transition ${
+                        editColor === col ? 'border-white scale-105 shadow-md shadow-white/30' : 'border-transparent hover:border-zinc-650'
+                      }`}
+                      title={col}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2 pt-2">
+                <button
+                  type="submit"
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-1.5 cursor-pointer transition text-xs uppercase"
+                >
+                  <Check className="w-4 h-4" />
+                  <span>Salvar Alterações</span>
+                </button>
+                
+                <button
+                  type="button"
+                  onClick={handleDeleteProfile}
+                  className="w-full bg-red-955/10 border border-red-950 hover:bg-red-955/20 text-[#ef4444] font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-1.5 cursor-pointer transition text-xs uppercase"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span>Excluir Perfil permanente</span>
+                </button>
+                
+                <button
+                  type="button"
+                  onClick={() => setEditingProfile(null)}
+                  className="w-full text-center text-zinc-500 hover:text-white text-xs mt-1 transition"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

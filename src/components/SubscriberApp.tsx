@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { 
-  User, Profile, Plan, Content, Category, Series, Season, Episode, Notification, Favorite, WatchHistory 
+  User, Profile, Plan, Content, Category, Series, Season, Episode, Notification, Favorite, WatchHistory, Review 
 } from '../types';
 import { db } from '../data/mockDatabase';
 import VideoPlayer from './VideoPlayer';
@@ -32,6 +32,7 @@ export default function SubscriberApp({ user, profile, onLogout, onNavigateToPro
   const [watchHistory, setWatchHistory] = useState<WatchHistory[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [plans, setPlans] = useState<Plan[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
 
   // Search & Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -53,6 +54,11 @@ export default function SubscriberApp({ user, profile, onLogout, onNavigateToPro
   const [newPass, setNewPass] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
+  // Review Form state
+  const [userRating, setUserRating] = useState<number>(5);
+  const [userComment, setUserComment] = useState<string>('');
+  const [reviewSuccessMsg, setReviewSuccessMsg] = useState<string>('');
+
   // Loaded DB data on mount
   useEffect(() => {
     reloadDb();
@@ -68,6 +74,7 @@ export default function SubscriberApp({ user, profile, onLogout, onNavigateToPro
     setWatchHistory(db.getWatchHistory().filter(h => h.userId === user.id));
     setNotifications(db.getNotifications());
     setPlans(db.getPlans());
+    setReviews(db.getReviews());
   };
 
   // Manage Favorites
@@ -132,6 +139,32 @@ export default function SubscriberApp({ user, profile, onLogout, onNavigateToPro
       setSuccessMsg('');
       setChangePasswordModal(false);
     }, 2500);
+  };
+
+  const handleSubmitReview = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedContent || !userComment.trim()) return;
+
+    const newReview: Review = {
+      id: 'rev-' + Math.random().toString(36).substring(2, 9),
+      contentId: selectedContent.id,
+      profileId: profile.id,
+      profileName: profile.name,
+      avatarColor: profile.avatarColor || 'bg-red-650',
+      rating: userRating,
+      comment: userComment,
+      createdAt: new Date().toISOString()
+    };
+
+    const nextReviews = [newReview, ...db.getReviews()];
+    db.setReviews(nextReviews);
+    setReviews(nextReviews);
+    setUserComment('');
+    setUserRating(5);
+    setReviewSuccessMsg('Opinião publicada com sucesso!');
+    setTimeout(() => {
+      setReviewSuccessMsg('');
+    }, 3000);
   };
 
   // Search filter matches
@@ -818,6 +851,154 @@ export default function SubscriberApp({ user, profile, onLogout, onNavigateToPro
                 </div>
               </div>
 
+            </div>
+
+            {/* INTEGRATED RATINGS & COMMUNITY COMMENTS MODULE */}
+            <div className="border-t border-white/5 bg-[#070707] p-6 md:p-10 flex flex-col gap-8">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-white/5">
+                <div>
+                  <h3 className="text-lg font-bold text-white uppercase tracking-wider font-mono flex items-center gap-2">
+                    <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
+                    <span>Opinião da Comunidade F5 TV</span>
+                  </h3>
+                  <p className="text-zinc-500 text-xs font-semibold mt-1">Veja e registre avaliações espontâneas para este título exclusivo.</p>
+                </div>
+                
+                {/* Stats recap */}
+                <div className="flex items-center gap-6 bg-[#0c0c0d] border border-white/5 px-4 py-2.5 rounded-xl font-mono">
+                  <div className="flex flex-col items-center">
+                    <span className="text-[10px] text-zinc-500 uppercase font-black">Média Geral</span>
+                    <span className="text-xl font-black text-amber-400 mt-0.5">
+                      {reviews.filter(r => r.contentId === selectedContent.id).length > 0
+                        ? (reviews.filter(r => r.contentId === selectedContent.id).reduce((sum, r) => sum + r.rating, 0) / reviews.filter(r => r.contentId === selectedContent.id).length).toFixed(1)
+                        : '5.0'} ★
+                    </span>
+                  </div>
+                  <div className="h-8 w-px bg-zinc-800" />
+                  <div className="flex flex-col items-center">
+                    <span className="text-[10px] text-zinc-500 uppercase font-black">Resenhas</span>
+                    <span className="text-lg font-black text-zinc-300 mt-0.5">
+                      {reviews.filter(r => r.contentId === selectedContent.id).length}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                
+                {/* Left: Input Feedback form */}
+                <div className="lg:col-span-2 bg-[#0a0a0b]/40 border border-[#ef4444]/5 p-5 rounded-xl flex flex-col gap-4">
+                  <h4 className="text-xs font-mono font-black text-zinc-300 uppercase tracking-widest">Enviar sua avaliação como <span className="text-red-500">{profile.name}</span></h4>
+                  
+                  {reviewSuccessMsg && (
+                    <div className="p-3 bg-emerald-950/40 border border-emerald-900 rounded-lg text-xs text-emerald-400 font-medium">
+                      {reviewSuccessMsg}
+                    </div>
+                  )}
+
+                  <form onSubmit={handleSubmitReview} className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-1.5">
+                      <span className="text-xs font-semibold text-zinc-400">Quantas estrelas este título merece?</span>
+                      <div className="flex gap-1 mt-0.5">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            type="button"
+                            onClick={() => setUserRating(star)}
+                            className="cursor-pointer focus:outline-none transition hover:scale-110"
+                            title={`Avaliar com ${star} estrelas`}
+                          >
+                            <Star 
+                              className={`w-6 h-6 transition ${
+                                userRating >= star 
+                                  ? 'fill-amber-400 text-amber-400' 
+                                  : 'text-zinc-700 hover:text-zinc-550'
+                              }`} 
+                            />
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <span className="text-xs font-semibold text-zinc-400">Seu Comentário Crítico</span>
+                      <textarea
+                        required
+                        maxLength={300}
+                        rows={3}
+                        value={userComment}
+                        onChange={(e) => setUserComment(e.target.value)}
+                        placeholder="Diga à comunidade o que achou da produção F5 TV..."
+                        className="w-full bg-[#030303] border border-white/5 focus:border-[#ef4444] rounded-lg p-3 text-xs text-zinc-100 placeholder:text-zinc-600 outline-none transition resize-none font-medium leading-relaxed"
+                      />
+                      <span className="text-[10px] text-zinc-650 font-mono text-right font-bold">{userComment.length}/300 caracteres</span>
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full bg-[#ef4444] hover:bg-red-700 text-white font-bold py-2.5 rounded-lg text-xs uppercase tracking-wider font-mono cursor-pointer transition shadow hover:shadow-red-950/40"
+                    >
+                      Publicar Opinião
+                    </button>
+                  </form>
+                </div>
+
+                {/* Right: Reviews List scrollable */}
+                <div className="lg:col-span-3 flex flex-col gap-4">
+                  <h4 className="text-xs font-mono font-black text-zinc-400 uppercase tracking-widest">Resenhas Recentes</h4>
+                  
+                  {reviews.filter(r => r.contentId === selectedContent.id).length === 0 ? (
+                    <div className="flex-1 border border-zinc-900 border-dashed rounded-xl p-8 text-center text-zinc-600 text-xs flex flex-col items-center justify-center gap-2">
+                      <Star className="w-8 h-8 text-zinc-800" />
+                      <p>Este título ainda não possui resenhas. Seja o primeiro assinante a deixar sua opinião crítica!</p>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-3 max-h-80 overflow-y-auto pr-2 scrollbar-thin">
+                      {reviews
+                        .filter(r => r.contentId === selectedContent.id)
+                        .map((rev) => {
+                          const firstLetter = rev.profileName ? rev.profileName.charAt(0).toUpperCase() : 'U';
+                          return (
+                            <div 
+                              key={rev.id} 
+                              className="bg-[#0b0b0c] border border-white/5 p-4 rounded-xl flex flex-col gap-2 transition hover:border-zinc-850"
+                            >
+                              <div className="flex justify-between items-center gap-2 text-xs">
+                                <div className="flex items-center gap-2.5">
+                                  <div className={`w-7 h-7 rounded-lg ${rev.avatarColor || 'bg-zinc-800'} text-xs font-bold text-white flex items-center justify-center`}>
+                                    {firstLetter}
+                                  </div>
+                                  <div className="flex flex-col text-left">
+                                    <span className="font-bold text-zinc-200">{rev.profileName}</span>
+                                    <span className="text-[10px] text-zinc-550 font-mono">
+                                      {new Date(rev.createdAt).toLocaleString('pt-BR', { dateStyle: 'short' }) || rev.createdAt}
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="flex gap-0.5">
+                                  {Array.from({ length: 5 }).map((_, i) => (
+                                    <Star 
+                                      key={i} 
+                                      className={`w-3.5 h-3.5 ${
+                                        i < rev.rating 
+                                          ? 'fill-amber-400 text-amber-400' 
+                                          : 'text-zinc-800'
+                                      }`} 
+                                    />
+                                  ))}
+                                </div>
+                              </div>
+                              <p className="text-xs text-zinc-350 leading-relaxed text-left font-medium">
+                                {rev.comment}
+                              </p>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  )}
+                </div>
+
+              </div>
             </div>
 
           </div>
