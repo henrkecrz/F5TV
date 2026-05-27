@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { 
   User, Profile, Plan, Content, Category, Series, Season, Episode, 
   Subscription, Payment, Upload, WatchHistory, Favorite, Notification, Review,
   Coupon, Channel, LiveSchedule, ConnectedDevice
 } from '../types';
 import { db } from '../data/mockDatabase';
+import { hostingerApi, isHostingerApiEnabled } from '../services/hostingerApi';
 
 interface DataContextType {
   users: User[];
@@ -25,6 +26,9 @@ interface DataContextType {
   channels: Channel[];
   liveSchedules: LiveSchedule[];
   connectedDevices: ConnectedDevice[];
+  isRemoteDataEnabled: boolean;
+  isRemoteDataLoading: boolean;
+  remoteDataError: string | null;
   updateUsers: (newUsers: User[]) => void;
   updatePlans: (newPlans: Plan[]) => void;
   updateContents: (newContents: Content[]) => void;
@@ -44,6 +48,7 @@ interface DataContextType {
   updateLiveSchedules: (newSchedules: LiveSchedule[]) => void;
   updateConnectedDevices: (newDevices: ConnectedDevice[]) => void;
   refreshAllData: () => void;
+  refreshRemoteData: () => Promise<void>;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -67,6 +72,45 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [channels, setChannels] = useState<Channel[]>(() => db.getChannels());
   const [liveSchedules, setLiveSchedules] = useState<LiveSchedule[]>(() => db.getLiveSchedules());
   const [connectedDevices, setConnectedDevices] = useState<ConnectedDevice[]>(() => db.getConnectedDevices());
+  const [isRemoteDataLoading, setIsRemoteDataLoading] = useState(false);
+  const [remoteDataError, setRemoteDataError] = useState<string | null>(null);
+
+  const isRemoteDataEnabled = isHostingerApiEnabled();
+
+  const refreshRemoteData = async () => {
+    if (!isRemoteDataEnabled) return;
+
+    setIsRemoteDataLoading(true);
+    setRemoteDataError(null);
+
+    try {
+      const [remotePlans, remoteCategories, remoteContents, remoteSeries, remoteChannels, remoteSchedule] = await Promise.all([
+        hostingerApi.getPlans(),
+        hostingerApi.getCategories(),
+        hostingerApi.getContents(),
+        hostingerApi.getSeries(),
+        hostingerApi.getChannels(),
+        hostingerApi.getLiveSchedule(),
+      ]);
+
+      if (remotePlans.length) setPlans(remotePlans);
+      if (remoteCategories.length) setCategories(remoteCategories as Category[]);
+      if (remoteContents.length) setContents(remoteContents);
+      if (remoteSeries.length) setSeries(remoteSeries);
+      if (remoteChannels.length) setChannels(remoteChannels);
+      if (remoteSchedule.length) setLiveSchedules(remoteSchedule);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Erro ao carregar API Hostinger.';
+      console.warn('[F5TV] API Hostinger indisponível, mantendo dados mockados:', message);
+      setRemoteDataError(message);
+    } finally {
+      setIsRemoteDataLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshRemoteData();
+  }, []);
 
   const updateUsers = (newUsers: User[]) => {
     db.setUsers(newUsers);
@@ -177,6 +221,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setChannels(db.getChannels());
     setLiveSchedules(db.getLiveSchedules());
     setConnectedDevices(db.getConnectedDevices());
+    refreshRemoteData();
   };
 
   return (
@@ -199,6 +244,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       channels,
       liveSchedules,
       connectedDevices,
+      isRemoteDataEnabled,
+      isRemoteDataLoading,
+      remoteDataError,
       updateUsers,
       updatePlans,
       updateContents,
@@ -217,7 +265,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       updateChannels,
       updateLiveSchedules,
       updateConnectedDevices,
-      refreshAllData
+      refreshAllData,
+      refreshRemoteData
     }}>
       {children}
     </DataContext.Provider>
