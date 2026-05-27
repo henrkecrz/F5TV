@@ -4,6 +4,7 @@
  */
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { resetDBToDefault } from '../data/mockDatabase';
 import { RefreshCw } from 'lucide-react';
 
@@ -46,10 +47,10 @@ export default function Footer({ onSelectCredential }: FooterProps) {
         <div className="flex flex-col gap-4">
           <h3 className="text-white font-mono tracking-[0.2em] uppercase text-[11px] font-bold">Institucional</h3>
           <ul className="flex flex-col gap-2.5 text-xs text-white/50">
-            <li><button onClick={() => alert('F5 TV S.A. - Emissora de Televisão Brasileira concessionária de radiodifusão.')} className="hover:text-white transition text-left cursor-pointer">Sobre o Grupo F5</button></li>
-            <li><span className="text-white/30">Imprensa & Comunicação</span></li>
-            <li><span className="text-white/30">Contato Comercial</span></li>
-            <li><span className="text-white/30">Carreiras Globais</span></li>
+            <li><Link to="/sobre" className="hover:text-white transition cursor-pointer">Sobre a F5 TV</Link></li>
+            <li><Link to="/contato" className="hover:text-white transition cursor-pointer">Contato & Suporte</Link></li>
+            <li><Link to="/termos" className="hover:text-white transition cursor-pointer">Termos de Serviço</Link></li>
+            <li><Link to="/privacidade" className="hover:text-white transition cursor-pointer">Políticas de Privacidade</Link></li>
           </ul>
         </div>
 

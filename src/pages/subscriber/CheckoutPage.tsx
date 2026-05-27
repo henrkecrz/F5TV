@@ -8,7 +8,7 @@ import { CreditCard, Ticket, Check, ShieldCheck, QrCode, ClipboardCheck, ArrowLe
 export const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { plans, coupons, updateCoupons, updatePayments, users, updateUsers } = useData();
+  const { plans, coupons, updateCoupons, payments, updatePayments, users, updateUsers } = useData();
   const { currentUser } = useAuth();
   
   const selectedPlanId = searchParams.get('plano') || 'plano-premium';
@@ -139,7 +139,7 @@ export const CheckoutPage: React.FC = () => {
       status: 'paid',
       paymentMethod: paymentMethod === 'card' ? 'credit_card' : 'pix'
     };
-    updatePayments([newPayment]);
+    updatePayments([...payments, newPayment]);
 
     // 3. Update coupon usage count if applied
     if (appliedCoupon) {

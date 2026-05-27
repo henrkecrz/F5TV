@@ -8,6 +8,10 @@ import { SubscriberLayout } from '../layouts/SubscriberLayout';
 import { HomePage } from '../pages/public/HomePage';
 import { LandingPageRoute } from '../pages/public/LandingPageRoute';
 import { PlansPage } from '../pages/public/PlansPage';
+import { SobrePage } from '../pages/public/SobrePage';
+import { ContatoPage } from '../pages/public/ContatoPage';
+import { TermosPage } from '../pages/public/TermosPage';
+import { PrivacidadePage } from '../pages/public/PrivacidadePage';
 
 // Auth pages
 import { LoginPage } from '../pages/auth/LoginPage';
@@ -44,6 +48,10 @@ export const AppRoutes: React.FC = () => {
         <Route path="/cadastro" element={<RegisterPage />} />
         <Route path="/recuperar-senha" element={<RecoveryPage />} />
         <Route path="/planos" element={<PlansPage />} />
+        <Route path="/sobre" element={<SobrePage />} />
+        <Route path="/contato" element={<ContatoPage />} />
+        <Route path="/termos" element={<TermosPage />} />
+        <Route path="/privacidade" element={<PrivacidadePage />} />
       </Route>
 
       {/* 2. Premium Live Gate & Simulated Checkout Paths */}
