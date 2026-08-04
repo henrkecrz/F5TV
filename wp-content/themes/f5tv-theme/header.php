@@ -67,7 +67,7 @@ if (!defined('ABSPATH')) {
             
             <!-- Logo F5 TV -->
             <a href="<?php echo esc_url(home_url('/')); ?>" class="flex items-center gap-3 group">
-                <img src="<?php echo esc_url(F5TV_ASSETS_URI . '/images/f5tv-logo-neg.png'); ?>" alt="F5 TV" class="h-9 sm:h-10 w-auto object-contain" width="180" height="60">
+                <img src="<?php echo esc_url(F5TV_ASSETS_URI . '/images/f5tv-logo-neg.png'); ?>" alt="F5 TV" class="f5tv-site-logo" width="180" height="60">
                 <?php if (is_front_page() || is_page('planos')): ?>
                     <span class="hidden sm:inline-flex items-center gap-1.5 bg-f5-red/10 text-f5-red px-2 py-0.5 text-[10px] font-mono font-bold rounded uppercase tracking-widest">
                         PREMIUM
