@@ -91,15 +91,15 @@ $contents = get_posts([
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             <?php foreach ($contents as $item): ?>
                 <?php
-                $cover = get_field('cover_url', $item->ID) ?: get_the_post_thumbnail_url($item->ID, 'medium');
+                    $cover = f5tv_get_16x9_image($item->ID);
                 $genre = get_field('genre', $item->ID) ?: get_the_category_list(', ', '', $item->ID);
                 $age_rating = get_field('age_rating', $item->ID) ?: 'Livre';
                 $is_exclusive = get_field('is_exclusive', $item->ID);
                 ?>
                 <div class="group relative bg-f5-blue-950 border border-white/5 hover:border-f5-red rounded-lg overflow-hidden cursor-pointer hover:border-f5-red/50 transform transition-all duration-300 hover:scale-[1.03] shadow-2xl">
-                    <div class="aspect-[3/4] relative w-full bg-f5-blue-900">
+                    <div class="aspect-video relative w-full bg-f5-blue-900">
                         <?php if ($cover): ?>
-                            <img src="<?php echo esc_url($cover); ?>" alt="<?php echo esc_attr(get_the_title($item)); ?>" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                            <img src="<?php echo esc_url($cover); ?>" alt="<?php echo esc_attr(get_the_title($item)); ?>" class="w-full h-full object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-300">
                         <?php endif; ?>
                         <div class="absolute top-2.5 right-2.5 bg-f5-blue/90 text-[10px] font-mono font-bold text-f5-red px-2 py-0.5 rounded border border-white/5">
                             <?php echo esc_html($age_rating); ?>

@@ -50,8 +50,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         container.innerHTML = items.map(item => `
             <a href="/assista?id=${item.id}" class="group flex flex-col bg-f5-blue-950 border border-zinc-900 rounded-xl overflow-hidden hover:scale-103 transition duration-200 shadow-lg">
-                <div class="aspect-[3/4] w-full bg-zinc-900 relative">
-                    <img src="${item.coverUrl || 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=600'}" alt="${item.title}" class="w-full h-full object-cover group-hover:opacity-80 transition">
+                <div class="aspect-video w-full bg-zinc-900 relative">
+                    <img src="${item.coverUrl || 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=1280'}" alt="${item.title}" class="w-full h-full object-contain group-hover:opacity-80 transition">
                 </div>
                 <div class="p-3 flex flex-col gap-1">
                     <strong class="text-xs text-white line-clamp-1 group-hover:text-f5-red transition">${item.title}</strong>

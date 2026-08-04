@@ -122,17 +122,14 @@ if (empty($contents)) {
 
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
                 <?php if (!empty($contents)): foreach ($contents as $item):
-                    $program_slug = sanitize_title($item->title ?? get_the_title($item->ID));
-                    $local_cover_path = F5TV_ASSETS_DIR . '/programas/' . $program_slug . '/' . $program_slug . '-16x9.jpg';
-                    $local_cover_url = F5TV_ASSETS_URI . '/programas/' . $program_slug . '/' . $program_slug . '-16x9.jpg';
-                    $cover = file_exists($local_cover_path) ? $local_cover_url : ($item->cover ?? f5tv_get_field('cover_url', $item->ID) ?: get_the_post_thumbnail_url($item->ID, 'medium') ?: 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=600');
+                    $cover = f5tv_get_16x9_image($item->ID, $item->cover ?? 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=1280');
                     $genre = $item->genre ?? f5tv_get_field('genre', $item->ID) ?: 'Streaming';
                     $age_rating = $item->age_rating ?? f5tv_get_field('age_rating', $item->ID) ?: 'Livre';
                     $is_exclusive = $item->is_exclusive ?? f5tv_get_field('is_exclusive', $item->ID);
                 ?>
                     <a href="<?php echo esc_url(get_permalink($item->ID)); ?>" class="group relative bg-f5-blue-950 border border-white/5 rounded-lg overflow-hidden cursor-pointer hover:border-f5-red/50 transform transition-all duration-300 hover:scale-[1.03] shadow-2xl block">
                         <div class="aspect-video relative w-full bg-f5-blue-900">
-                            <img src="<?php echo esc_url($cover); ?>" alt="<?php echo esc_attr($item->post_title); ?>" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                            <img src="<?php echo esc_url($cover); ?>" alt="<?php echo esc_attr($item->post_title); ?>" class="w-full h-full object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-300">
                             <div class="absolute top-2.5 right-2.5 bg-f5-blue/90 text-[10px] font-mono font-bold text-f5-red px-2 py-0.5 rounded border border-white/5">
                                 <?php echo esc_html($age_rating); ?>
                             </div>

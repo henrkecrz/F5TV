@@ -165,7 +165,7 @@ if ($all_categories && !is_wp_error($all_categories)) {
                                     src="<?php echo esc_url($card_cover); ?>"
                                     alt="<?php echo esc_attr($ser['title']); ?>"
                                     referrerpolicy="no-referrer"
-                                    class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition duration-300"
+                                    class="w-full h-full object-contain opacity-90 group-hover:opacity-100 transition duration-300"
                                 >
                                 <div class="absolute top-2 left-2 bg-f5-red text-[9px] font-bold text-white px-1.5 py-0.5 rounded uppercase font-mono tracking-wider">
                                     SÉRIE F5 TV
@@ -216,7 +216,7 @@ if ($all_categories && !is_wp_error($all_categories)) {
                                             src="<?php echo esc_url($cover); ?>"
                                             alt="<?php echo esc_attr($item->post_title); ?>"
                                             referrerpolicy="no-referrer"
-                                            class="w-full h-full object-cover group-hover:opacity-100 opacity-80 transition duration-200"
+                                            class="w-full h-full object-contain group-hover:opacity-100 opacity-80 transition duration-200"
                                         >
                                         <div class="absolute top-2 right-2 bg-black/85 text-[10px] font-mono font-bold text-gray-300 px-1.5 py-0.5 rounded border border-white/5">
                                             <?php echo esc_html($age_rating); ?>

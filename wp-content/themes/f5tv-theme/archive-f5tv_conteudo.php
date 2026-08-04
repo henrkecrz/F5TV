@@ -43,18 +43,18 @@ if (!$archive_title) {
         <?php if (have_posts()): ?>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                 <?php while (have_posts()): the_post();
-                    $cover      = get_field('cover_url') ?: get_the_post_thumbnail_url(get_the_ID(), 'medium') ?: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=600';
+                    $cover      = f5tv_get_16x9_image(get_the_ID(), 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=1280');
                     $genre      = get_field('genre') ?: '';
                     $age_rating = get_field('age_rating') ?: 'Livre';
                     $exclusive  = get_field('is_exclusive');
                 ?>
                     <article class="group relative bg-f5-blue-950 border border-zinc-900 hover:border-red-600 rounded-lg overflow-hidden cursor-pointer transition transform hover:-translate-y-1 block animate-fade-in">
                         <a href="<?php the_permalink(); ?>" class="block">
-                            <div class="aspect-[3/4] relative bg-f5-blue-900">
+                            <div class="aspect-video relative bg-f5-blue-900">
                                 <img
                                     src="<?php echo esc_url($cover); ?>"
                                     alt="<?php the_title_attribute(); ?>"
-                                    class="w-full h-full object-cover group-hover:opacity-100 opacity-80 transition duration-200"
+                                    class="w-full h-full object-contain group-hover:opacity-100 opacity-80 transition duration-200"
                                 >
                                 <div class="absolute top-2 right-2 bg-black/85 text-[10px] font-mono font-bold text-gray-300 px-1.5 py-0.5 rounded border border-white/5">
                                     <?php echo esc_html($age_rating); ?>

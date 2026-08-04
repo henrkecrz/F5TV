@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return `
                 <a href="/assista?id=${item.contentId}" class="group flex flex-col bg-f5-blue-950 border border-zinc-900 rounded-2xl overflow-hidden hover:scale-102 transition duration-200 shadow-xl">
                     <div class="aspect-video w-full bg-zinc-900 relative">
-                        <img src="${banner}" alt="${title}" class="w-full h-full object-cover group-hover:opacity-75 transition">
+                        <img src="${banner}" alt="${title}" class="w-full h-full object-contain group-hover:opacity-75 transition">
                         <div class="absolute inset-x-0 bottom-0 bg-black/60 h-1.5">
                             <div class="bg-f5-red h-full" style="width: ${progress}%"></div>
                         </div>

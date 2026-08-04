@@ -25,16 +25,16 @@ $term = get_queried_object();
         <?php if (have_posts()): ?>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <?php while (have_posts()): the_post();
-                    $cover = get_field('cover_url') ?: get_the_post_thumbnail_url(get_the_ID(), 'medium');
+                    $cover = f5tv_get_16x9_image(get_the_ID());
                     $genre = get_field('genre') ?: '';
                     $age_rating = get_field('age_rating') ?: 'Livre';
                     $is_exclusive = get_field('is_exclusive');
                 ?>
                     <article class="group relative bg-f5-blue-950 border border-white/5 hover:border-f5-red rounded-lg overflow-hidden cursor-pointer hover:border-f5-red/50 transform transition-all duration-300 hover:scale-[1.03] shadow-2xl">
                         <a href="<?php the_permalink(); ?>" class="block">
-                            <div class="aspect-[3/4] relative w-full bg-f5-blue-900">
+                            <div class="aspect-video relative w-full bg-f5-blue-900">
                                 <?php if ($cover): ?>
-                                    <img src="<?php echo esc_url($cover); ?>" alt="<?php the_title(); ?>" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300">
+                                    <img src="<?php echo esc_url($cover); ?>" alt="<?php the_title(); ?>" class="w-full h-full object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-300">
                                 <?php endif; ?>
                                 <div class="absolute top-2.5 right-2.5 bg-f5-blue/90 text-[10px] font-mono font-bold text-f5-red px-2 py-0.5 rounded border border-white/5">
                                     <?php echo esc_html($age_rating); ?>

@@ -26,10 +26,7 @@ $program_query = new WP_Query([
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-5 md:gap-6">
                 <?php while ($program_query->have_posts()): $program_query->the_post();
                     $post_id = get_the_ID();
-                    $program_slug = sanitize_title(get_the_title($post_id));
-                    $local_cover_path = F5TV_ASSETS_DIR . '/programas/' . $program_slug . '/' . $program_slug . '-16x9.jpg';
-                    $local_cover_url = F5TV_ASSETS_URI . '/programas/' . $program_slug . '/' . $program_slug . '-16x9.jpg';
-                    $cover = file_exists($local_cover_path) ? $local_cover_url : (f5tv_get_field('cover_url', $post_id) ?: get_the_post_thumbnail_url($post_id, 'medium'));
+                    $cover = f5tv_get_16x9_image($post_id);
                     $genre = f5tv_get_field('genre', $post_id) ?: 'F5 TV';
                     $age_rating = f5tv_get_field('age_rating', $post_id) ?: 'Livre';
                     $description = get_the_excerpt();
@@ -38,7 +35,7 @@ $program_query = new WP_Query([
                         <a href="<?php echo esc_url(get_permalink($post_id)); ?>" class="block">
                             <div class="aspect-video relative bg-f5-blue-900">
                                 <?php if ($cover): ?>
-                                    <img src="<?php echo esc_url($cover); ?>" alt="<?php the_title_attribute(); ?>" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition duration-300">
+                                    <img src="<?php echo esc_url($cover); ?>" alt="<?php the_title_attribute(); ?>" class="w-full h-full object-contain opacity-90 group-hover:opacity-100 transition duration-300">
                                 <?php endif; ?>
                                 <span class="absolute top-2 right-2 bg-black/80 text-[10px] font-mono font-bold text-gray-200 px-1.5 py-0.5 rounded border border-white/10"><?php echo esc_html($age_rating); ?></span>
                             </div>

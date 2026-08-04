@@ -341,16 +341,16 @@ while (have_posts()): the_post();
                     <h3 class="text-xs font-mono font-black uppercase text-zinc-500 tracking-wider">Você Também Pode Curtir</h3>
                     <div class="flex flex-col gap-3">
                         <?php foreach ($related_posts as $related):
-                            $rel_cover  = f5tv_get_field('cover_url', $related->ID) ?: get_the_post_thumbnail_url($related->ID, 'thumbnail') ?: '';
+                            $rel_cover  = f5tv_get_16x9_image($related->ID);
                             $rel_genre  = f5tv_get_field('genre', $related->ID) ?: '';
                             $rel_dur    = f5tv_get_field('duration', $related->ID) ?: '';
                         ?>
                             <a href="<?php echo esc_url(get_permalink($related->ID)); ?>"
                                class="flex gap-3 bg-f5-blue-950 p-2 rounded-xl border border-zinc-900 hover:border-zinc-800 transition cursor-pointer group">
-                                <div class="w-16 h-20 rounded bg-f5-blue-900 overflow-hidden shrink-0">
+                                <div class="w-28 aspect-video rounded bg-f5-blue-900 overflow-hidden shrink-0">
                                     <?php if ($rel_cover): ?>
                                         <img src="<?php echo esc_url($rel_cover); ?>" alt="<?php echo esc_attr($related->post_title); ?>"
-                                             class="w-full h-full object-cover group-hover:opacity-100 opacity-70 transition">
+                                             class="w-full h-full object-contain group-hover:opacity-100 opacity-70 transition">
                                     <?php endif; ?>
                                 </div>
                                 <div class="flex-1 flex flex-col justify-center text-left">

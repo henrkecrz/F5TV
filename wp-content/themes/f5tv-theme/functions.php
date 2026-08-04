@@ -50,6 +50,28 @@ if (!function_exists('f5tv_get_field')) {
 }
 
 /**
+ * Retorna sempre a arte horizontal 16:9 destinada aos cards.
+ * O arquivo local tem prioridade para evitar capas verticais ou recortes.
+ */
+if (!function_exists('f5tv_get_16x9_image')) {
+    function f5tv_get_16x9_image($post_id, $fallback = ''): string {
+        $post_id = is_object($post_id) && isset($post_id->ID) ? $post_id->ID : (int) $post_id;
+        $slug = sanitize_title(get_the_title($post_id));
+        $local_path = F5TV_ASSETS_DIR . '/programas/' . $slug . '/' . $slug . '-16x9.jpg';
+        $local_url  = F5TV_ASSETS_URI . '/programas/' . $slug . '/' . $slug . '-16x9.jpg';
+
+        if ($slug && file_exists($local_path)) {
+            return $local_url;
+        }
+
+        return (string) (f5tv_get_field('banner_url', $post_id)
+            ?: f5tv_get_field('cover_url', $post_id)
+            ?: get_the_post_thumbnail_url($post_id, 'f5tv-content-banner')
+            ?: $fallback);
+    }
+}
+
+/**
  * Funções auxiliares para parser de URLs de Vídeo (Vimeo, YouTube, MP4, HLS)
  */
 if (!function_exists('f5tv_get_vimeo_id')) {
@@ -499,7 +521,7 @@ add_action('rest_api_init', function () {
                 $items[] = [
                     'id'       => $saved_id,
                     'title'    => get_the_title($saved_id),
-                    'coverUrl' => f5tv_get_field('cover_url', $saved_id) ?: get_the_post_thumbnail_url($saved_id, 'medium'),
+                    'coverUrl' => f5tv_get_16x9_image($saved_id),
                     'genre'    => ($terms && !is_wp_error($terms)) ? $terms[0]->name : 'F5 TV',
                     'url'      => get_permalink($saved_id),
                 ];
