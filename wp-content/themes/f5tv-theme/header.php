@@ -138,6 +138,7 @@ if (!defined('ABSPATH')) {
                         </div>
 
                         <nav class="p-2 flex flex-col gap-1 text-xs font-semibold text-zinc-200">
+                            <?php if (is_user_logged_in()): ?>
                             <a href="<?php echo esc_url(home_url('/area-do-assinante/')); ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-f5-red/15 hover:text-white transition group/item">
                                 <svg class="w-4 h-4 text-f5-red group-hover/item:scale-110 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                                 <span>Área do Assinante</span>
@@ -175,7 +176,9 @@ if (!defined('ABSPATH')) {
                                 <span>Planos & Assinatura</span>
                             </a>
 
-                            <div class="my-1.5 border-t border-zinc-800"></div>
+                            <?php endif; ?>
+
+                            <?php if (is_user_logged_in()): ?><div class="my-1.5 border-t border-zinc-800"></div><?php endif; ?>
 
                             <?php if (is_user_logged_in()): ?>
                                 <a href="<?php echo esc_url(wp_logout_url(home_url('/'))); ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-f5-red hover:bg-f5-red/15 transition font-bold group/item">

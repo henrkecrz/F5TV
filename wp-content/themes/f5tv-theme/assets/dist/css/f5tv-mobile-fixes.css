@@ -42,6 +42,11 @@ body {
   z-index: 9999 !important;
   pointer-events: auto !important;
   isolation: isolate;
+  background: #060913 !important;
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-bottom: 1px solid #3f3f46 !important;
 }
 
 #f5tv-mobile-menu:not(.hidden) {
@@ -50,6 +55,10 @@ body {
 
 #f5tv-user-dropdown {
   z-index: 10000 !important;
+  background: #0a0f1d !important;
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 @media (max-width: 1023px) {
