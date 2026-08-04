@@ -93,7 +93,7 @@ if (!defined('ABSPATH')) {
             <!-- Navegação Principal -->
             <nav class="hidden lg:flex items-center gap-5 text-xs font-mono font-bold tracking-widest text-zinc-300 uppercase">
                 <a href="<?php echo esc_url(home_url('/')); ?>" class="hover:text-white transition">Início</a>
-                <a href="<?php echo esc_url(home_url('/series/')); ?>" class="hover:text-white transition">Catálogo</a>
+                <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="hover:text-white transition">Catálogo</a>
                 <a href="<?php echo esc_url(home_url('/minha-lista/')); ?>" class="hover:text-white transition">Minha Lista</a>
                 <a href="<?php echo esc_url(home_url('/ao-vivo/')); ?>" class="hover:text-white transition">Ao Vivo</a>
                 <a href="<?php echo esc_url(home_url('/programacao/')); ?>" class="hover:text-white transition">Programação</a>
@@ -155,9 +155,9 @@ if (!defined('ABSPATH')) {
                                 <svg class="w-4 h-4 text-f5-red group-hover/item:scale-110 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                                 <span>Área do Assinante</span>
                             </a>
-                            <a href="<?php echo esc_url(home_url('/series/')); ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-f5-red/15 hover:text-white transition group/item">
+                            <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-f5-red/15 hover:text-white transition group/item">
                                 <svg class="w-4 h-4 text-f5-red group-hover/item:scale-110 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/></svg>
-                                <span>Catálogo de Séries</span>
+                                <span>Catálogo</span>
                             </a>
                             <a href="<?php echo esc_url(home_url('/ao-vivo/')); ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-f5-red/15 hover:text-white transition group/item">
                                 <svg class="w-4 h-4 text-f5-red group-hover/item:scale-110 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
@@ -218,7 +218,7 @@ if (!defined('ABSPATH')) {
     <div id="f5tv-mobile-menu" class="hidden lg:hidden fixed inset-x-0 top-[4.5rem] z-[75] bg-[#071a33] border-b border-zinc-700/80 shadow-2xl p-4">
         <nav class="flex flex-col gap-1 text-xs font-mono font-bold tracking-widest text-zinc-200 uppercase">
             <a href="<?php echo esc_url(home_url('/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Início</a>
-            <a href="<?php echo esc_url(home_url('/series/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Catálogo</a>
+            <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Catálogo</a>
             <a href="<?php echo esc_url(home_url('/minha-lista/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Minha Lista</a>
             <a href="<?php echo esc_url(home_url('/ao-vivo/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Ao Vivo</a>
             <a href="<?php echo esc_url(home_url('/programacao/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Programação</a>

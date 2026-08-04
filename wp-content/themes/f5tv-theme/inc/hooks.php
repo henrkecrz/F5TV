@@ -135,7 +135,7 @@ function f5tv_auto_create_pages(): void
         'sobre'                => 'Sobre a F5 TV',
         'contato'              => 'Contato & Suporte',
         'area-do-assinante'    => 'Área do Assinante',
-        'series'               => 'Catálogo de Séries',
+        'series'               => 'Catálogo',
     ];
 
     foreach ($pages as $slug => $title) {
@@ -545,7 +545,6 @@ function f5tv_custom_menu_order(array $menu_order): array
     }
     return $menu_order;
 }
-
 
 
 

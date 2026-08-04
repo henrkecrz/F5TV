@@ -23,8 +23,7 @@ if (!defined('ABSPATH')) {
                 <ul class="flex flex-col gap-2.5 text-xs text-white/50">
                     <li><a href="<?php echo esc_url(home_url('/')); ?>" class="hover:text-white transition">Início</a></li>
                     <li><a href="<?php echo esc_url(home_url('/planos/')); ?>" class="hover:text-white transition">Planos</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/categoria/series/')); ?>" class="hover:text-white transition">Séries</a></li>
-                    <li><a href="<?php echo esc_url(home_url('/series/')); ?>" class="hover:text-white transition">Catálogo</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="hover:text-white transition">Catálogo</a></li>
                     <li><a href="<?php echo esc_url(home_url('/area-do-assinante/')); ?>" class="hover:text-white transition">Área do Assinante</a></li>
                 </ul>
             </div>

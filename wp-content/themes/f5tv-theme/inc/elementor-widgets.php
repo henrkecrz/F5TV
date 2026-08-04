@@ -108,8 +108,8 @@ function f5tv_register_elementor_widgets($widgets_manager): void
                         <a href="#planos" class="px-8 py-3.5 rounded bg-white text-black font-bold flex items-center justify-center gap-2 hover:bg-f5-red hover:text-white transition-colors cursor-pointer text-sm uppercase tracking-wider">
                             <span>Conteúdos em breve</span>
                         </a>
-                        <a href="<?php echo esc_url(home_url('/area-do-assinante/')); ?>" class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-3.5 rounded font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition cursor-pointer text-sm uppercase tracking-wider">
-                            <span>&#9654; Explorar Prévia</span>
+                        <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-3.5 rounded font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition cursor-pointer text-sm uppercase tracking-wider">
+                            <span>&#9654; Explorar a Programação</span>
                         </a>
                     </div>
                 </div>
@@ -194,7 +194,7 @@ function f5tv_register_elementor_widgets($widgets_manager): void
                             <span class="text-[10px] font-mono font-bold tracking-[0.2em] text-f5-red uppercase">NO CATÁLOGO</span>
                             <h2 class="text-3xl md:text-5xl font-black tracking-tight text-white mt-2">Nossos Maiores Sucessos</h2>
                         </div>
-                        <a href="<?php echo esc_url(home_url('/series/')); ?>" class="text-sm font-semibold text-f5-red hover:text-white flex items-center gap-2 transition-colors uppercase tracking-wider font-mono text-xs">
+                        <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="text-sm font-semibold text-f5-red hover:text-white flex items-center gap-2 transition-colors uppercase tracking-wider font-mono text-xs">
                             <span>Ver catálogo completo &rarr;</span>
                         </a>
                     </div>

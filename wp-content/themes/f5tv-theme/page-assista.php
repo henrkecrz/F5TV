@@ -55,13 +55,13 @@ if ($content_post) {
         }
     }
 
-    $back_url = get_permalink($content_id) ?: home_url('/series/');
+    $back_url = get_permalink($content_id) ?: home_url('/catalogo/');
 } else {
     $video_url   = 'https://vimeo.com/76979871';
     $title       = 'Conteúdo Indisponível';
     $subtitle    = '';
     $poster_url  = '';
-    $back_url    = home_url('/series/');
+    $back_url    = home_url('/catalogo/');
     $next_ep_url = null;
 }
 
@@ -242,7 +242,7 @@ $yt_id    = $is_youtube ? $yt_match[1] : '';
         </svg>
         <h2 style="font-size:18px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#dc2626;margin:0;">Mídia Indisponível</h2>
         <p style="color:#71717a;font-size:13px;font-family:monospace;max-width:280px;margin:0;">Conteúdo não encontrado ou sem vídeo cadastrado.</p>
-        <a href="<?php echo esc_url(home_url('/series/')); ?>"
+        <a href="<?php echo esc_url(home_url('/catalogo/')); ?>"
            style="margin-top:8px;padding:8px 20px;background:rgba(10,10,48,.8);border:1px solid rgba(255,255,255,.15);border-radius:6px;font-family:monospace;font-size:12px;text-transform:uppercase;color:#fff;text-decoration:none;transition:background .2s;">
             ← Voltar ao Catálogo
         </a>

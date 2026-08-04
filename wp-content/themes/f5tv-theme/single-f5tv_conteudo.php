@@ -93,7 +93,7 @@ while (have_posts()): the_post();
 
     <!-- Breadcrumb -->
     <div class="max-w-7xl mx-auto px-6 md:px-8 pt-6">
-        <a href="<?php echo esc_url(home_url('/series/')); ?>" class="inline-flex items-center gap-1 text-zinc-500 hover:text-white transition text-xs font-mono font-bold uppercase">
+        <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="inline-flex items-center gap-1 text-zinc-500 hover:text-white transition text-xs font-mono font-bold uppercase">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
             <span>Voltar ao catálogo</span>
         </a>

@@ -32,7 +32,7 @@ if (!$archive_title) {
                 <p class="text-zinc-400 text-sm font-semibold mt-1 max-w-2xl"><?php echo esc_html($archive_desc); ?></p>
             <?php endif; ?>
         </div>
-        <a href="<?php echo esc_url(home_url('/series/')); ?>" class="hidden sm:flex items-center gap-2 text-xs font-mono font-bold text-zinc-500 hover:text-f5-red transition uppercase tracking-widest shrink-0">
+        <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="hidden sm:flex items-center gap-2 text-xs font-mono font-bold text-zinc-500 hover:text-f5-red transition uppercase tracking-widest shrink-0">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
             <span>Ver Séries</span>
         </a>

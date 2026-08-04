@@ -843,6 +843,14 @@ add_filter('template_include', function ($template) {
     return $template;
 }, 99);
 
+add_action('template_redirect', function () {
+    $request_path = isset($_SERVER['REQUEST_URI']) ? trim((string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/') : '';
+    if ($request_path === 'series' || $request_path === 'categoria/series') {
+        wp_safe_redirect(home_url('/catalogo/'), 301);
+        exit;
+    }
+});
+
 /**
  * Cadastra os programas editoriais fornecidos pela F5 TV no catálogo.
  * A rotina é idempotente: cria uma vez e atualiza as capas/descritivos sem duplicar posts.
