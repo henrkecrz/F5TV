@@ -615,6 +615,7 @@ add_action('after_switch_theme', 'f5tv_create_cadastro_page');
 add_action('init', 'f5tv_ensure_cadastro_page_exists');
 add_action('after_switch_theme', 'f5tv_create_catalogo_page');
 add_action('init', 'f5tv_ensure_catalogo_page_exists');
+add_action('init', 'f5tv_register_catalogo_route', 1);
 
 function f5tv_create_login_page(): void
 {
@@ -727,6 +728,24 @@ function f5tv_ensure_catalogo_page_exists(): void
 }
 
 /**
+ * Keep /catalogo/ available even when WordPress has not flushed permalinks after deploy.
+ */
+function f5tv_register_catalogo_route(): void
+{
+    add_rewrite_rule('^catalogo/?$', 'index.php?f5tv_catalogo=1', 'top');
+
+    if (get_option('f5tv_catalogo_rewrite_version') !== '1') {
+        flush_rewrite_rules(false);
+        update_option('f5tv_catalogo_rewrite_version', '1', false);
+    }
+}
+
+add_filter('query_vars', function ($vars) {
+    $vars[] = 'f5tv_catalogo';
+    return $vars;
+});
+
+/**
  * 4. Após falha de login WP (wp-login.php?login=failed),
  *    garantir que o redirect vai para /login?login=failed
  */
@@ -756,7 +775,8 @@ add_filter('lostpassword_url', function ($lostpassword_url, $redirect) {
  *    Método mais confiável — não depende de post_meta
  */
 add_filter('template_include', function ($template) {
-    if (is_page('login') || is_page('cadastro') || is_page('catalogo')) {
+    $request_path = isset($_SERVER['REQUEST_URI']) ? trim((string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/') : '';
+    if (is_page('login') || is_page('cadastro') || is_page('catalogo') || get_query_var('f5tv_catalogo') || $request_path === 'catalogo') {
         $custom = get_template_directory() . (is_page('cadastro') ? '/page-cadastro.php' : (is_page('catalogo') ? '/page-catalogo.php' : '/page-login.php'));
         if (file_exists($custom)) {
             return $custom;
