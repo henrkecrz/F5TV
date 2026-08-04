@@ -81,8 +81,6 @@ if (!defined('ABSPATH')) {
                 <a href="<?php echo esc_url(home_url('/series/')); ?>" class="hover:text-white transition">Séries</a>
                 <a href="<?php echo esc_url(home_url('/ao-vivo/')); ?>" class="hover:text-white transition">Ao Vivo</a>
                 <a href="<?php echo esc_url(home_url('/programacao/')); ?>" class="hover:text-white transition">Programação</a>
-                <a href="<?php echo esc_url(home_url('/minha-lista/')); ?>" class="hover:text-white transition">Minha Lista</a>
-                <a href="<?php echo esc_url(home_url('/continuar-assistindo/')); ?>" class="hover:text-white transition">Continuar</a>
                 <a href="<?php echo esc_url(home_url('/busca/')); ?>" class="hover:text-white transition">Busca</a>
                 <a href="<?php echo esc_url(home_url('/planos/')); ?>" class="hover:text-white transition text-f5-red">Planos</a>
             </nav>
@@ -207,7 +205,6 @@ if (!defined('ABSPATH')) {
             <a href="<?php echo esc_url(home_url('/series/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Séries</a>
             <a href="<?php echo esc_url(home_url('/ao-vivo/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Ao Vivo</a>
             <a href="<?php echo esc_url(home_url('/programacao/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Programação</a>
-            <a href="<?php echo esc_url(home_url('/minha-lista/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Minha Lista</a>
             <a href="<?php echo esc_url(home_url('/busca/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Busca</a>
             <a href="<?php echo esc_url(home_url('/planos/')); ?>" class="px-3 py-3 rounded-lg text-f5-red hover:bg-f5-red/15 hover:text-white transition">Planos</a>
         </nav>
