@@ -14,7 +14,7 @@ get_header();
             <h1 class="text-3xl font-black tracking-tight mt-1">Continuar Assistindo</h1>
         </div>
 
-        <div id="f5tv-continue-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div id="f5tv-continue-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
             <div class="col-span-full py-16 text-center text-zinc-500 font-mono text-xs">
                 Carregando seu histórico de progresso...
             </div>

@@ -14,7 +14,7 @@ get_header();
             <h1 class="text-3xl font-black tracking-tight mt-1">Minha Lista de Conteúdos</h1>
         </div>
 
-        <div id="f5tv-mylist-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <div id="f5tv-mylist-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6">
             <div class="col-span-full py-16 text-center text-zinc-500 font-mono text-xs">
                 Carregando sua lista personalizada...
             </div>
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         grid.innerHTML = myItems.map(item => `
             <a href="${item.url || ('/assista/' + item.id + '/')}" class="group flex flex-col bg-f5-blue-950 border border-zinc-900 rounded-xl overflow-hidden hover:scale-103 transition duration-200 shadow-lg">
-                <div class="aspect-[4/5] w-full bg-zinc-900 relative">
+                <div class="aspect-video w-full bg-zinc-900 relative">
                     <img src="${item.coverUrl || 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=1280'}" alt="${item.title}" class="w-full h-full object-contain group-hover:opacity-80 transition">
                 </div>
                 <div class="p-3 flex flex-col gap-1">

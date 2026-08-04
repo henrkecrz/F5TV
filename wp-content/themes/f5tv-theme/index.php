@@ -88,7 +88,7 @@ $contents = get_posts([
             </a>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6">
             <?php foreach ($contents as $item): ?>
                 <?php
                     $cover = f5tv_get_16x9_image($item->ID);
