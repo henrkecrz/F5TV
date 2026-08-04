@@ -155,6 +155,7 @@ function f5tv_enqueue_assets(): void
 
     // CSS principal (Tailwind compilado)
     wp_enqueue_style('f5tv-main-css', F5TV_ASSETS_URI . '/dist/css/style.css', [], $version);
+    wp_enqueue_style('f5tv-mobile-fixes', F5TV_ASSETS_URI . '/dist/css/f5tv-mobile-fixes.css', ['f5tv-main-css'], $version . '.mobile');
 
     // JS principal (blocos Gutenberg leves)
     wp_enqueue_script('f5tv-main-js', F5TV_ASSETS_URI . '/dist/js/main.js', [], $version, true);
