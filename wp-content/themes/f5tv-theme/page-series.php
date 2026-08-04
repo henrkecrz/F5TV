@@ -54,7 +54,7 @@ if (empty($series_list)) {
                 'coverUrl'    => f5tv_get_field('cover_url', $program_id) ?: get_the_post_thumbnail_url($program_id, 'medium'),
                 'bannerUrl'   => f5tv_get_field('banner_url', $program_id) ?: f5tv_get_field('cover_url', $program_id),
                 'genre'       => f5tv_get_field('genre', $program_id) ?: (($terms && !is_wp_error($terms)) ? $terms[0]->name : 'F5 TV'),
-                'link'        => home_url('/assista?id=' . $program_id),
+                'link'        => get_permalink($program_id),
             ];
         }
         wp_reset_postdata();
