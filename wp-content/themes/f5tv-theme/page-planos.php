@@ -20,12 +20,12 @@ if (did_action('elementor/loaded') && \Elementor\Plugin::$instance->db->is_built
 <div id="plans-page-root" class="min-h-screen bg-f5-blue text-white flex flex-col justify-between font-sans relative pb-16">
     <main class="flex-1 max-w-7xl w-full mx-auto px-6 py-16 flex flex-col items-center gap-12">
         <div class="text-center max-w-2xl flex flex-col gap-3">
-            <span class="text-f5-red font-mono font-black text-xs uppercase tracking-widest">Escolha a sua experiência</span>
+            <span class="text-f5-red font-mono font-black text-xs uppercase tracking-widest">ASSINATURAS EM BREVE</span>
             <h1 class="text-3xl md:text-5xl font-black tracking-tight leading-none text-zinc-100">
-                Assinaturas Simples e Transparentes
+                Conteúdos por assinatura disponíveis em breve!
             </h1>
             <p class="text-zinc-400 text-sm md:text-base font-medium">
-                Selecione o plano ideal para você e sua família. Sem fidelidade, sem taxas ocultas, cancele a qualquer segundo online.
+                Estamos a preparar novas experiências de conteúdo para a F5 TV.
             </p>
         </div>
 
@@ -35,8 +35,7 @@ if (did_action('elementor/loaded') && \Elementor\Plugin::$instance->db->is_built
                 <div class="flex flex-col gap-2 pb-6 border-b border-zinc-900 text-center">
                     <span class="text-xs font-mono text-zinc-400 uppercase font-black tracking-widest">Básico</span>
                     <div class="flex items-baseline gap-1 mt-1 justify-center">
-                        <span class="text-4xl font-extrabold text-white">R$ 19,90</span>
-                        <span class="text-xs text-zinc-400 font-medium">/mês</span>
+                        <span class="text-sm font-semibold text-f5-red">Conteúdos por assinatura disponíveis em breve!</span>
                     </div>
                 </div>
 
@@ -58,9 +57,7 @@ if (did_action('elementor/loaded') && \Elementor\Plugin::$instance->db->is_built
                     </ul>
                 </div>
 
-                <a href="<?php echo esc_url(home_url('/cadastro?plan=plano-basico')); ?>" class="w-full text-center py-3 px-4 rounded-xl font-bold font-mono text-xs uppercase tracking-wider cursor-pointer transition duration-300 bg-[#194b7a] hover:bg-[#2869a5] text-zinc-100">
-                    Assinar Agora
-                </a>
+                <span class="w-full text-center py-3 px-4 rounded-xl font-bold font-mono text-xs uppercase tracking-wider bg-[#194b7a]/60 text-white/80">Disponível em breve</span>
             </div>
 
             <!-- Plano Família -->
@@ -68,8 +65,7 @@ if (did_action('elementor/loaded') && \Elementor\Plugin::$instance->db->is_built
                 <div class="flex flex-col gap-2 pb-6 border-b border-zinc-900 text-center">
                     <span class="text-xs font-mono text-zinc-400 uppercase font-black tracking-widest">Família</span>
                     <div class="flex items-baseline gap-1 mt-1 justify-center">
-                        <span class="text-4xl font-extrabold text-white">R$ 34,90</span>
-                        <span class="text-xs text-zinc-400 font-medium">/mês</span>
+                        <span class="text-sm font-semibold text-f5-red">Conteúdos por assinatura disponíveis em breve!</span>
                     </div>
                 </div>
 
@@ -91,9 +87,7 @@ if (did_action('elementor/loaded') && \Elementor\Plugin::$instance->db->is_built
                     </ul>
                 </div>
 
-                <a href="<?php echo esc_url(home_url('/cadastro?plan=plano-familia')); ?>" class="w-full text-center py-3 px-4 rounded-xl font-bold font-mono text-xs uppercase tracking-wider cursor-pointer transition duration-300 bg-f5-blue-900 hover:bg-zinc-800 text-zinc-100">
-                    Assinar Agora
-                </a>
+                <span class="w-full text-center py-3 px-4 rounded-xl font-bold font-mono text-xs uppercase tracking-wider bg-[#194b7a]/60 text-white/80">Disponível em breve</span>
             </div>
 
             <!-- Plano Premium (Recomendado) -->
@@ -105,8 +99,7 @@ if (did_action('elementor/loaded') && \Elementor\Plugin::$instance->db->is_built
                 <div class="flex flex-col gap-2 pb-6 border-b border-zinc-900 text-center">
                     <span class="text-xs font-mono text-f5-red uppercase font-black tracking-widest">Premium 4K</span>
                     <div class="flex items-baseline gap-1 mt-1 justify-center">
-                        <span class="text-4xl font-extrabold text-white">R$ 49,90</span>
-                        <span class="text-xs text-zinc-400 font-medium">/mês</span>
+                        <span class="text-sm font-semibold text-f5-red">Conteúdos por assinatura disponíveis em breve!</span>
                     </div>
                 </div>
 
@@ -132,9 +125,7 @@ if (did_action('elementor/loaded') && \Elementor\Plugin::$instance->db->is_built
                     </ul>
                 </div>
 
-                <a href="<?php echo esc_url(home_url('/cadastro?plan=plano-premium')); ?>" class="w-full text-center py-3 px-4 rounded-xl font-bold font-mono text-xs uppercase tracking-wider cursor-pointer transition duration-300 bg-[#194b7a] hover:bg-[#2869a5] text-white">
-                    Assinar Agora
-                </a>
+                <span class="w-full text-center py-3 px-4 rounded-xl font-bold font-mono text-xs uppercase tracking-wider bg-[#194b7a]/60 text-white/80">Disponível em breve</span>
             </div>
         </div>
 

@@ -52,7 +52,7 @@ if (!empty($hero_content)) {
 
         <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full h-fit max-w-md mt-2 sm:mt-4">
             <a href="<?php echo esc_url(home_url('/planos/')); ?>" class="px-5 sm:px-8 py-3 sm:py-3.5 rounded bg-white text-black font-bold flex items-center justify-center gap-2 hover:bg-f5-red hover:text-white transition-colors text-sm uppercase tracking-wider">
-                <span>Assinar Agora</span>
+                <span>Conteúdos em breve</span>
             </a>
             <a href="<?php echo esc_url(home_url('/categoria/series/')); ?>" class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-5 sm:px-8 py-3 sm:py-3.5 rounded font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition text-sm uppercase tracking-wider">
                 <span>Explorar Prévia</span>
@@ -170,9 +170,9 @@ $plans = get_posts([
 <section id="planos" class="py-24 px-4 sm:px-8 bg-f5-blue border-b border-white/5">
     <div class="max-w-7xl mx-auto">
         <div class="text-left max-w-2xl mb-18 flex flex-col gap-3">
-            <span class="text-[10px] font-mono font-bold tracking-[0.2em] text-f5-red uppercase">PREÇOS TRANSPARENTES</span>
-            <h2 class="text-4xl sm:text-6xl font-black tracking-tighter text-white leading-none">Escolha o seu plano ideal</h2>
-            <p class="text-white/60 text-base font-normal mt-2">Valores simples, táticos e sem fidelidade. Cancele digitalmente na simulação de conta em 2 cliques.</p>
+            <span class="text-[10px] font-mono font-bold tracking-[0.2em] text-f5-red uppercase">ASSINATURAS EM BREVE</span>
+            <h2 class="text-4xl sm:text-6xl font-black tracking-tighter text-white leading-none">Conteúdos por assinatura disponíveis em breve!</h2>
+            <p class="text-white/60 text-base font-normal mt-2">Estamos a preparar novas experiências de conteúdo para a F5 TV.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl">
@@ -192,16 +192,10 @@ $plans = get_posts([
 
                     <div class="<?php echo $is_premium ? 'pt-10' : ''; ?> p-8 flex flex-col gap-5 border-b border-white/5">
                         <span class="text-xs font-mono tracking-widest font-bold uppercase text-white/40"><?php echo esc_html(get_the_title($plan)); ?></span>
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-white/40 font-bold text-sm">R$</span>
-                            <span class="text-4xl font-black text-white">
-                                <?php echo number_format($price, 2, ',', '.'); ?>
-                            </span>
-                            <span class="text-white/45 text-xs">/mês</span>
-                        </div>
-                        <a href="<?php echo esc_url(home_url('/cadastro/?plan=' . $plan_id)); ?>" class="w-full font-bold px-4 py-3.5 rounded text-xs text-center transition tracking-wider uppercase font-mono flex items-center justify-center gap-2 <?php echo $is_premium ? 'bg-f5-red hover:bg-f5-red-700 text-white shadow-lg shadow-f5-red-700/10' : 'bg-white/10 hover:bg-white/20 text-white border border-white/10'; ?>">
-                            Definir Plano & Seguir
-                        </a>
+                        <p class="text-sm font-semibold text-f5-red">Conteúdos por assinatura disponíveis em breve!</p>
+                        <span class="w-full font-bold px-4 py-3.5 rounded text-xs text-center uppercase font-mono flex items-center justify-center gap-2 bg-white/10 text-white/60 border border-white/10">
+                            Disponível em breve
+                        </span>
                     </div>
 
                     <div class="flex-1 p-8 flex flex-col gap-4 bg-black/20">

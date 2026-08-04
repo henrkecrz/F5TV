@@ -92,7 +92,7 @@ if (empty($contents)) {
 
             <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full h-fit max-w-md mt-2 sm:mt-4">
                 <a href="#planos" class="px-5 sm:px-8 py-3 sm:py-3.5 rounded bg-white text-black font-bold flex items-center justify-center gap-2 hover:bg-f5-red hover:text-white transition-colors cursor-pointer text-sm uppercase tracking-wider">
-                    <span>&#128100; Assinar Agora</span>
+                    <span>Conteúdos em breve</span>
                 </a>
                 <a href="<?php echo esc_url(home_url('/area-do-assinante/')); ?>" class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-5 sm:px-8 py-3 sm:py-3.5 rounded font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition cursor-pointer text-sm uppercase tracking-wider">
                     <span>&#9654; Explorar Prévia</span>
@@ -315,50 +315,50 @@ if (empty($contents)) {
 
         <div class="max-w-7xl mx-auto">
             <div class="text-left max-w-2xl mb-18 flex flex-col gap-3">
-                <span class="text-[10px] font-mono font-bold tracking-[0.2em] text-f5-red uppercase">PREÇOS TRANSPARENTES</span>
-                <h2 class="text-4xl sm:text-6xl font-black tracking-tighter text-white leading-none">Escolha o seu plano ideal</h2>
-                <p class="text-white/60 text-base font-normal mt-2">Valores simples, táticos e sem fidelidade. Cancele digitalmente em 2 cliques.</p>
+                <span class="text-[10px] font-mono font-bold tracking-[0.2em] text-f5-red uppercase">ASSINATURAS EM BREVE</span>
+                <h2 class="text-4xl sm:text-6xl font-black tracking-tighter text-white leading-none">Conteúdos por assinatura disponíveis em breve!</h2>
+                <p class="text-white/60 text-base font-normal mt-2">Estamos a preparar novas experiências de conteúdo para a F5 TV.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl">
                 <div class="bg-f5-blue-950 border border-white/5 p-8 rounded-2xl flex flex-col justify-between">
                     <div>
                         <h3 class="text-2xl font-black text-white">Plano Básico</h3>
-                        <div class="text-3xl font-black text-f5-red mt-2">R$ 19,90<span class="text-xs text-zinc-500 font-normal">/mês</span></div>
+                        <p class="text-sm font-semibold text-f5-red mt-2">Conteúdos por assinatura disponíveis em breve!</p>
                         <ul class="mt-6 flex flex-col gap-3 text-xs text-zinc-300 font-medium">
                             <li>&bull; Acesso ao Sinal Ao Vivo 24/7</li>
                             <li>&bull; Resolução HD 720p em 1 Tela</li>
                             <li>&bull; Suporte Técnico Via Ticket</li>
                         </ul>
                     </div>
-                    <a href="<?php echo esc_url(home_url('/checkout?plan=plano-basico')); ?>" class="mt-8 bg-[#194b7a] hover:bg-[#2869a5] text-white text-center font-mono font-bold text-xs uppercase py-3 rounded-xl transition">Assinar Básico</a>
+                    <span class="mt-8 bg-[#194b7a]/60 text-white/80 text-center font-mono font-bold text-xs uppercase py-3 rounded-xl">Disponível em breve</span>
                 </div>
 
                 <div class="bg-f5-blue-950 border-2 border-f5-red p-8 rounded-2xl flex flex-col justify-between relative shadow-2xl">
                     <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-f5-red text-white text-[9px] font-mono font-black uppercase px-3 py-1 rounded-full shadow">MAIS POPULAR</span>
                     <div>
                         <h3 class="text-2xl font-black text-white">Plano Família</h3>
-                        <div class="text-3xl font-black text-f5-red mt-2">R$ 34,90<span class="text-xs text-zinc-500 font-normal">/mês</span></div>
+                        <p class="text-sm font-semibold text-f5-red mt-2">Conteúdos por assinatura disponíveis em breve!</p>
                         <ul class="mt-6 flex flex-col gap-3 text-xs text-zinc-300 font-medium">
                             <li>&bull; 3 Telas Simultâneas em Full HD</li>
                             <li>&bull; Perfis Individuais com Perfil Kids</li>
                             <li>&bull; Downloads Offline Ilimitados</li>
                         </ul>
                     </div>
-                    <a href="<?php echo esc_url(home_url('/checkout?plan=plano-familia')); ?>" class="mt-8 bg-f5-red hover:bg-f5-red-700 text-white text-center font-mono font-bold text-xs uppercase py-3 rounded-xl transition shadow-lg shadow-f5-red-700/30">Assinar Família</a>
+                    <span class="mt-8 bg-f5-red/50 text-white/80 text-center font-mono font-bold text-xs uppercase py-3 rounded-xl">Disponível em breve</span>
                 </div>
 
                 <div class="bg-f5-blue-950 border border-white/5 p-8 rounded-2xl flex flex-col justify-between">
                     <div>
                         <h3 class="text-2xl font-black text-white">Plano Premium</h3>
-                        <div class="text-3xl font-black text-f5-red mt-2">R$ 49,90<span class="text-xs text-zinc-500 font-normal">/mês</span></div>
+                        <p class="text-sm font-semibold text-f5-red mt-2">Conteúdos por assinatura disponíveis em breve!</p>
                         <ul class="mt-6 flex flex-col gap-3 text-xs text-zinc-300 font-medium">
                             <li>&bull; 4 Telas Simultâneas em 4K HDR</li>
                             <li>&bull; Áudio Dolby Atmos 5.1</li>
                             <li>&bull; Acesso Antecipado às Séries Exclusivas</li>
                         </ul>
                     </div>
-                    <a href="<?php echo esc_url(home_url('/checkout?plan=plano-premium')); ?>" class="mt-8 bg-[#194b7a] hover:bg-[#2869a5] text-white text-center font-mono font-bold text-xs uppercase py-3 rounded-xl transition">Assinar Premium</a>
+                    <span class="mt-8 bg-[#194b7a]/60 text-white/80 text-center font-mono font-bold text-xs uppercase py-3 rounded-xl">Disponível em breve</span>
                 </div>
             </div>
         </div>

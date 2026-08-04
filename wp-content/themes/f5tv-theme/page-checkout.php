@@ -6,6 +6,18 @@
 
 get_header();
 
+?>
+<main class="min-h-[55vh] bg-f5-blue text-white flex items-center justify-center px-6 py-20">
+    <div class="max-w-2xl text-center">
+        <span class="text-f5-red font-mono font-black text-xs tracking-widest uppercase">ASSINATURAS EM BREVE</span>
+        <h1 class="text-3xl md:text-5xl font-black tracking-tight mt-3">Conteúdos por assinatura disponíveis em breve!</h1>
+        <p class="text-white/60 text-sm md:text-base mt-5">A área de assinatura ainda não está disponível. Em breve teremos novidades.</p>
+    </div>
+</main>
+<?php
+get_footer();
+return;
+
 $plan = isset($_GET['plan']) ? sanitize_text_field($_GET['plan']) : 'plano-premium';
 $plan_names = [
     'plano-basico'  => ['name' => 'Plano Básico', 'price' => 19.90],
