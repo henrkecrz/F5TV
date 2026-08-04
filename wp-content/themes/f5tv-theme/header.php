@@ -78,7 +78,7 @@ if (!defined('ABSPATH')) {
             </a>
 
             <!-- Navegação Principal -->
-            <nav class="hidden md:flex items-center gap-5 text-xs font-mono font-bold tracking-widest text-zinc-300 uppercase">
+            <nav class="hidden lg:flex items-center gap-5 text-xs font-mono font-bold tracking-widest text-zinc-300 uppercase">
                 <a href="<?php echo esc_url(home_url('/')); ?>" class="hover:text-white transition">Início</a>
                 <a href="<?php echo esc_url(home_url('/series/')); ?>" class="hover:text-white transition">Séries</a>
                 <a href="<?php echo esc_url(home_url('/ao-vivo/')); ?>" class="hover:text-white transition">Ao Vivo</a>
@@ -91,7 +91,7 @@ if (!defined('ABSPATH')) {
 
             <!-- Lado Direito: Ícone do Personagem / Avatar + Menu Cascata do Assinante -->
             <div class="flex items-center gap-3">
-                <button type="button" id="f5tv-mobile-menu-btn" aria-expanded="false" aria-controls="f5tv-mobile-menu" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-xl border border-zinc-700/80 bg-[#0e1424] text-zinc-200 hover:text-white hover:bg-[#161f36] transition cursor-pointer" aria-label="Abrir menu">
+                <button type="button" id="f5tv-mobile-menu-btn" aria-expanded="false" aria-controls="f5tv-mobile-menu" class="lg:hidden relative z-[80] inline-flex items-center justify-center w-10 h-10 rounded-xl border border-zinc-700/80 bg-[#0e1424] text-zinc-200 hover:text-white hover:bg-[#161f36] transition cursor-pointer select-none" aria-label="Abrir menu">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
 
@@ -196,7 +196,7 @@ if (!defined('ABSPATH')) {
         </div>
     </header>
 
-    <div id="f5tv-mobile-menu" class="hidden md:hidden fixed inset-x-0 top-[4.5rem] z-[65] bg-[#060913] border-b border-zinc-700/80 shadow-2xl p-4">
+    <div id="f5tv-mobile-menu" class="hidden lg:hidden fixed inset-x-0 top-[4.5rem] z-[75] bg-[#060913] border-b border-zinc-700/80 shadow-2xl p-4">
         <nav class="flex flex-col gap-1 text-xs font-mono font-bold tracking-widest text-zinc-200 uppercase">
             <a href="<?php echo esc_url(home_url('/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Início</a>
             <a href="<?php echo esc_url(home_url('/series/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Séries</a>
