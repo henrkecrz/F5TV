@@ -9,6 +9,10 @@ if (!defined('ABSPATH')) {
 ?>
     </main>
 
+    <button type="button" id="f5tv-back-to-top" class="f5tv-back-to-top" aria-label="Voltar ao topo" title="Voltar ao topo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 15 6-6 6 6"/><path d="M12 9v10"/></svg>
+    </button>
+
     <footer class="mt-auto border-t border-white/5 bg-f5-blue py-12 px-4 sm:px-8">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
             <div class="flex flex-col gap-4">
@@ -58,6 +62,23 @@ if (!defined('ABSPATH')) {
             </span>
         </div>
     </footer>
+
+    <script>
+    (function () {
+        var button = document.getElementById('f5tv-back-to-top');
+        if (!button) return;
+
+        function updateBackToTop() {
+            button.classList.toggle('is-visible', window.scrollY > window.innerHeight * 0.5);
+        }
+
+        window.addEventListener('scroll', updateBackToTop, { passive: true });
+        updateBackToTop();
+        button.addEventListener('click', function () {
+            window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+        });
+    }());
+    </script>
 </div>
 
 <?php wp_footer(); ?>
