@@ -461,10 +461,8 @@ a[href*="plano-premium"]:hover {
 /* Desktop header remains visible while scrolling, with a light glass effect. */
 @media (min-width: 1024px) {
   #f5tv-app > header {
-    position: fixed !important;
+    position: sticky !important;
     top: 0;
-    left: 0;
-    right: 0;
     z-index: 1000 !important;
     background: rgba(6, 9, 19, 0.84) !important;
     border-bottom-color: rgba(148, 163, 184, 0.18) !important;
@@ -472,9 +470,6 @@ a[href*="plano-premium"]:hover {
     -webkit-backdrop-filter: blur(14px);
   }
 
-  #f5tv-main {
-    padding-top: 76px;
-  }
 }
 
 .f5tv-back-to-top {
