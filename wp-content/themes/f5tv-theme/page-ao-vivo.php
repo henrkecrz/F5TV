@@ -100,7 +100,7 @@ if ($schedules_query->have_posts()) {
                 <!-- Main video section -->
                 <div class="lg:col-span-3 flex flex-col gap-5">
                     <div class="relative aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-zinc-900">
-                        <video id="f5tv-live-player" src="<?php echo esc_url($active_channel['streamUrl']); ?>" autoplay loop muted playsinline class="w-full h-full object-cover"></video>
+                        <video id="f5tv-live-player" src="<?php echo esc_url($active_channel['streamUrl']); ?>" autoplay loop muted playsinline controls preload="metadata" class="w-full h-full object-cover"></video>
                         <div class="absolute top-4 left-4 bg-f5-red text-white font-mono font-extrabold text-[10px] tracking-wider uppercase px-2.5 py-1 rounded-md flex items-center gap-1.5 shadow-lg">
                             <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
                             AO VIVO
