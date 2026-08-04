@@ -186,9 +186,13 @@ if (!defined('ABSPATH')) {
                                     <span>Sair da Conta</span>
                                 </a>
                             <?php else: ?>
-                                <a href="<?php echo esc_url(wp_login_url()); ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-f5-red hover:bg-f5-red/15 transition font-bold group/item">
+                                <a href="<?php echo esc_url(home_url('/login/')); ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-f5-red hover:bg-f5-red/15 transition font-bold group/item" aria-label="Fazer login">
                                     <svg class="w-4 h-4 text-f5-red group-hover/item:scale-110 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
                                     <span>Fazer Login</span>
+                                </a>
+                                <a href="<?php echo esc_url(home_url('/cadastro/')); ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white hover:bg-f5-red/15 transition font-bold group/item" aria-label="Criar conta">
+                                    <svg class="w-4 h-4 text-f5-red group-hover/item:scale-110 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                    <span>Criar Conta</span>
                                 </a>
                             <?php endif; ?>
                         </nav>
