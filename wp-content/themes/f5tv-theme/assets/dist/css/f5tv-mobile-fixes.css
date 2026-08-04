@@ -71,6 +71,36 @@ body {
 }
 
 @media (min-width: 1024px) {
+  #hero {
+    height: auto !important;
+    min-height: clamp(560px, calc(100vh - 75px), 720px);
+    padding: 4rem clamp(2rem, 6vw, 7rem) 5rem !important;
+  }
+
+  #hero > div.relative {
+    max-width: 72rem !important;
+  }
+
+  #hero h1 {
+    max-width: 1000px !important;
+    font-size: clamp(3.5rem, 6vw, 6.5rem) !important;
+    line-height: 0.98 !important;
+  }
+
+  #hero p {
+    max-width: 800px !important;
+    font-size: clamp(1rem, 1.3vw, 1.25rem) !important;
+  }
+
+  #hero .max-w-md {
+    max-width: 32rem !important;
+  }
+
+  #hero a {
+    white-space: nowrap;
+    padding: 0.875rem 1.75rem !important;
+  }
+
   #f5tv-mobile-menu-btn {
     display: none !important;
   }
