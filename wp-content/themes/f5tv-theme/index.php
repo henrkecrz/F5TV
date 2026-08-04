@@ -17,8 +17,8 @@ $hero_content = get_posts([
 ]);
 
 $hero_bg = '';
-$hero_title = 'CONEXÃO <span class="text-f5-red italic">F5</span>';
-$hero_desc = 'Mergulhe nos bastidores do poder, do jornalismo investigativo tático, de documentários de alta voltagem e de esportes ao vivo. Sem censura, com qualidade calibrada de cinema.';
+$hero_title = 'Uma nova forma de <span class="text-f5-red italic">fazer televisão.</span>';
+$hero_desc = 'A F5 TV Streaming nasce para marcar uma nova etapa na televisão em Portugal. Escolha o que quer ver, quando quer ver e em qualquer ecrã.';
 
 if (!empty($hero_content)) {
     $hero = $hero_content[0];
@@ -81,7 +81,7 @@ $contents = get_posts([
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-12">
             <div>
                 <span class="text-[10px] font-mono font-bold tracking-[0.2em] text-f5-red uppercase">NO CATÁLOGO</span>
-                <h2 class="text-3xl md:text-5xl font-black tracking-tight text-white mt-2">Nossos Maiores Sucessos Disponíveis</h2>
+                <h2 class="text-3xl md:text-5xl font-black tracking-tight text-white mt-2">Conteúdo que encontra o seu público</h2>
             </div>
             <a href="<?php echo esc_url(home_url('/categoria/series/')); ?>" class="text-sm font-semibold text-f5-red hover:text-f5-red flex items-center gap-2 transition-colors uppercase tracking-wider font-mono text-xs">
                 <span>Ver catálogo completo</span>
@@ -128,7 +128,7 @@ $contents = get_posts([
 // Benefits section
 $benefits = [
     ['icon' => 'Smartphone', 'title' => 'Assista onde quiser', 'desc' => 'Disponível em Celulares, Tablets, Smart TVs, Computadores e consoles de videogame sem custo extra.'],
-    ['icon' => 'Sparkles', 'title' => 'Conteúdos Exclusivos F5', 'desc' => 'Séries investigativas brutas, bastidores das grandes cidades do Brasil e jornalismo ao vivo 24h.'],
+    ['icon' => 'Sparkles', 'title' => 'Conteúdos próprios e parceiros', 'desc' => 'Formatos diferenciados, histórias, ideias e protagonistas que merecem ser vistos e ouvidos.'],
     ['icon' => 'Database', 'title' => 'Downloads sob demanda', 'desc' => 'Baixe episódios inteiros em segundos e assista no avião, metrô ou estrada mesmo sem internet.'],
     ['icon' => 'Tv', 'title' => 'Alta Fidelidade 4K / HDR', 'desc' => 'Assista seus documentários favoritos com cores calibradas de cinema e som Dolby Atmos imersivo.'],
     ['icon' => 'Users', 'title' => 'Multi-perfil Familiar', 'desc' => 'Crie perfis independentes para cada membro da família, incluindo um perfil Kids totalmente vigiado.'],
@@ -140,8 +140,8 @@ $benefits = [
     <div class="max-w-7xl mx-auto">
         <div class="text-left max-w-2xl mb-20 flex flex-col gap-3">
             <span class="text-[10px] font-mono font-bold tracking-[0.2em] text-f5-red uppercase">BENEFÍCIOS EXCLUSIVOS</span>
-            <h2 class="text-4xl sm:text-6xl font-black tracking-tighter text-white leading-none">Por que assinar a F5 TV?</h2>
-            <p class="text-white/60 text-base font-normal mt-2 leading-relaxed">Elevamos o padrão de streaming nacional com jornalismo tático, documentários premium e tecnologia de ponta.</p>
+            <h2 class="text-4xl sm:text-6xl font-black tracking-tighter text-white leading-none">Televisão para um novo tempo</h2>
+            <p class="text-white/60 text-base font-normal mt-2 leading-relaxed">Uma experiência mais flexível, contemporânea e conectada com o seu tempo, com conteúdos próprios e parceiros.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

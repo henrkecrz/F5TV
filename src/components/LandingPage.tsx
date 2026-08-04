@@ -34,8 +34,8 @@ export default function LandingPage({ plans, contents, onNavigate }: LandingPage
     },
     {
       icon: <Sparkles className="w-6 h-6 text-[#ef4444]" />,
-      title: 'Conteúdos Exclusivos F5',
-      desc: 'Séries investigativas brutas, bastidores das grandes cidades do Brasil e jornalismo ao vivo 24h.'
+      title: 'Conteúdos próprios e parceiros',
+      desc: 'Formatos diferenciados, histórias, ideias e protagonistas que merecem ser vistos e ouvidos.'
     },
     {
       icon: <Database className="w-6 h-6 text-[#ef4444]" />,
@@ -152,15 +152,15 @@ export default function LandingPage({ plans, contents, onNavigate }: LandingPage
         <div className="max-w-4xl mx-auto w-full relative z-20 flex flex-col items-start gap-4">
           <div className="inline-flex items-center gap-2 bg-red-600 px-2.5 py-0.5 text-[10px] font-mono font-bold rounded uppercase tracking-widest">
             <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-            <span>SÉRIE ORIGINAL F5</span>
+            <span>A 1ª TV STREAMING DE PORTUGAL</span>
           </div>
 
           <h1 className="text-5xl sm:text-7xl font-black tracking-tighter leading-none text-white max-w-3xl">
-            CONEXÃO <span className="text-red-600 italic">F5</span>
+            Uma nova forma de <span className="text-red-600 italic">fazer televisão.</span>
           </h1>
 
           <p className="text-white/70 text-base md:text-lg max-w-2xl leading-relaxed font-normal">
-            Mergulhe nos bastidores do poder, do jornalismo investigativo tático, de documentários de alta voltagem e de esportes ao vivo. Sem censura, com qualidade calibrada de cinema.
+            A F5 TV Streaming nasce para marcar uma nova etapa na televisão em Portugal. Escolha o que quer ver, quando quer ver e em qualquer ecrã.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full h-fit max-w-md mt-4">
@@ -201,7 +201,7 @@ export default function LandingPage({ plans, contents, onNavigate }: LandingPage
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-12">
             <div>
               <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-red-650 uppercase">NO CATÁLOGO</span>
-              <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white mt-2">Nossos Maiores Sucessos Disponíveis</h2>
+              <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white mt-2">Conteúdo que encontra o seu público</h2>
             </div>
             <button 
               onClick={() => onNavigate('/login')}
@@ -255,8 +255,8 @@ export default function LandingPage({ plans, contents, onNavigate }: LandingPage
         <div className="max-w-7xl mx-auto">
           <div className="text-left max-w-2xl mb-20 flex flex-col gap-3">
             <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-red-650 uppercase">BENEFÍCIOS EXCLUSIVOS</span>
-            <h2 className="text-4xl sm:text-6xl font-black tracking-tighter text-white leading-none">Por que assinar a F5 TV?</h2>
-            <p className="text-white/60 text-base font-normal mt-2 leading-relaxed">Elevamos o padrão de streaming nacional com jornalismo tático, documentários premium e tecnologia de ponta.</p>
+            <h2 className="text-4xl sm:text-6xl font-black tracking-tighter text-white leading-none">Televisão para um novo tempo</h2>
+            <p className="text-white/60 text-base font-normal mt-2 leading-relaxed">Uma experiência mais flexível, contemporânea e conectada com o seu tempo, com conteúdos próprios e parceiros.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

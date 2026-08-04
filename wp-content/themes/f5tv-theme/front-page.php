@@ -79,15 +79,15 @@ if (empty($contents)) {
         
         <div class="max-w-4xl mx-auto w-full relative z-20 flex flex-col items-start gap-4 text-left">
             <div class="inline-flex items-center gap-2 bg-f5-red px-2.5 py-0.5 text-[10px] font-mono font-bold rounded uppercase tracking-widest text-white shadow">
-                <span>&#10024; SÉRIE ORIGINAL F5</span>
+                <span>&#10024; A 1ª TV STREAMING DE PORTUGAL</span>
             </div>
 
             <h1 class="text-5xl sm:text-7xl font-black tracking-tighter leading-none text-white max-w-3xl">
-                CONEXÃO <span class="text-f5-red italic">F5</span>
+                Uma nova forma de <span class="text-f5-red italic">fazer televisão.</span>
             </h1>
 
             <p class="text-white/70 text-base md:text-lg max-w-2xl leading-relaxed font-normal">
-                Mergulhe nos bastidores do poder, do jornalismo investigativo tático, de documentários de alta voltagem e de esportes ao vivo. Sem censura, com qualidade calibrada de cinema.
+                A F5 TV Streaming nasce para marcar uma nova etapa na televisão em Portugal. Escolha o que quer ver, quando quer ver e em qualquer ecrã.
             </p>
 
             <div class="flex flex-col sm:flex-row gap-4 w-full h-fit max-w-md mt-4">
@@ -113,7 +113,7 @@ if (empty($contents)) {
             <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-12">
                 <div>
                     <span class="text-[10px] font-mono font-bold tracking-[0.2em] text-f5-red uppercase">NO CATÁLOGO</span>
-                    <h2 class="text-3xl md:text-5xl font-black tracking-tight text-white mt-2">Nossos Maiores Sucessos Disponíveis</h2>
+                    <h2 class="text-3xl md:text-5xl font-black tracking-tight text-white mt-2">Conteúdo que encontra o seu público</h2>
                 </div>
                 <a href="<?php echo esc_url(home_url('/series/')); ?>" class="text-sm font-semibold text-f5-red hover:text-white flex items-center gap-2 transition-colors uppercase tracking-wider font-mono text-xs">
                     <span>Ver catálogo completo &rarr;</span>
@@ -158,8 +158,8 @@ if (empty($contents)) {
         <div class="max-w-7xl mx-auto">
             <div class="text-left max-w-2xl mb-20 flex flex-col gap-3">
                 <span class="text-[10px] font-mono font-bold tracking-[0.2em] text-f5-red uppercase">BENEFÍCIOS EXCLUSIVOS</span>
-                <h2 class="text-4xl sm:text-6xl font-black tracking-tighter text-white leading-none">Por que assinar a F5 TV?</h2>
-                <p class="text-white/60 text-base font-normal mt-2 leading-relaxed">Elevamos o padrão de streaming nacional com jornalismo tático, documentários premium e tecnologia de ponta.</p>
+                <h2 class="text-4xl sm:text-6xl font-black tracking-tighter text-white leading-none">Televisão para um novo tempo</h2>
+                <p class="text-white/60 text-base font-normal mt-2 leading-relaxed">Uma experiência mais flexível, contemporânea e conectada com o seu tempo, com conteúdos próprios e parceiros.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -168,8 +168,8 @@ if (empty($contents)) {
                     <p class="text-sm text-white/60 leading-relaxed font-normal">Disponível em Celulares, Tablets, Smart TVs, Computadores e consoles sem custo extra.</p>
                 </div>
                 <div class="p-8 bg-f5-blue-950 border border-white/5 rounded-xl flex flex-col gap-4 group">
-                    <h3 class="text-xl font-bold text-white group-hover:text-f5-red transition">Conteúdos Exclusivos F5</h3>
-                    <p class="text-sm text-white/60 leading-relaxed font-normal">Séries investigativas brutas, bastidores das grandes cidades do Brasil e jornalismo 24h.</p>
+                    <h3 class="text-xl font-bold text-white group-hover:text-f5-red transition">Conteúdos próprios e parceiros</h3>
+                    <p class="text-sm text-white/60 leading-relaxed font-normal">Formatos diferenciados, histórias, ideias e protagonistas que merecem ser vistos e ouvidos.</p>
                 </div>
                 <div class="p-8 bg-f5-blue-950 border border-white/5 rounded-xl flex flex-col gap-4 group">
                     <h3 class="text-xl font-bold text-white group-hover:text-f5-red transition">Downloads sob demanda</h3>

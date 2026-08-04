@@ -63,13 +63,13 @@ function f5tv_register_elementor_widgets($widgets_manager): void
             $this->add_control('title', [
                 'label'   => __('Título Principal', 'f5tv-theme'),
                 'type'    => \Elementor\Controls_Manager::TEXT,
-                'default' => 'CONEXÃO F5',
+                'default' => 'Uma nova forma de fazer televisão.',
             ]);
 
             $this->add_control('description', [
                 'label'   => __('Descrição / Sinopse', 'f5tv-theme'),
                 'type'    => \Elementor\Controls_Manager::TEXTAREA,
-                'default' => 'Mergulhe nos bastidores do poder, do jornalismo investigativo tático, de documentários de alta voltagem e de esportes ao vivo. Sem censura, com qualidade calibrada de cinema.',
+                'default' => 'A F5 TV Streaming nasce para marcar uma nova etapa na televisão em Portugal. Escolha o que quer ver, quando quer ver e em qualquer ecrã.',
             ]);
 
             $this->add_control('bg_image', [
