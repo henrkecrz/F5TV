@@ -28,7 +28,7 @@ if (!empty($hero_content)) {
 }
 ?>
 
-<section id="hero" class="relative h-[560px] px-4 sm:px-8 pt-12 flex flex-col justify-end pb-16 overflow-hidden border-b border-white/5">
+<section id="hero" class="relative h-auto min-h-[560px] lg:h-[560px] px-5 sm:px-8 pt-8 lg:pt-12 flex flex-col justify-end pb-10 lg:pb-16 overflow-hidden border-b border-white/5">
     <?php if ($hero_bg): ?>
         <div class="absolute inset-0 bg-cover bg-center opacity-65 grayscale-[0.25]" style="background-image: url('<?php echo esc_url($hero_bg); ?>')"></div>
     <?php else: ?>
@@ -37,7 +37,7 @@ if (!empty($hero_content)) {
     <div class="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#050505]/75 to-transparent z-10"></div>
     <div class="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent z-10"></div>
 
-    <div class="max-w-4xl mx-auto w-full relative z-20 flex flex-col items-start gap-4 px-4">
+    <div class="max-w-4xl mx-auto w-full relative z-20 flex flex-col items-start gap-3 lg:gap-4 px-0 sm:px-4">
         <div class="inline-flex items-center gap-2 bg-f5-red px-2.5 py-0.5 text-[10px] font-mono font-bold rounded uppercase tracking-widest">
             <span>SÉRIE ORIGINAL F5</span>
         </div>
@@ -46,20 +46,20 @@ if (!empty($hero_content)) {
             <?php echo $hero_title; ?>
         </h1>
 
-        <p class="text-white/70 text-base md:text-lg max-w-2xl leading-relaxed font-normal">
+        <p class="text-white/70 text-sm md:text-lg max-w-2xl leading-relaxed font-normal">
             <?php echo esc_html($hero_desc); ?>
         </p>
 
-        <div class="flex flex-col sm:flex-row gap-4 w-full h-fit max-w-md mt-4">
-            <a href="<?php echo esc_url(home_url('/planos/')); ?>" class="px-8 py-3.5 rounded bg-white text-black font-bold flex items-center justify-center gap-2 hover:bg-f5-red hover:text-white transition-colors text-sm uppercase tracking-wider">
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full h-fit max-w-md mt-2 sm:mt-4">
+            <a href="<?php echo esc_url(home_url('/planos/')); ?>" class="px-5 sm:px-8 py-3 sm:py-3.5 rounded bg-white text-black font-bold flex items-center justify-center gap-2 hover:bg-f5-red hover:text-white transition-colors text-sm uppercase tracking-wider">
                 <span>Assinar Agora</span>
             </a>
-            <a href="<?php echo esc_url(home_url('/categoria/series/')); ?>" class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-3.5 rounded font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition text-sm uppercase tracking-wider">
+            <a href="<?php echo esc_url(home_url('/categoria/series/')); ?>" class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-5 sm:px-8 py-3 sm:py-3.5 rounded font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition text-sm uppercase tracking-wider">
                 <span>Explorar Prévia</span>
             </a>
         </div>
 
-        <div class="flex items-center gap-6 text-[10px] text-white/30 uppercase tracking-[0.2em] font-medium font-mono mt-8">
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-[9px] sm:text-[10px] text-white/30 uppercase tracking-[0.16em] sm:tracking-[0.2em] font-medium font-mono mt-6 sm:mt-8">
             <span>&#10003; CANCELAMENTO 100% ONLINE</span>
             <span>&#8226;</span>
             <span>&#10003; FILMES FILTRADOS EM 4K</span>

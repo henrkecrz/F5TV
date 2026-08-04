@@ -72,34 +72,34 @@ if (empty($contents)) {
 <div id="f5-landing-root" class="min-h-screen bg-f5-blue text-white selection:bg-f5-red selection:text-white font-sans">
 
     <!-- Hero Banner Section -->
-    <section id="hero" class="relative h-[560px] px-8 pt-12 flex flex-col justify-end pb-16 overflow-hidden border-b border-white/5 bg-black">
+    <section id="hero" class="relative h-auto min-h-[560px] lg:h-[560px] px-5 sm:px-8 pt-8 lg:pt-12 flex flex-col justify-end pb-10 lg:pb-16 overflow-hidden border-b border-white/5 bg-black">
         <div class="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#050505]/75 to-transparent z-10"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent z-10"></div>
         <div class="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2025')] bg-cover bg-center opacity-65 grayscale-[0.25]"></div>
         
-        <div class="max-w-4xl mx-auto w-full relative z-20 flex flex-col items-start gap-4 text-left">
+        <div class="max-w-4xl mx-auto w-full relative z-20 flex flex-col items-start gap-3 lg:gap-4 text-left">
             <div class="inline-flex items-center gap-2 bg-f5-red px-2.5 py-0.5 text-[10px] font-mono font-bold rounded uppercase tracking-widest text-white shadow">
                 <span>&#10024; A 1ª TV STREAMING DE PORTUGAL</span>
             </div>
 
-            <h1 class="text-5xl sm:text-7xl font-black tracking-tighter leading-none text-white max-w-3xl">
+            <h1 class="text-4xl sm:text-7xl font-black tracking-tighter leading-none text-white max-w-3xl">
                 Uma nova forma de <span class="text-f5-red italic">fazer televisão.</span>
             </h1>
 
-            <p class="text-white/70 text-base md:text-lg max-w-2xl leading-relaxed font-normal">
+            <p class="text-white/70 text-sm md:text-lg max-w-2xl leading-relaxed font-normal">
                 A F5 TV Streaming nasce para marcar uma nova etapa na televisão em Portugal. Escolha o que quer ver, quando quer ver e em qualquer ecrã.
             </p>
 
-            <div class="flex flex-col sm:flex-row gap-4 w-full h-fit max-w-md mt-4">
-                <a href="#planos" class="px-8 py-3.5 rounded bg-white text-black font-bold flex items-center justify-center gap-2 hover:bg-f5-red hover:text-white transition-colors cursor-pointer text-sm uppercase tracking-wider">
+            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full h-fit max-w-md mt-2 sm:mt-4">
+                <a href="#planos" class="px-5 sm:px-8 py-3 sm:py-3.5 rounded bg-white text-black font-bold flex items-center justify-center gap-2 hover:bg-f5-red hover:text-white transition-colors cursor-pointer text-sm uppercase tracking-wider">
                     <span>&#128100; Assinar Agora</span>
                 </a>
-                <a href="<?php echo esc_url(home_url('/area-do-assinante/')); ?>" class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-3.5 rounded font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition cursor-pointer text-sm uppercase tracking-wider">
+                <a href="<?php echo esc_url(home_url('/area-do-assinante/')); ?>" class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-5 sm:px-8 py-3 sm:py-3.5 rounded font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition cursor-pointer text-sm uppercase tracking-wider">
                     <span>&#9654; Explorar Prévia</span>
                 </a>
             </div>
             
-            <div class="flex items-center gap-6 text-[10px] text-white/40 uppercase tracking-[0.2em] font-medium font-mono mt-8">
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-[9px] sm:text-[10px] text-white/40 uppercase tracking-[0.16em] sm:tracking-[0.2em] font-medium font-mono mt-6 sm:mt-8">
                 <span>&#10003; CANCELAMENTO 100% ONLINE</span>
                 <span>&bull;</span>
                 <span>&#10003; FILMES FILTRADOS EM 4K</span>

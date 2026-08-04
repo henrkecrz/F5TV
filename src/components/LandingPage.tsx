@@ -143,27 +143,27 @@ export default function LandingPage({ plans, contents, onNavigate }: LandingPage
       </header>
 
       {/* Hero Banner Section */}
-      <section id="hero" className="relative h-[560px] px-8 pt-12 flex flex-col justify-end pb-16 overflow-hidden border-b border-white/5">
+      <section id="hero" className="relative h-auto min-h-[560px] lg:h-[560px] px-5 sm:px-8 pt-8 lg:pt-12 flex flex-col justify-end pb-10 lg:pb-16 overflow-hidden border-b border-white/5">
         <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#050505]/75 to-transparent z-10" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent z-10" />
         {/* Simulated Hero Image Background */}
         <div className="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2025&auto=format&fit=crop')] bg-cover bg-center opacity-65 grayscale-[0.25]" />
         
-        <div className="max-w-4xl mx-auto w-full relative z-20 flex flex-col items-start gap-4">
+        <div className="max-w-4xl mx-auto w-full relative z-20 flex flex-col items-start gap-3 lg:gap-4">
           <div className="inline-flex items-center gap-2 bg-red-600 px-2.5 py-0.5 text-[10px] font-mono font-bold rounded uppercase tracking-widest">
             <Sparkles className="w-3.5 h-3.5 animate-pulse" />
             <span>A 1ª TV STREAMING DE PORTUGAL</span>
           </div>
 
-          <h1 className="text-5xl sm:text-7xl font-black tracking-tighter leading-none text-white max-w-3xl">
+          <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-none text-white max-w-3xl">
             Uma nova forma de <span className="text-red-600 italic">fazer televisão.</span>
           </h1>
 
-          <p className="text-white/70 text-base md:text-lg max-w-2xl leading-relaxed font-normal">
+          <p className="text-white/70 text-sm md:text-lg max-w-2xl leading-relaxed font-normal">
             A F5 TV Streaming nasce para marcar uma nova etapa na televisão em Portugal. Escolha o que quer ver, quando quer ver e em qualquer ecrã.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 w-full h-fit max-w-md mt-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full h-fit max-w-md mt-2 sm:mt-4">
             <button 
               id="hero-subscribe-cta"
               onClick={() => {
@@ -172,7 +172,7 @@ export default function LandingPage({ plans, contents, onNavigate }: LandingPage
                   plansSection.scrollIntoView({ behavior: 'smooth' });
                 }
               }}
-              className="px-8 py-3.5 rounded bg-white text-black font-bold flex items-center justify-center gap-2 hover:bg-red-600 hover:text-white transition-colors cursor-pointer text-sm uppercase tracking-wider"
+              className="px-5 sm:px-8 py-3 sm:py-3.5 rounded bg-white text-black font-bold flex items-center justify-center gap-2 hover:bg-red-600 hover:text-white transition-colors cursor-pointer text-sm uppercase tracking-wider"
             >
               <UserPlus className="w-4 h-4" />
               <span>Assinar Agora</span>
@@ -180,14 +180,14 @@ export default function LandingPage({ plans, contents, onNavigate }: LandingPage
             <button 
               id="hero-catalogo-preview-cta"
               onClick={() => onNavigate('/app')} // Goes into streaming client sandbox
-              className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-3.5 rounded font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition cursor-pointer text-sm uppercase tracking-wider"
+              className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-5 sm:px-8 py-3 sm:py-3.5 rounded font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition cursor-pointer text-sm uppercase tracking-wider"
             >
               <Play className="w-4 h-4 fill-current" />
               <span>Explorar Prévia</span>
             </button>
           </div>
           
-          <div className="flex items-center gap-6 text-[10px] text-white/30 uppercase tracking-[0.2em] font-medium font-mono mt-8">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[9px] sm:text-[10px] text-white/30 uppercase tracking-[0.16em] sm:tracking-[0.2em] font-medium font-mono mt-6 sm:mt-8">
             <span>✓ CANCELAMENTO 100% ONLINE</span>
             <span>•</span>
             <span>✓ FILMES FILTRADOS EM 4K</span>
