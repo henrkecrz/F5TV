@@ -4,7 +4,7 @@ body {
   min-height: 100%;
   margin: 0 !important;
   padding: 0 !important;
-  background: #020617 !important;
+  background: #071a33 !important;
   overflow-x: hidden !important;
 }
 
@@ -13,19 +13,19 @@ body {
 .wp-site-blocks {
   width: 100%;
   min-height: 100vh;
-  background: #020617 !important;
+  background: #071a33 !important;
 }
 
 #hero {
-  background-color: #020617 !important;
+  background-color: #071a33 !important;
 }
 
 #hero > div.absolute.z-10:first-of-type {
-  background-image: linear-gradient(to right, #020617 0%, rgb(2 6 23 / 80%) 58%, transparent 100%) !important;
+  background-image: linear-gradient(to right, #071a33 0%, rgb(7 26 51 / 80%) 58%, transparent 100%) !important;
 }
 
 #hero > div.absolute.z-10:nth-of-type(2) {
-  background-image: linear-gradient(to top, #020617 0%, transparent 100%) !important;
+  background-image: linear-gradient(to top, #071a33 0%, transparent 100%) !important;
 }
 
 #f5tv-mobile-menu-btn {
