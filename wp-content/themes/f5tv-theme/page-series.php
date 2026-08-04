@@ -153,11 +153,16 @@ if ($all_categories && !is_wp_error($all_categories)) {
         <?php else: ?>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <?php foreach ($series_list as $ser): ?>
+                    <?php
+                    $program_slug = sanitize_title($ser['title']);
+                    $local_cover_path = F5TV_ASSETS_DIR . '/programas/' . $program_slug . '/' . $program_slug . '-16x9.jpg';
+                    $card_cover = file_exists($local_cover_path) ? F5TV_ASSETS_URI . '/programas/' . $program_slug . '/' . $program_slug . '-16x9.jpg' : ($ser['coverUrl'] ?: $ser['bannerUrl']);
+                    ?>
                     <div class="group relative bg-f5-blue-950/80 border border-zinc-900 rounded-xl overflow-hidden cursor-pointer hover:border-red-600 transition shadow-lg shrink-0 flex flex-col">
                         <a href="<?php echo esc_url($ser['link']); ?>" class="flex flex-col flex-1">
                             <div class="aspect-video w-full bg-f5-blue-900 overflow-hidden relative">
                                 <img
-                                    src="<?php echo esc_url($ser['coverUrl'] ?: $ser['bannerUrl']); ?>"
+                                    src="<?php echo esc_url($card_cover); ?>"
                                     alt="<?php echo esc_attr($ser['title']); ?>"
                                     referrerpolicy="no-referrer"
                                     class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition duration-300"

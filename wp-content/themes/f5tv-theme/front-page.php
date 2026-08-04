@@ -122,7 +122,10 @@ if (empty($contents)) {
 
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <?php if (!empty($contents)): foreach ($contents as $item):
-                    $cover = $item->cover ?? f5tv_get_field('cover_url', $item->ID) ?: get_the_post_thumbnail_url($item->ID, 'medium') ?: 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=600';
+                    $program_slug = sanitize_title($item->title ?? get_the_title($item->ID));
+                    $local_cover_path = F5TV_ASSETS_DIR . '/programas/' . $program_slug . '/' . $program_slug . '-16x9.jpg';
+                    $local_cover_url = F5TV_ASSETS_URI . '/programas/' . $program_slug . '/' . $program_slug . '-16x9.jpg';
+                    $cover = file_exists($local_cover_path) ? $local_cover_url : ($item->cover ?? f5tv_get_field('cover_url', $item->ID) ?: get_the_post_thumbnail_url($item->ID, 'medium') ?: 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=600');
                     $genre = $item->genre ?? f5tv_get_field('genre', $item->ID) ?: 'Streaming';
                     $age_rating = $item->age_rating ?? f5tv_get_field('age_rating', $item->ID) ?: 'Livre';
                     $is_exclusive = $item->is_exclusive ?? f5tv_get_field('is_exclusive', $item->ID);

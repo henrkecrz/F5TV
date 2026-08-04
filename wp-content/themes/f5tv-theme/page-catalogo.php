@@ -26,7 +26,10 @@ $program_query = new WP_Query([
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-5">
                 <?php while ($program_query->have_posts()): $program_query->the_post();
                     $post_id = get_the_ID();
-                    $cover = f5tv_get_field('cover_url', $post_id) ?: get_the_post_thumbnail_url($post_id, 'medium');
+                    $program_slug = sanitize_title(get_the_title($post_id));
+                    $local_cover_path = F5TV_ASSETS_DIR . '/programas/' . $program_slug . '/' . $program_slug . '-16x9.jpg';
+                    $local_cover_url = F5TV_ASSETS_URI . '/programas/' . $program_slug . '/' . $program_slug . '-16x9.jpg';
+                    $cover = file_exists($local_cover_path) ? $local_cover_url : (f5tv_get_field('cover_url', $post_id) ?: get_the_post_thumbnail_url($post_id, 'medium'));
                     $genre = f5tv_get_field('genre', $post_id) ?: 'F5 TV';
                     $age_rating = f5tv_get_field('age_rating', $post_id) ?: 'Livre';
                     $description = get_the_excerpt();
