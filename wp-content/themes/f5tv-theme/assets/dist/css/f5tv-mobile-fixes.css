@@ -123,6 +123,24 @@ a[href*="plano-premium"]:hover {
   -webkit-backdrop-filter: none !important;
 }
 
+#f5tv-user-dropdown.pointer-events-auto,
+#f5tv-user-dropdown.visible {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transform: scale(1) !important;
+}
+
+@media (max-width: 1023px) {
+  #f5tv-user-dropdown {
+    position: fixed !important;
+    top: 5.25rem !important;
+    right: 1rem !important;
+    width: min(16rem, calc(100vw - 2rem)) !important;
+    z-index: 100000 !important;
+  }
+}
+
 @media (max-width: 1023px) {
   #hero {
     height: auto !important;
