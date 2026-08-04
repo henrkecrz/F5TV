@@ -40,10 +40,10 @@ export const SobrePage: React.FC = () => {
       {/* Main Content */}
       <main className="flex-grow max-w-4xl mx-auto px-8 py-16 text-left">
         <div className="flex flex-col gap-3 mb-10">
-          <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-red-500 uppercase">QUEM SOMOS NOS</span>
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tighter leading-none mb-2">Sobre a F5 TV Brasil</h1>
+          <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-red-500 uppercase">F5 TV STREAMING</span>
+          <h1 className="text-4xl sm:text-6xl font-black tracking-tighter leading-none mb-2">A 1ª TV Streaming de Portugal</h1>
           <p className="text-zinc-400 text-sm leading-relaxed max-w-2xl font-semibold">
-            Uma emissora com DNA tático e digital. Nascemos na interseção entre o jornalismo tático livre, os esportes de alta adrenalina e o entretenimento familiar seguro.
+            Uma nova forma de fazer televisão.
           </p>
         </div>
 
@@ -68,38 +68,45 @@ export const SobrePage: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-16">
           <div className="flex flex-col gap-3 p-6 bg-[#0a0a0a] border border-white/5 rounded-2xl">
             <Eye className="w-8 h-8 text-red-500" />
-            <h3 className="text-lg font-black tracking-tight mt-1 text-white">Transparência Tática</h3>
+            <h3 className="text-lg font-black tracking-tight mt-1 text-white">Televisão sem fronteiras</h3>
             <p className="text-zinc-500 text-xs font-semibold leading-relaxed">
-              Jornalismo que expõe fatos sem agendas de corporações, reportando as notícias de forma objetiva sobre economia, infraestrutura e segurança.
+              Informação, entretenimento, cultura, entrevistas, opinião, negócios e lifestyle num só lugar.
             </p>
           </div>
 
           <div className="flex flex-col gap-3 p-6 bg-[#0a0a0a] border border-white/5 rounded-2xl">
             <Shield className="w-8 h-8 text-red-500" />
-            <h3 className="text-lg font-black tracking-tight mt-1 text-white">Ambiente Protegido</h3>
+            <h3 className="text-lg font-black tracking-tight mt-1 text-white">Uma visão contemporânea</h3>
             <p className="text-zinc-500 text-xs font-semibold leading-relaxed">
-              Dedicamos canais infantis e infanto-juvenis totalmente livres de doutrinação ideológica e com curadoria pedagógica severa para segurança dos filhos.
+              Conteúdos próprios e parceiros, formatos diferenciados e uma experiência adaptada aos novos ecrãs.
             </p>
           </div>
 
           <div className="flex flex-col gap-3 p-6 bg-[#0a0a0a] border border-white/5 rounded-2xl">
             <Award className="w-8 h-8 text-red-500" />
-            <h3 className="text-lg font-black tracking-tight mt-1 text-white">Esportes e Lazer</h3>
+            <h3 className="text-lg font-black tracking-tight mt-1 text-white">Portugal e o mundo</h3>
             <p className="text-zinc-500 text-xs font-semibold leading-relaxed">
-              Transmissões completas de automobilismo de teste, lutas de alta performance e campeonatos regionais esquecidos pelas grandes redes.
+              Histórias, ideias e protagonistas que merecem ser vistos e ouvidos.
             </p>
           </div>
         </div>
 
         {/* Narrative editorial statement */}
         <section className="border-t border-white/5 pt-12 flex flex-col gap-6 font-semibold text-zinc-350 text-sm leading-relaxed max-w-3xl">
-          <h2 className="text-2xl font-black text-white tracking-tight">Nossa Jornada & Concessionária</h2>
+          <h2 className="text-2xl font-black text-white tracking-tight">Uma nova forma de fazer televisão</h2>
           <p>
-            Fundada pelo grupo F5 de Comunicação S.A., a F5 TV atua como emissora concessionária de radiodifusão de sons e imagens com outorga e cobertura em território brasileiro. Em 2024, expandimos nossas operações com o lançamento da plataforma de streaming F5 Premium, garantindo acesso em tempo real e sob demanda para mais de 10 milhões de lares via Smart TV, consoles de vídeo game, tablets e smartphones.
+            A F5 TV Streaming nasce para marcar uma nova etapa na televisão em Portugal. Como 1ª TV Streaming de Portugal, assumimos uma posição pioneira num mercado em transformação, onde a televisão deixou de estar limitada a horários, grelhas e formatos convencionais. Hoje, o público escolhe o que quer ver, quando quer ver e através de diferentes ecrãs. É nesse novo território que a F5 se posiciona.
           </p>
           <p>
-            Acreditamos que todo cidadão merece veracidade em tempo real. Por isso, a F5 TV investe integralmente em tecnologia de tráfego ultra-low-latency e estúdios modernos baseados em inteligência computacional tática, garantindo que nossas câmeras estejam posicionadas nos corações dos acontecimentos mais impactantes do país.
+            Somos uma plataforma de televisão concebida para reunir informação, entretenimento, cultura, entrevistas, opinião, negócios, lifestyle e conteúdos especiais, aproximando diferentes públicos de histórias, ideias e protagonistas que merecem ser vistos e ouvidos.
           </p>
+          <p>
+            Na F5TV acreditamos que a televisão do futuro não será apenas aquela que transmite conteúdos. Será aquela que cria relevância, estabelece ligações e acompanha a transformação da sociedade. Por isso, construímos uma experiência de televisão mais flexível, contemporânea e conectada com o seu tempo, com conteúdos próprios e parceiros, formatos diferenciados e uma visão aberta ao que acontece em Portugal e no mundo.
+          </p>
+          <p>
+            A F5TV é televisão sem fronteiras de horário, de espaço ou de formato. É televisão para uma nova geração de espectadores. É conteúdo que encontra o seu público. É comunicação que permanece para além do ecrã.
+          </p>
+          <p className="text-lg font-black text-white">F5 TV Streaming. O futuro da televisão começa aqui.</p>
           <div className="bg-zinc-950 p-5 rounded-2xl border border-white/5 flex items-center gap-4 mt-2">
             <Tv className="w-10 h-10 text-red-500 shrink-0" />
             <div className="text-xs">
