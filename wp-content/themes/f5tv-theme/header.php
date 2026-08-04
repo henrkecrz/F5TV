@@ -91,13 +91,17 @@ if (!defined('ABSPATH')) {
 
             <!-- Lado Direito: Ícone do Personagem / Avatar + Menu Cascata do Assinante -->
             <div class="flex items-center gap-3">
+                <button type="button" id="f5tv-mobile-menu-btn" aria-expanded="false" aria-controls="f5tv-mobile-menu" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-xl border border-zinc-700/80 bg-[#0e1424] text-zinc-200 hover:text-white hover:bg-[#161f36] transition cursor-pointer" aria-label="Abrir menu">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+
                 <a href="<?php echo esc_url(home_url('/planos/')); ?>" class="hidden lg:inline-flex bg-f5-red hover:bg-f5-red-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition uppercase tracking-wider shadow-lg shadow-f5-red-700/20">
                     Assine Agora
                 </a>
 
                 <!-- Dropdown Menu de Personagem / Assinante -->
                 <div class="relative group">
-                    <button type="button" id="f5tv-user-dropdown-btn" class="flex items-center gap-2.5 bg-[#0e1424] hover:bg-[#161f36] border border-zinc-700/80 p-1.5 pr-3 rounded-full transition cursor-pointer select-none shadow-md">
+                    <button type="button" id="f5tv-user-dropdown-btn" aria-expanded="false" aria-controls="f5tv-user-dropdown" class="flex items-center gap-2.5 bg-[#0e1424] hover:bg-[#161f36] border border-zinc-700/80 p-1.5 pr-3 rounded-full transition cursor-pointer select-none shadow-md">
                         <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-f5-red to-red-600 flex items-center justify-center text-white font-black text-xs shadow border border-white/20">
                             <?php if (is_user_logged_in()): ?>
                                 <?php echo esc_html(strtoupper(substr(wp_get_current_user()->display_name ?: wp_get_current_user()->user_login, 0, 1))); ?>
@@ -114,7 +118,7 @@ if (!defined('ABSPATH')) {
                     </button>
 
                     <!-- Menu Cascata (Dropdown) das Seções do Assinante - Fundo Sólido Opaco para Máxima Leitura -->
-                    <div class="absolute right-0 top-full mt-2 w-64 bg-[#0a0f1d] border border-zinc-700 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.95)] overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform origin-top-right group-hover:scale-100 scale-95">
+                    <div id="f5tv-user-dropdown" class="absolute right-0 top-full mt-2 w-64 bg-[#0a0f1d] border border-zinc-700 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.95)] overflow-hidden opacity-0 invisible pointer-events-none transition-all duration-200 z-[70] transform origin-top-right scale-95">
                         <div class="p-4 border-b border-zinc-800 bg-[#0e1424] flex items-center gap-3">
                             <div class="w-10 h-10 rounded-full bg-f5-red flex items-center justify-center text-white font-black text-sm shadow border border-white/20">
                                 <?php if (is_user_logged_in()): ?>
@@ -191,5 +195,72 @@ if (!defined('ABSPATH')) {
             </div>
         </div>
     </header>
+
+    <div id="f5tv-mobile-menu" class="hidden md:hidden fixed inset-x-0 top-[4.5rem] z-[65] bg-[#060913] border-b border-zinc-700/80 shadow-2xl p-4">
+        <nav class="flex flex-col gap-1 text-xs font-mono font-bold tracking-widest text-zinc-200 uppercase">
+            <a href="<?php echo esc_url(home_url('/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Início</a>
+            <a href="<?php echo esc_url(home_url('/series/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Séries</a>
+            <a href="<?php echo esc_url(home_url('/ao-vivo/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Ao Vivo</a>
+            <a href="<?php echo esc_url(home_url('/programacao/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Programação</a>
+            <a href="<?php echo esc_url(home_url('/minha-lista/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Minha Lista</a>
+            <a href="<?php echo esc_url(home_url('/busca/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Busca</a>
+            <a href="<?php echo esc_url(home_url('/planos/')); ?>" class="px-3 py-3 rounded-lg text-f5-red hover:bg-f5-red/15 hover:text-white transition">Planos</a>
+        </nav>
+    </div>
+
+    <script>
+    (function () {
+        var menuButton = document.getElementById('f5tv-mobile-menu-btn');
+        var mobileMenu = document.getElementById('f5tv-mobile-menu');
+        var userButton = document.getElementById('f5tv-user-dropdown-btn');
+        var userMenu = document.getElementById('f5tv-user-dropdown');
+
+        function setVisible(element, visible) {
+            if (!element) return;
+            element.classList.toggle('hidden', !visible);
+            element.classList.toggle('opacity-100', visible);
+            element.classList.toggle('visible', visible);
+            element.classList.toggle('pointer-events-auto', visible);
+            element.classList.toggle('scale-100', visible);
+            element.classList.toggle('opacity-0', !visible);
+            element.classList.toggle('invisible', !visible);
+            element.classList.toggle('pointer-events-none', !visible);
+            element.classList.toggle('scale-95', !visible);
+        }
+
+        if (menuButton && mobileMenu) {
+            menuButton.addEventListener('click', function () {
+                var visible = mobileMenu.classList.contains('hidden');
+                setVisible(mobileMenu, visible);
+                menuButton.setAttribute('aria-expanded', visible ? 'true' : 'false');
+            });
+            mobileMenu.querySelectorAll('a').forEach(function (link) {
+                link.addEventListener('click', function () {
+                    setVisible(mobileMenu, false);
+                    menuButton.setAttribute('aria-expanded', 'false');
+                });
+            });
+        }
+
+        if (userButton && userMenu) {
+            userButton.addEventListener('click', function (event) {
+                event.stopPropagation();
+                var visible = !userMenu.classList.contains('pointer-events-auto');
+                setVisible(userMenu, visible);
+                userButton.setAttribute('aria-expanded', visible ? 'true' : 'false');
+            });
+            userMenu.querySelectorAll('a').forEach(function (link) {
+                link.addEventListener('click', function () {
+                    setVisible(userMenu, false);
+                    userButton.setAttribute('aria-expanded', 'false');
+                });
+            });
+            document.addEventListener('click', function () {
+                setVisible(userMenu, false);
+                userButton.setAttribute('aria-expanded', 'false');
+            });
+        }
+    }());
+    </script>
 
     <main id="f5tv-main">

@@ -3,7 +3,7 @@ import { Outlet, useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
 import { 
-  Search, Heart, Bell, X, LogOut, Users, Settings, Grid, Play, AlertCircle, Tv
+  Search, Heart, Bell, X, LogOut, Users, Settings, Grid, Play, AlertCircle, Tv, Menu
 } from 'lucide-react';
 
 export const SubscriberLayout: React.FC = () => {
@@ -13,6 +13,8 @@ export const SubscriberLayout: React.FC = () => {
   const [searchParams] = useSearchParams();
 
   const [showNotificationDrawer, setShowNotificationDrawer] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [searchVal, setSearchVal] = useState(searchParams.get('q') || '');
 
   if (!currentUser) {
@@ -101,6 +103,17 @@ export const SubscriberLayout: React.FC = () => {
               Minha Lista
             </Link>
           </nav>
+
+          <button
+            type="button"
+            onClick={() => setShowMobileMenu((open) => !open)}
+            aria-expanded={showMobileMenu}
+            aria-controls="subscriber-mobile-menu"
+            aria-label="Abrir menu"
+            className="lg:hidden p-2 text-zinc-300 hover:text-white rounded-lg hover:bg-zinc-900 cursor-pointer"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Right tools row */}
@@ -154,8 +167,14 @@ export const SubscriberLayout: React.FC = () => {
           </button>
 
           {/* Profile Quick menu dropdown details */}
-          <div className="relative group">
-            <button className="flex items-center gap-2 p-1 bg-zinc-950 hover:bg-zinc-900 rounded-full border border-white/5 transition pr-3 select-none">
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setShowProfileMenu((open) => !open)}
+              aria-expanded={showProfileMenu}
+              aria-controls="subscriber-profile-menu"
+              className="flex items-center gap-2 p-1 bg-zinc-950 hover:bg-zinc-900 rounded-full border border-white/5 transition pr-3 select-none cursor-pointer"
+            >
               <div className={`w-7 h-7 ${effectiveProfile.avatarColor || 'bg-red-600'} rounded-full text-xs font-extrabold flex items-center justify-center uppercase text-white shadow shadow-black`}>
                 {profileChar}
               </div>
@@ -163,9 +182,10 @@ export const SubscriberLayout: React.FC = () => {
             </button>
 
             {/* Dropdown container */}
-            <div className="absolute right-0 top-10 pointer-events-none group-hover:pointer-events-auto opacity-0 group-hover:opacity-100 transition-all duration-200 mt-2 w-48 bg-zinc-950 border border-zinc-900 rounded-xl shadow-2xl p-2 z-50 flex flex-col gap-1">
+            <div id="subscriber-profile-menu" className={`absolute right-0 top-full mt-2 w-48 bg-zinc-950 border border-zinc-900 rounded-xl shadow-2xl p-2 z-[70] flex flex-col gap-1 transition-all duration-200 ${showProfileMenu ? 'opacity-100 visible pointer-events-auto translate-y-0' : 'opacity-0 invisible pointer-events-none -translate-y-1'}`}>
               <Link
                 to="/app/minha-conta"
+                onClick={() => setShowProfileMenu(false)}
                 className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-lg transition"
               >
                 <Settings className="w-4 h-4" />
@@ -173,6 +193,7 @@ export const SubscriberLayout: React.FC = () => {
               </Link>
               <Link
                 to="/app/perfis"
+                onClick={() => setShowProfileMenu(false)}
                 className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-lg transition"
               >
                 <Users className="w-4 h-4" />
@@ -180,6 +201,7 @@ export const SubscriberLayout: React.FC = () => {
               </Link>
               <Link
                 to="/app/dispositivos"
+                onClick={() => setShowProfileMenu(false)}
                 className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-lg transition"
               >
                 <Tv className="w-4 h-4" />
@@ -201,6 +223,21 @@ export const SubscriberLayout: React.FC = () => {
 
         </div>
       </header>
+
+      <div id="subscriber-mobile-menu" className={`${showMobileMenu ? 'block' : 'hidden'} lg:hidden fixed inset-x-0 top-20 z-[65] bg-[#050505] border-b border-white/10 shadow-2xl p-4`}>
+        <nav className="flex flex-col gap-1 text-xs font-mono font-bold tracking-widest text-zinc-300 uppercase">
+          {[
+            ['/app', 'Início'], ['/app/ao-vivo', 'Ao Vivo'], ['/app/programacao', 'Programação'],
+            ['/app/busca?type=series', 'Séries'], ['/app/busca?type=news', 'Jornalismo'],
+            ['/app/busca?type=documentary', 'Documentários'], ['/app/busca?type=sports', 'Esportes'],
+            ['/app/minha-lista', 'Minha Lista']
+          ].map(([to, label]) => (
+            <Link key={to} to={to} onClick={() => setShowMobileMenu(false)} className="px-3 py-3 rounded-lg hover:bg-zinc-900 hover:text-white">
+              {label}
+            </Link>
+          ))}
+        </nav>
+      </div>
 
       {/* Mobile search bar (under headers) */}
       <div className="p-3.5 md:hidden border-b border-white/5 bg-[#050505] flex gap-2">
@@ -226,7 +263,7 @@ export const SubscriberLayout: React.FC = () => {
       </div>
 
       {/* MOBILE LOWER NAVIGATION BAR */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/95 border-t border-zinc-900 py-2.5 px-2 flex justify-around text-[9px] font-mono font-bold uppercase tracking-wider text-zinc-400">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[80] bg-zinc-950/95 border-t border-zinc-900 py-2.5 px-2 flex justify-around text-[9px] font-mono font-bold uppercase tracking-wider text-zinc-400">
         <Link to="/app" className="flex flex-col items-center gap-1 hover:text-white">
           <Grid className="w-4 h-4" />
           <span>Início</span>
