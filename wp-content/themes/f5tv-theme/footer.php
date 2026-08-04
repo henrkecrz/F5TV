@@ -16,15 +16,17 @@ if (!defined('ABSPATH')) {
                 <p class="text-white/50 text-xs leading-relaxed max-w-xs">
                     A plataforma premium de streaming e portal de conteúdos exclusivos da emissora F5 TV. Jornalismo tático, entretenimento, esportes e muito mais.
                 </p>
-                <span class="text-white/30 text-[10px] font-mono tracking-wider mt-4 block">
-                    &copy; <?php echo esc_html(date('Y')); ?> F5 TV Brasil. All rights reserved.
-                </span>
-                <p class="text-white/40 text-[10px] leading-relaxed mt-1">
-                    Desenvolvido por
-                    <a href="https://conectacomunicacao.pt" target="_blank" rel="noopener noreferrer" class="text-white/70 hover:text-f5-red transition">
-                        Conecta Comunicação
-                    </a>
-                </p>
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-4 text-[10px] leading-relaxed">
+                    <span class="text-white/30 font-mono tracking-wider">
+                        &copy; <?php echo esc_html(date('Y')); ?> F5 TV Brasil. All rights reserved.
+                    </span>
+                    <span class="text-white/40">
+                        Desenvolvido por
+                        <a href="https://conectacomunicacao.pt" target="_blank" rel="noopener noreferrer" class="text-white/70 hover:text-f5-red transition">
+                            Conecta Comunicação
+                        </a>
+                    </span>
+                </div>
             </div>
 
             <div class="flex flex-col gap-4">
