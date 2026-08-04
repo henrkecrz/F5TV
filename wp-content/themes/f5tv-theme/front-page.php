@@ -174,7 +174,7 @@ if (empty($contents)) {
                     <a href="<?php echo esc_url(get_permalink($item->ID)); ?>" class="group relative bg-f5-blue-950 border border-white/5 rounded-lg overflow-hidden cursor-pointer hover:border-f5-red/50 transform transition-all duration-300 hover:scale-[1.03] shadow-2xl block">
                         <div class="aspect-video relative w-full bg-f5-blue-900">
                             <img src="<?php echo esc_url($cover); ?>" alt="<?php echo esc_attr($item->post_title); ?>" class="w-full h-full object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                            <div class="absolute top-2.5 right-2.5 bg-f5-blue/90 text-[10px] font-mono font-bold text-f5-red px-2 py-0.5 rounded border border-white/5">
+                            <div class="absolute top-2 right-2 bg-black/80 text-[10px] font-mono font-bold text-gray-200 px-1.5 py-0.5 rounded border border-white/10">
                                 <?php echo esc_html($age_rating); ?>
                             </div>
                             <?php if ($is_exclusive): ?>
