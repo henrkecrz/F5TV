@@ -34,8 +34,8 @@ if (!empty($hero_content)) {
     <?php else: ?>
         <div class="absolute inset-0 bg-gradient-to-b from-f5-blue to-black"></div>
     <?php endif; ?>
-    <div class="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#050505]/75 to-transparent z-10"></div>
-    <div class="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent z-10"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-[#020617] via-[#020617]/80 to-transparent z-10"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-[#020617] to-transparent z-10"></div>
 
     <div class="max-w-4xl mx-auto w-full relative z-20 flex flex-col items-start gap-3 lg:gap-4 px-0 sm:px-4">
         <div class="inline-flex items-center gap-2 bg-f5-red px-2.5 py-0.5 text-[10px] font-mono font-bold rounded uppercase tracking-widest">

@@ -72,9 +72,9 @@ if (empty($contents)) {
 <div id="f5-landing-root" class="min-h-screen bg-f5-blue text-white selection:bg-f5-red selection:text-white font-sans">
 
     <!-- Hero Banner Section -->
-    <section id="hero" class="relative h-auto min-h-[560px] lg:h-[560px] px-5 sm:px-8 pt-8 lg:pt-12 flex flex-col justify-end pb-10 lg:pb-16 overflow-hidden border-b border-white/5 bg-black">
-        <div class="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#050505]/75 to-transparent z-10"></div>
-        <div class="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent z-10"></div>
+    <section id="hero" class="relative h-auto min-h-[560px] lg:h-[560px] px-5 sm:px-8 pt-8 lg:pt-12 flex flex-col justify-end pb-10 lg:pb-16 overflow-hidden border-b border-white/5 bg-[#020617]">
+        <div class="absolute inset-0 bg-gradient-to-r from-[#020617] via-[#020617]/80 to-transparent z-10"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#020617] to-transparent z-10"></div>
         <div class="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2025')] bg-cover bg-center opacity-65 grayscale-[0.25]"></div>
         
         <div class="max-w-4xl mx-auto w-full relative z-20 flex flex-col items-start gap-3 lg:gap-4 text-left">

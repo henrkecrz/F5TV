@@ -144,8 +144,8 @@ export default function LandingPage({ plans, contents, onNavigate }: LandingPage
 
       {/* Hero Banner Section */}
       <section id="hero" className="relative h-auto min-h-[560px] lg:h-[560px] px-5 sm:px-8 pt-8 lg:pt-12 flex flex-col justify-end pb-10 lg:pb-16 overflow-hidden border-b border-white/5">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#050505]/75 to-transparent z-10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#020617] via-[#020617]/80 to-transparent z-10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#020617] to-transparent z-10" />
         {/* Simulated Hero Image Background */}
         <div className="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2025&auto=format&fit=crop')] bg-cover bg-center opacity-65 grayscale-[0.25]" />
         
