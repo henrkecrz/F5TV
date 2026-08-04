@@ -210,13 +210,13 @@ a[href*="plano-premium"]:hover {
     display: none !important;
   }
 
-  #f5tv-app > header nav {
+  #f5tv-app > header > div > nav {
     display: flex !important;
   }
 }
 
 @media (max-width: 1023px) {
-  #f5tv-app > header nav {
+  #f5tv-app > header > div > nav {
     display: none !important;
   }
 }
