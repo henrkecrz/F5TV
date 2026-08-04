@@ -109,7 +109,7 @@ function f5tv_register_elementor_widgets($widgets_manager): void
                             <span>Conteúdos em breve</span>
                         </a>
                         <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-3.5 rounded font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition cursor-pointer text-sm uppercase tracking-wider">
-                            <span>&#9654; Explorar a Programação</span>
+                            <span>&#9654; Conheça a Programação</span>
                         </a>
                     </div>
                 </div>

@@ -55,7 +55,7 @@ if (!empty($hero_content)) {
                 <span>Conteúdos em breve</span>
             </a>
             <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-5 sm:px-8 py-3 sm:py-3.5 rounded font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition text-sm uppercase tracking-wider">
-                <span>Explorar a Programação</span>
+                <span>Conheça a Programação</span>
             </a>
         </div>
 
