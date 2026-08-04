@@ -41,7 +41,7 @@ if (!$archive_title) {
     <!-- Content Grid - identical to AppHomePage category grid -->
     <main class="max-w-7xl w-full mx-auto px-6 md:px-8 py-10 flex flex-col gap-12">
         <?php if (have_posts()): ?>
-            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6">
                 <?php while (have_posts()): the_post();
                     $cover      = f5tv_get_16x9_image(get_the_ID(), 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=1280');
                     $genre      = get_field('genre') ?: '';

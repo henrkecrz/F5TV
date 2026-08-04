@@ -201,7 +201,7 @@ if ($all_categories && !is_wp_error($all_categories)) {
                         <span class="w-1.5 h-3 bg-f5-red rounded-sm inline-block"></span>
                         <span><?php echo esc_html($row['cat']->name); ?></span>
                     </h3>
-                    <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6">
                         <?php foreach ($row['posts'] as $item):
                             $cover      = f5tv_get_field('cover_url', $item->ID) ?: get_the_post_thumbnail_url($item->ID, 'medium') ?: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=600';
                             $genre      = f5tv_get_field('genre', $item->ID) ?: '';

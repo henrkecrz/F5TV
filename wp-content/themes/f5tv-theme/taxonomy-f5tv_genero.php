@@ -23,7 +23,7 @@ $term = get_queried_object();
 
     <main class="max-w-7xl mx-auto px-4 sm:px-8 py-12">
         <?php if (have_posts()): ?>
-            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6">
                 <?php while (have_posts()): the_post();
                     $cover = f5tv_get_16x9_image(get_the_ID());
                     $genre = get_field('genre') ?: '';

@@ -18,7 +18,7 @@ get_header();
             </div>
         </div>
 
-        <div id="f5tv-search-results" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6 mt-2">
+        <div id="f5tv-search-results" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6 mt-2">
             <div class="col-span-full py-16 text-center text-zinc-500 font-mono text-xs">
                 Carregando catálogo completo...
             </div>

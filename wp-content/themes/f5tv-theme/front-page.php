@@ -164,7 +164,7 @@ if (empty($contents)) {
                 </a>
             </div>
 
-            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
                 <?php if (!empty($contents)): foreach ($contents as $item):
                     $cover = f5tv_get_16x9_image($item->ID, $item->cover ?? 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=1280');
                     $genre = $item->genre ?? f5tv_get_field('genre', $item->ID) ?: 'Streaming';

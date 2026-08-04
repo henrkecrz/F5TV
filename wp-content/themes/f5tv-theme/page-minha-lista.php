@@ -14,7 +14,7 @@ get_header();
             <h1 class="text-3xl font-black tracking-tight mt-1">Minha Lista de Conteúdos</h1>
         </div>
 
-        <div id="f5tv-mylist-grid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6">
+        <div id="f5tv-mylist-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6">
             <div class="col-span-full py-16 text-center text-zinc-500 font-mono text-xs">
                 Carregando sua lista personalizada...
             </div>

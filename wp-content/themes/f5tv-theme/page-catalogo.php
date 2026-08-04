@@ -23,7 +23,7 @@ $program_query = new WP_Query([
 
     <main class="max-w-7xl w-full mx-auto px-6 md:px-8 py-10">
         <?php if ($program_query->have_posts()): ?>
-            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
                 <?php while ($program_query->have_posts()): $program_query->the_post();
                     $post_id = get_the_ID();
                     $cover = f5tv_get_16x9_image($post_id);
