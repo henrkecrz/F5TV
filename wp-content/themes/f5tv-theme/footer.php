@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
                 <p class="text-white/50 text-xs leading-relaxed max-w-xs">
                     A plataforma premium de streaming e portal de conteúdos exclusivos da emissora F5 TV. Jornalismo tático, entretenimento, esportes e muito mais.
                 </p>
-                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-4 text-[10px] leading-relaxed">
+                <div class="flex flex-nowrap items-center gap-x-2 mt-4 text-xs leading-relaxed whitespace-nowrap">
                     <span class="text-white/30 font-mono tracking-wider">
                         &copy; <?php echo esc_html(date('Y')); ?> F5 TV Brasil. All rights reserved.
                     </span>
