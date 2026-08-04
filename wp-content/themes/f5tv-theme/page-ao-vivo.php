@@ -24,9 +24,25 @@ if ($channels_query->have_posts()) {
             'status'    => get_field('status') ?: 'online',
             'active'    => (bool) get_field('active'),
             'category'  => get_the_terms(get_the_ID(), 'f5tv_categoria') ? get_the_terms(get_the_ID(), 'f5tv_categoria')[0]->name : 'Geral',
+            'demo'      => false,
         ];
     }
     wp_reset_postdata();
+}
+
+$demo_channel = false;
+if (empty($channels)) {
+    $demo_channel = true;
+    $channels[] = [
+        'id'        => 'demo-f5tv',
+        'name'      => 'F5 TV Demonstração',
+        'logoText'  => 'F5',
+        'streamUrl' => 'https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4',
+        'status'    => 'demo',
+        'active'    => true,
+        'category'  => 'Demonstração',
+        'demo'      => true,
+    ];
 }
 
 $active_channel = $channels[0] ?? null;
@@ -64,13 +80,13 @@ if ($schedules_query->have_posts()) {
             <div>
                 <span class="text-f5-red font-mono font-black text-xs tracking-widest uppercase flex items-center gap-1.5">
                     <span class="w-2.5 h-2.5 rounded-full bg-f5-red animate-pulse block"></span>
-                    Transmissão Simultânea Ao Vivo
+                    <?php echo $demo_channel ? 'Transmissão Demonstrativa' : 'Transmissão Simultânea Ao Vivo'; ?>
                 </span>
                 <h1 class="text-3xl font-black tracking-tight mt-1">Central de Transmissões</h1>
             </div>
             <div class="flex items-center gap-3 bg-f5-blue-950 border border-zinc-900 px-4 py-2 rounded-xl text-xs text-zinc-400 font-mono">
                 <span class="text-f5-red">&#128101;</span>
-                <span id="f5tv-live-viewers">1.240 assinantes assistindo agora</span>
+                <span id="f5tv-live-viewers"><?php echo $demo_channel ? 'Sinal demonstrativo · audiência simulada' : '1.240 assinantes assistindo agora'; ?></span>
             </div>
         </div>
 
@@ -107,10 +123,10 @@ if ($schedules_query->have_posts()) {
                         </div>
 
                         <div class="bg-f5-blue-900/60 p-4 border border-zinc-850 rounded-xl flex flex-col gap-2">
-                            <span class="text-[10px] font-mono font-extrabold tracking-widest text-f5-red uppercase">NO AR AGORA:</span>
+                            <span class="text-[10px] font-mono font-extrabold tracking-widest text-f5-red uppercase"><?php echo $demo_channel ? 'PRÉVIA DEMONSTRATIVA:' : 'NO AR AGORA:'; ?></span>
                             <div class="flex flex-col">
-                                <h3 class="text-lg font-black text-white"><?php echo esc_html($active_channel['name']); ?> - Transmissão Oficial</h3>
-                                <p class="text-xs text-zinc-400 mt-1 leading-relaxed">Acompanhe a transmissão em alta definição do sinal F5 TV.</p>
+                                <h3 class="text-lg font-black text-white"><?php echo esc_html($active_channel['name']); ?> - <?php echo $demo_channel ? 'Conteúdo demonstrativo' : 'Transmissão Oficial'; ?></h3>
+                                <p class="text-xs text-zinc-400 mt-1 leading-relaxed"><?php echo $demo_channel ? 'Imagem e sinal usados apenas para demonstrar a experiência do player.' : 'Acompanhe a transmissão em alta definição do sinal F5 TV.'; ?></p>
                             </div>
                         </div>
                     </div>

@@ -25,6 +25,15 @@ if ($channels_query->have_posts()) {
     wp_reset_postdata();
 }
 
+$demo_schedule = false;
+if (empty($channels)) {
+    $channels[] = [
+        'id'       => 'demo-f5tv',
+        'name'     => 'F5 TV Demonstração',
+        'logoText' => 'F5',
+    ];
+}
+
 // Schedules
 $schedules_query = new WP_Query([
     'post_type'      => 'f5tv_programacao',
@@ -48,6 +57,16 @@ if ($schedules_query->have_posts()) {
     }
     wp_reset_postdata();
 }
+
+if (empty($schedules)) {
+    $demo_schedule = true;
+    $schedules = [
+        ['id' => 'demo-1', 'channelId' => 'demo-f5tv', 'title' => 'Bom Dia F5', 'date' => date('Y-m-d'), 'startTime' => '08:00', 'endTime' => '10:00', 'status' => 'scheduled', 'host' => 'Equipe F5 TV'],
+        ['id' => 'demo-2', 'channelId' => 'demo-f5tv', 'title' => 'F5 Entrevista', 'date' => date('Y-m-d'), 'startTime' => '10:30', 'endTime' => '12:00', 'status' => 'scheduled', 'host' => 'Redação F5 TV'],
+        ['id' => 'demo-3', 'channelId' => 'demo-f5tv', 'title' => 'Jornal F5 Ao Vivo', 'date' => date('Y-m-d'), 'startTime' => '13:00', 'endTime' => '14:00', 'status' => 'scheduled', 'host' => 'Jornalismo F5'],
+        ['id' => 'demo-4', 'channelId' => 'demo-f5tv', 'title' => 'Portugal em Foco', 'date' => date('Y-m-d'), 'startTime' => '18:00', 'endTime' => '19:30', 'status' => 'scheduled', 'host' => 'Equipe F5 TV'],
+    ];
+}
 ?>
 
 <div class="min-h-screen bg-f5-blue text-white font-sans selection:bg-f5-red p-6 md:p-10">
@@ -61,6 +80,12 @@ if ($schedules_query->have_posts()) {
                 Assistir Ao Vivo Agora
             </a>
         </div>
+
+        <?php if ($demo_schedule): ?>
+            <div class="bg-[#10284a] border border-f5-red/30 rounded-xl px-4 py-3 text-xs text-white/80 font-mono uppercase tracking-wider">
+                <span class="text-f5-red font-black">Programação demonstrativa:</span> horários e programas abaixo são exemplos de apresentação.
+            </div>
+        <?php endif; ?>
 
         <div class="bg-f5-blue-950 border border-zinc-900 rounded-2xl p-6 overflow-x-auto shadow-2xl">
             <table class="w-full text-left border-collapse text-xs font-semibold min-w-[600px]">
