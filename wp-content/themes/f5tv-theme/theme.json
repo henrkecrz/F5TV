@@ -4,7 +4,7 @@
   "settings": {
     "color": {
       "palette": [
-        { "slug": "f5-blue", "name": "F5 Blue", "color": "#030315" },
+        { "slug": "f5-blue", "name": "F5 Blue", "color": "#071a33" },
         { "slug": "f5-red", "name": "F5 Red", "color": "#dc2626" },
         { "slug": "f5-red-950", "name": "F5 Red 950", "color": "#450a0a" },
         { "slug": "f5-red-900", "name": "F5 Red 900", "color": "#7f1d1d" },
@@ -43,13 +43,13 @@
         { "slug": "transparent", "name": "Transparent", "color": "transparent" }
       ],
       "gradients": [
-        { "slug": "f5-hero", "name": "F5 Hero Gradient", "gradient": "linear-gradient(135deg, #030315 0%, #151515 50%, #030315 100%)" },
+        { "slug": "f5-hero", "name": "F5 Hero Gradient", "gradient": "linear-gradient(135deg, #071a33 0%, #0b2648 50%, #071a33 100%)" },
         { "slug": "f5-red-gradient", "name": "F5 Red Gradient", "gradient": "linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)" },
         { "slug": "f5-card-gradient", "name": "F5 Card Gradient", "gradient": "linear-gradient(145deg, #151515 0%, #0a0a0a 100%)" },
         { "slug": "f5-glass", "name": "F5 Glass Gradient", "gradient": "linear-gradient(145deg, rgba(21, 21, 21, 0.8) 0%, rgba(10, 10, 10, 0.9) 100%)" }
       ],
       "duotone": [
-        { "slug": "f5-duotone", "name": "F5 Duotone", "colors": ["#030315", "#dc2626"] }
+        { "slug": "f5-duotone", "name": "F5 Duotone", "colors": ["#071a33", "#dc2626"] }
       ]
     },
     "typography": {

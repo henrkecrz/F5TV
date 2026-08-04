@@ -16,6 +16,15 @@ body {
   background: #071a33 !important;
 }
 
+.bg-f5-blue {
+  background-color: #071a33 !important;
+}
+
+#f5-landing-root > section,
+#f5tv-main > section {
+  background-color: #071a33;
+}
+
 #hero {
   background-color: #071a33 !important;
 }
