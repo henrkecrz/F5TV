@@ -118,6 +118,15 @@ if (empty($contents)) {
         </div>
     </section>
 
+    <style>
+        .f5tv-hero-slide {
+            transform: scale(1.04);
+            transition: opacity 700ms ease-in-out, transform 3000ms cubic-bezier(.16, 1, .3, 1);
+        }
+        .f5tv-hero-slide.f5tv-hero-active {
+            transform: scale(1.1);
+        }
+    </style>
     <script>
     (function () {
         const slideshow = document.getElementById('f5tv-hero-slideshow');
@@ -128,14 +137,17 @@ if (empty($contents)) {
         let activeIndex = 0;
         slides[activeIndex].classList.remove('opacity-0');
         slides[activeIndex].classList.add('opacity-65');
+        slides[activeIndex].classList.add('f5tv-hero-active');
 
         window.setInterval(function () {
             slides[activeIndex].classList.remove('opacity-65');
             slides[activeIndex].classList.add('opacity-0');
+            slides[activeIndex].classList.remove('f5tv-hero-active');
             activeIndex = (activeIndex + 1) % slides.length;
             slides[activeIndex].classList.remove('opacity-0');
             slides[activeIndex].classList.add('opacity-65');
-        }, 1500);
+            slides[activeIndex].classList.add('f5tv-hero-active');
+        }, 3000);
     }());
     </script>
 
