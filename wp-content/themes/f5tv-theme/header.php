@@ -81,6 +81,7 @@ if (!defined('ABSPATH')) {
             #f5tv-app > header > div { min-height:40px; }
             #f5tv-app > header .f5tv-site-logo { height:36px !important; max-width:150px !important; }
             #f5tv-app > header > div > nav { display:none; }
+            #f5tv-mobile-bottom-nav { position:fixed; left:0; right:0; bottom:0; z-index:1100; display:grid; }
         }
     </style>
 </head>
