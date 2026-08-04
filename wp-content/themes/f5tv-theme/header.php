@@ -72,6 +72,11 @@ if (!defined('ABSPATH')) {
 </div>
 
 <div id="f5tv-app">
+    <div class="w-full bg-[#10284a] border-b border-white/10 px-4 py-2 text-center text-[10px] sm:text-xs font-mono tracking-[0.12em] uppercase text-white/75" role="status" aria-label="Aviso de demonstração">
+        <span class="text-f5-red font-black">Ambiente demonstrativo</span>
+        <span class="mx-1.5 text-white/40">·</span>
+        Conteúdos, dados e funcionalidades em fase de demonstração. Informações oficiais permanecem identificadas.
+    </div>
     <header class="sticky top-0 z-40 bg-[#060913]/95 backdrop-blur-md border-b border-zinc-800/80 px-4 sm:px-8 lg:px-0 py-3.5">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-6 lg:px-8">
             
