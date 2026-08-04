@@ -119,18 +119,31 @@ while (have_posts()): the_post();
         </div>
     </section>
 
-    <!-- Player de pré-visualização: a reprodução abre em tela cheia pelo botão Play. -->
+    <!-- Player de detalhes no estilo YouTube; o Play abre a reprodução em tela cheia. -->
     <section class="max-w-7xl mx-auto px-6 md:px-8 mb-10">
-        <div class="relative aspect-video max-w-5xl mx-auto rounded-2xl overflow-hidden border border-white/10 bg-black shadow-2xl group" id="f5tv-details-player">
+        <div class="relative aspect-video max-w-5xl mx-auto rounded-2xl overflow-hidden border border-white/10 bg-black shadow-2xl group" id="f5tv-details-player" aria-label="Player de vídeo">
             <?php if ($banner_url || $cover_url): ?>
                 <img src="<?php echo esc_url($banner_url ?: $cover_url); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-75 transition duration-300">
             <?php endif; ?>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/20"></div>
-            <div class="absolute inset-0 flex flex-col items-center justify-center gap-3">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/10"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
                 <a href="<?php echo esc_url(home_url('/assista?id=' . get_the_ID())); ?>" class="w-20 h-20 rounded-full bg-f5-red hover:bg-f5-red-700 flex items-center justify-center shadow-2xl hover:scale-110 transition-transform" aria-label="Reproduzir <?php echo esc_attr(get_the_title()); ?>">
                     <svg class="w-9 h-9 fill-white ml-1" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                 </a>
-                <span class="text-xs font-mono font-bold uppercase tracking-widest text-white">Reproduzir em tela cheia</span>
+            </div>
+            <div class="absolute inset-x-0 bottom-0 px-4 md:px-6 pb-4 pt-16 bg-gradient-to-t from-black/95 to-transparent">
+                <div class="h-1 rounded-full bg-white/25 mb-3 overflow-hidden"><div class="h-full w-0 bg-f5-red rounded-full"></div></div>
+                <div class="flex items-center justify-between text-white">
+                    <div class="flex items-center gap-2 md:gap-3">
+                        <a href="<?php echo esc_url(home_url('/assista?id=' . get_the_ID())); ?>" class="w-9 h-9 flex items-center justify-center hover:text-f5-red transition" aria-label="Play"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></a>
+                        <button type="button" class="w-9 h-9 hidden sm:flex items-center justify-center hover:text-f5-red transition" aria-label="Volume"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a3.5 3.5 0 00-2.5-3.35v6.7A3.5 3.5 0 0016.5 12zM14 3.23v2.06a7 7 0 010 13.42v2.06a9 9 0 000-17.54z"/></svg></button>
+                        <span class="text-[10px] font-mono text-white/70">0:00 / --:--</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button type="button" class="w-9 h-9 hidden sm:flex items-center justify-center hover:text-f5-red transition" aria-label="Configurações"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.65.07-.98s-.02-.66-.07-.98l2.11-1.65-2-3.46-2.49 1a7.4 7.4 0 00-1.69-.98L15 3h-4l-.36 2.53c-.6.24-1.17.56-1.69.98l-2.49-1-2 3.46 2.11 1.65c-.04.32-.08.65-.08.98s.03.66.08.98l-2.11 1.65 2 3.46 2.49-1c.52.42 1.09.74 1.69.98L11 21h4l.36-2.53c.6-.24 1.17-.56 1.69-.98l2.49 1 2-3.46-2.11-1.65zM13 15.5A3.5 3.5 0 1113 8a3.5 3.5 0 010 7.5z"/></svg></button>
+                        <a href="<?php echo esc_url(home_url('/assista?id=' . get_the_ID())); ?>" class="w-9 h-9 flex items-center justify-center hover:text-f5-red transition" aria-label="Tela cheia"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg></a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
