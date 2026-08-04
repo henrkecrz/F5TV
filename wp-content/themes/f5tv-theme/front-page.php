@@ -91,8 +91,8 @@ if (empty($contents)) {
             </p>
 
             <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full h-fit max-w-md mt-2 sm:mt-4">
-                <a href="<?php echo esc_url(home_url('/planos/')); ?>" class="px-5 sm:px-8 py-3 sm:py-3.5 rounded bg-white text-black font-bold flex items-center justify-center gap-2 hover:bg-f5-red hover:text-white transition-colors cursor-pointer text-sm uppercase tracking-wider">
-                    <span>Conteúdos em breve</span>
+                <a href="#sobre-f5tv" class="px-5 sm:px-8 py-3 sm:py-3.5 rounded bg-white text-black font-bold flex items-center justify-center gap-2 hover:bg-f5-red hover:text-white transition-colors cursor-pointer text-sm uppercase tracking-wider">
+                    <span>Sobre a F5 TV</span>
                 </a>
                 <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-5 sm:px-8 py-3 sm:py-3.5 rounded font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition cursor-pointer text-sm uppercase tracking-wider">
                     <span>&#9654; Conheça a Programação</span>
