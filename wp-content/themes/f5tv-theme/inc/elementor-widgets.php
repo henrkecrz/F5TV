@@ -130,7 +130,7 @@ function f5tv_register_elementor_widgets($widgets_manager): void
         {
             $contents = get_posts([
                 'post_type'      => ['f5tv_conteudo', 'f5tv_serie'],
-                'posts_per_page' => 6,
+                'posts_per_page' => 7,
                 'post_status'    => 'publish',
             ]);
 

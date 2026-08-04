@@ -725,6 +725,96 @@ add_filter('template_include', function ($template) {
     return $template;
 }, 99);
 
+/**
+ * Cadastra os programas editoriais fornecidos pela F5 TV no catálogo.
+ * A rotina é idempotente: cria uma vez e atualiza as capas/descritivos sem duplicar posts.
+ */
+add_action('init', 'f5tv_seed_program_catalog', 30);
+function f5tv_seed_program_catalog(): void
+{
+    static $ran = false;
+    if ($ran || !post_type_exists('f5tv_conteudo')) return;
+    $ran = true;
+
+    $programs = [
+        [
+            'slug' => 'bela-escala',
+            'title' => 'Bela Escala',
+            'genre' => 'Empreendedorismo',
+            'description' => 'Talk show apresentado por Sara Bello, com entrevistas, estratégias de crescimento e histórias de líderes e empresários que transformaram desafios em grandes conquistas.',
+        ],
+        [
+            'slug' => 'conexao-imob',
+            'title' => 'Conexão Imob',
+            'genre' => 'Mercado Imobiliário',
+            'description' => 'Podcast apresentado por João Marcos Marçal sobre o mercado imobiliário em Portugal, reunindo empresários, consultores, investidores e especialistas para debater tendências e oportunidades.',
+        ],
+        [
+            'slug' => 'essencia-lusa',
+            'title' => 'Essência Lusa',
+            'genre' => 'Documentário',
+            'description' => 'Documentário cinematográfico sobre as raízes históricas, culturais e antropológicas que moldaram a identidade portuguesa.',
+        ],
+        [
+            'slug' => 'maria-joao-tv',
+            'title' => 'Maria João TV',
+            'genre' => 'Lifestyle',
+            'description' => 'Programa sobre moda, beleza, estilo de vida, comportamento e autoestima, apresentado por Maria João com elegância, inspiração e autenticidade.',
+        ],
+        [
+            'slug' => 'no-sofa-com-a-rainha',
+            'title' => 'No Sofá com a Rainha',
+            'genre' => 'Entrevistas',
+            'description' => 'Patrícia Calhas recebe empresários, líderes e personalidades para conversas sobre networking, empreendedorismo, liderança e construção de relações de sucesso.',
+        ],
+        [
+            'slug' => 'street-talk',
+            'title' => 'Street Talk',
+            'genre' => 'Jornalismo',
+            'description' => 'Um formato dinâmico em que novos repórteres vão às ruas sem pauta para transformar o quotidiano em reportagens e entrevistas surpreendentes.',
+        ],
+        [
+            'slug' => 'vozes-que-empreendem',
+            'title' => 'Vozes que Empreendem',
+            'genre' => 'Empreendedorismo',
+            'description' => 'Valódia Mafuiane conduz histórias reais de empreendedorismo, superação e inovação, mostrando como pessoas transformam sonhos em conquistas.',
+        ],
+    ];
+
+    foreach ($programs as $program) {
+        $existing = get_posts([
+            'post_type' => 'f5tv_conteudo',
+            'name' => $program['slug'],
+            'post_status' => 'any',
+            'posts_per_page' => 1,
+            'fields' => 'ids',
+        ]);
+
+        $post_id = !empty($existing) ? (int) $existing[0] : wp_insert_post([
+            'post_type' => 'f5tv_conteudo',
+            'post_status' => 'publish',
+            'post_title' => $program['title'],
+            'post_name' => $program['slug'],
+            'post_content' => $program['description'],
+            'post_excerpt' => $program['description'],
+        ]);
+
+        if (!$post_id || is_wp_error($post_id)) continue;
+
+        $base = F5TV_ASSETS_URI . '/programas/' . $program['slug'] . '/';
+        update_post_meta($post_id, 'cover_url', $base . $program['slug'] . '-4x3.jpg');
+        update_post_meta($post_id, 'banner_url', $base . $program['slug'] . '-16x9.jpg');
+        update_post_meta($post_id, 'genre', $program['genre']);
+        update_post_meta($post_id, 'content_type', 'programa');
+        update_post_meta($post_id, 'age_rating', 'Livre');
+        update_post_meta($post_id, 'is_exclusive', 0);
+
+        if (taxonomy_exists('f5tv_genero')) {
+            wp_set_object_terms($post_id, $program['genre'], 'f5tv_genero', false);
+        }
+    }
+}
+
 
 
 
