@@ -1,0 +1,162 @@
+<?php
+/**
+ * F5TV Client Area - CSS Base
+ * Estilos isolados da área do assinante
+ */
+
+/* Layout */
+.f5tv-client-dashboard {
+    display: flex;
+    min-height: 100vh;
+    background-color: #0f0f0f;
+    color: #f5f5f5;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.f5tv-client-sidebar {
+    width: 240px;
+    background-color: #18181b;
+    border-right: 1px solid #27272a;
+    padding: 1.5rem;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.f5tv-client-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.f5tv-nav-item {
+    display: block;
+    padding: 0.6rem 0.75rem;
+    border-radius: 0.375rem;
+    color: #a1a1aa;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.f5tv-nav-item:hover,
+.f5tv-nav-item.active {
+    background-color: #27272a;
+    color: #f5f5f5;
+}
+
+.f5tv-client-main {
+    flex: 1;
+    padding: 2rem;
+}
+
+.f5tv-client-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.f5tv-client-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Profile selector */
+.f5tv-profile-selector {
+    max-width: 720px;
+    margin: 4rem auto;
+    text-align: center;
+}
+
+.f5tv-profile-selector h3 {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.f5tv-profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1.5rem;
+}
+
+.f5tv-profile-card {
+    background: transparent;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: transform 0.2s ease;
+}
+
+.f5tv-profile-card:hover {
+    transform: scale(1.05);
+}
+
+.f5tv-profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.f5tv-avatar-add {
+    border: 2px dashed #71717a;
+    background: transparent;
+    color: #a1a1aa;
+}
+
+/* Player */
+.f5tv-player-wrapper {
+    max-width: 960px;
+    margin: 0 auto;
+    background: #000;
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.f5tv-player-wrapper video {
+    width: 100%;
+    display: block;
+}
+
+.f5tv-player-error {
+    color: #ef4444;
+    text-align: center;
+    padding: 2rem;
+}
+
+/* Devices */
+.f5tv-device-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 720px;
+}
+
+.f5tv-device-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background-color: #18181b;
+    border: 1px solid #27272a;
+    border-radius: 0.5rem;
+}
+
+/* Loading */
+.f5tv-loading {
+    text-align: center;
+    padding: 4rem;
+    color: #a1a1aa;
+}
