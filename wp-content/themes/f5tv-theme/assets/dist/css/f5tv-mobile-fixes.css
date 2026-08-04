@@ -1,0 +1,77 @@
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #030315 !important;
+  overflow-x: hidden !important;
+}
+
+#f5tv-app,
+#f5-landing-root,
+.wp-site-blocks {
+  width: 100%;
+  min-height: 100vh;
+  background: #030315 !important;
+}
+
+#f5tv-mobile-menu-btn {
+  position: relative !important;
+  z-index: 10000 !important;
+  pointer-events: auto !important;
+}
+
+#f5tv-mobile-menu {
+  position: fixed !important;
+  top: 4.5rem !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+  isolation: isolate;
+}
+
+#f5tv-mobile-menu:not(.hidden) {
+  display: block !important;
+}
+
+#f5tv-user-dropdown {
+  z-index: 10000 !important;
+}
+
+@media (max-width: 1023px) {
+  #hero {
+    height: auto !important;
+    min-height: 560px;
+    padding: 2rem 1.25rem 2.5rem !important;
+  }
+
+  #hero h1 {
+    font-size: 2.25rem !important;
+    line-height: 1 !important;
+  }
+
+  #hero p {
+    font-size: 0.875rem !important;
+  }
+
+  #hero a {
+    padding: 0.75rem 1.25rem !important;
+  }
+
+  #hero .mt-8 {
+    margin-top: 1.5rem !important;
+  }
+
+  #hero .gap-6 {
+    column-gap: 1rem !important;
+    row-gap: 0.5rem !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  #f5tv-mobile-menu {
+    display: none !important;
+  }
+}
