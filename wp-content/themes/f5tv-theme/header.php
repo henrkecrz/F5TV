@@ -89,7 +89,7 @@ if (!defined('ABSPATH')) {
             <nav class="hidden lg:flex items-center gap-5 text-xs font-mono font-bold tracking-widest text-zinc-300 uppercase">
                 <a href="<?php echo esc_url(home_url('/')); ?>" class="hover:text-white transition">Início</a>
                 <a href="<?php echo esc_url(home_url('/series/')); ?>" class="hover:text-white transition">Séries</a>
-                <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="hover:text-white transition">Catálogo</a>
+                <a href="<?php echo esc_url(home_url('/series/')); ?>" class="hover:text-white transition">Catálogo</a>
                 <a href="<?php echo esc_url(home_url('/ao-vivo/')); ?>" class="hover:text-white transition">Ao Vivo</a>
                 <a href="<?php echo esc_url(home_url('/programacao/')); ?>" class="hover:text-white transition">Programação</a>
                 <a href="<?php echo esc_url(home_url('/busca/')); ?>" class="hover:text-white transition">Busca</a>
@@ -214,7 +214,7 @@ if (!defined('ABSPATH')) {
         <nav class="flex flex-col gap-1 text-xs font-mono font-bold tracking-widest text-zinc-200 uppercase">
             <a href="<?php echo esc_url(home_url('/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Início</a>
             <a href="<?php echo esc_url(home_url('/series/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Séries</a>
-            <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Catálogo</a>
+            <a href="<?php echo esc_url(home_url('/series/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Catálogo</a>
             <a href="<?php echo esc_url(home_url('/ao-vivo/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Ao Vivo</a>
             <a href="<?php echo esc_url(home_url('/programacao/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Programação</a>
             <a href="<?php echo esc_url(home_url('/busca/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Busca</a>

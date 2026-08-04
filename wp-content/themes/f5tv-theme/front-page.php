@@ -115,7 +115,7 @@ if (empty($contents)) {
                     <span class="text-[10px] font-mono font-bold tracking-[0.2em] text-f5-red uppercase">NO CATÁLOGO</span>
                     <h2 class="text-3xl md:text-5xl font-black tracking-tight text-white mt-2">Conteúdo que encontra o seu público</h2>
                 </div>
-                <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="text-sm font-semibold text-f5-red hover:text-white flex items-center gap-2 transition-colors uppercase tracking-wider font-mono text-xs">
+                <a href="<?php echo esc_url(home_url('/series/')); ?>" class="text-sm font-semibold text-f5-red hover:text-white flex items-center gap-2 transition-colors uppercase tracking-wider font-mono text-xs">
                     <span>Ver catálogo completo &rarr;</span>
                 </a>
             </div>
