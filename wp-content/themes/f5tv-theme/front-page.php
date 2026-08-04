@@ -91,7 +91,7 @@ if (empty($contents)) {
             </p>
 
             <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full h-fit max-w-md mt-2 sm:mt-4">
-                <a href="#planos" class="px-5 sm:px-8 py-3 sm:py-3.5 rounded bg-white text-black font-bold flex items-center justify-center gap-2 hover:bg-f5-red hover:text-white transition-colors cursor-pointer text-sm uppercase tracking-wider">
+                <a href="<?php echo esc_url(home_url('/planos/')); ?>" class="px-5 sm:px-8 py-3 sm:py-3.5 rounded bg-white text-black font-bold flex items-center justify-center gap-2 hover:bg-f5-red hover:text-white transition-colors cursor-pointer text-sm uppercase tracking-wider">
                     <span>Conteúdos em breve</span>
                 </a>
                 <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-5 sm:px-8 py-3 sm:py-3.5 rounded font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition cursor-pointer text-sm uppercase tracking-wider">
@@ -313,55 +313,38 @@ if (empty($contents)) {
         }
     })();
     </script>
-    <!-- Planos de Assinatura Section -->
-    <section id="planos" class="py-24 px-8 bg-f5-blue border-b border-white/5">
-
-        <div class="max-w-7xl mx-auto">
-            <div class="text-left max-w-2xl mb-18 flex flex-col gap-3">
-                <span class="text-[10px] font-mono font-bold tracking-[0.2em] text-f5-red uppercase">ASSINATURAS EM BREVE</span>
-                <h2 class="text-4xl sm:text-6xl font-black tracking-tighter text-white leading-none">Conteúdos por assinatura disponíveis em breve!</h2>
-                <p class="text-white/60 text-base font-normal mt-2">Estamos a preparar novas experiências de conteúdo para a F5 TV.</p>
+    <!-- Sobre a F5 TV Section -->
+    <section id="sobre-f5tv" class="py-24 px-8 bg-f5-blue border-b border-white/5">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-20 items-start">
+            <div class="lg:sticky lg:top-28">
+                <span class="text-[10px] font-mono font-bold tracking-[0.2em] text-f5-red uppercase">SOBRE A F5 TV</span>
+                <h2 class="text-4xl sm:text-6xl font-black tracking-tighter text-white leading-none mt-3">A 1ª TV Streaming de Portugal</h2>
+                <p class="text-xl text-zinc-300 leading-relaxed font-semibold mt-6">Uma nova forma de fazer televisão.</p>
+                <a href="<?php echo esc_url(home_url('/sobre/')); ?>" class="inline-flex mt-8 text-f5-red font-mono font-bold text-xs uppercase tracking-wider hover:text-white transition-colors">Conheça a F5 TV <span class="ml-2">→</span></a>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl">
-                <div class="bg-f5-blue-950 border border-white/5 p-8 rounded-2xl flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-2xl font-black text-white">Plano Básico</h3>
-                        <p class="text-sm font-semibold text-f5-red mt-2">Conteúdos por assinatura disponíveis em breve!</p>
-                        <ul class="mt-6 flex flex-col gap-3 text-xs text-zinc-300 font-medium">
-                            <li>&bull; Acesso ao Sinal Ao Vivo 24/7</li>
-                            <li>&bull; Resolução HD 720p em 1 Tela</li>
-                            <li>&bull; Suporte Técnico Via Ticket</li>
-                        </ul>
+            <div class="flex flex-col gap-8">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="p-5 bg-f5-blue-950 border border-white/5 rounded-2xl">
+                        <h3 class="text-lg font-black text-white">Televisão sem fronteiras</h3>
+                        <p class="text-zinc-400 text-xs font-semibold leading-relaxed mt-3">Informação, entretenimento, cultura, entrevistas, opinião, negócios e lifestyle num só lugar.</p>
                     </div>
-                    <span class="mt-8 bg-[#194b7a]/60 text-white/80 text-center font-mono font-bold text-xs uppercase py-3 rounded-xl">Assinatura em Breve</span>
+                    <div class="p-5 bg-f5-blue-950 border border-white/5 rounded-2xl">
+                        <h3 class="text-lg font-black text-white">Uma visão contemporânea</h3>
+                        <p class="text-zinc-400 text-xs font-semibold leading-relaxed mt-3">Conteúdos próprios e parceiros, formatos diferenciados e uma experiência adaptada aos novos ecrãs.</p>
+                    </div>
+                    <div class="p-5 bg-f5-blue-950 border border-white/5 rounded-2xl">
+                        <h3 class="text-lg font-black text-white">Portugal e o mundo</h3>
+                        <p class="text-zinc-400 text-xs font-semibold leading-relaxed mt-3">Histórias, ideias e protagonistas que merecem ser vistos e ouvidos.</p>
+                    </div>
                 </div>
 
-                <div class="bg-f5-blue-950 border-2 border-f5-red p-8 rounded-2xl flex flex-col justify-between relative shadow-2xl">
-                    <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-f5-red text-white text-[9px] font-mono font-black uppercase px-3 py-1 rounded-full shadow">MAIS POPULAR</span>
-                    <div>
-                        <h3 class="text-2xl font-black text-white">Plano Família</h3>
-                        <p class="text-sm font-semibold text-f5-red mt-2">Conteúdos por assinatura disponíveis em breve!</p>
-                        <ul class="mt-6 flex flex-col gap-3 text-xs text-zinc-300 font-medium">
-                            <li>&bull; 3 Telas Simultâneas em Full HD</li>
-                            <li>&bull; Perfis Individuais com Perfil Kids</li>
-                            <li>&bull; Downloads Offline Ilimitados</li>
-                        </ul>
-                    </div>
-                    <span class="mt-8 bg-f5-red/50 text-white/80 text-center font-mono font-bold text-xs uppercase py-3 rounded-xl">Assinatura em Breve</span>
-                </div>
-
-                <div class="bg-f5-blue-950 border border-white/5 p-8 rounded-2xl flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-2xl font-black text-white">Plano Premium</h3>
-                        <p class="text-sm font-semibold text-f5-red mt-2">Conteúdos por assinatura disponíveis em breve!</p>
-                        <ul class="mt-6 flex flex-col gap-3 text-xs text-zinc-300 font-medium">
-                            <li>&bull; 4 Telas Simultâneas em 4K HDR</li>
-                            <li>&bull; Áudio Dolby Atmos 5.1</li>
-                            <li>&bull; Acesso Antecipado às Séries Exclusivas</li>
-                        </ul>
-                    </div>
-                    <span class="mt-8 bg-[#194b7a]/60 text-white/80 text-center font-mono font-bold text-xs uppercase py-3 rounded-xl">Assinatura em Breve</span>
+                <div class="border-t border-white/10 pt-8 flex flex-col gap-5 font-semibold text-zinc-300 text-sm leading-relaxed">
+                    <p>A F5 TV Streaming nasce para marcar uma nova etapa na televisão em Portugal. Como 1ª TV Streaming de Portugal, assumimos uma posição pioneira num mercado em transformação, onde a televisão deixou de estar limitada a horários, grelhas e formatos convencionais. Hoje, o público escolhe o que quer ver, quando quer ver e através de diferentes ecrãs. É nesse novo território que a F5 se posiciona.</p>
+                    <p>Somos uma plataforma de televisão concebida para reunir informação, entretenimento, cultura, entrevistas, opinião, negócios, lifestyle e conteúdos especiais, aproximando diferentes públicos de histórias, ideias e protagonistas que merecem ser vistos e ouvidos.</p>
+                    <p>Na F5TV acreditamos que a televisão do futuro não será apenas aquela que transmite conteúdos. Será aquela que cria relevância, estabelece ligações e acompanha a transformação da sociedade. Por isso, construímos uma experiência de televisão mais flexível, contemporânea e conectada com o seu tempo, com conteúdos próprios e parceiros, formatos diferenciados e uma visão aberta ao que acontece em Portugal e no mundo.</p>
+                    <p>A F5TV é televisão sem fronteiras de horário, de espaço ou de formato. É televisão para uma nova geração de espectadores. É conteúdo que encontra o seu público. É comunicação que permanece para além do ecrã.</p>
+                    <p class="text-lg font-black text-white">F5 TV Streaming. O futuro da televisão começa aqui.</p>
                 </div>
             </div>
         </div>
