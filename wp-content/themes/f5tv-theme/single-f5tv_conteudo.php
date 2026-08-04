@@ -119,6 +119,22 @@ while (have_posts()): the_post();
         </div>
     </section>
 
+    <!-- Player de pré-visualização: a reprodução abre em tela cheia pelo botão Play. -->
+    <section class="max-w-7xl mx-auto px-6 md:px-8 mb-10">
+        <div class="relative aspect-video max-w-5xl mx-auto rounded-2xl overflow-hidden border border-white/10 bg-black shadow-2xl group" id="f5tv-details-player">
+            <?php if ($banner_url || $cover_url): ?>
+                <img src="<?php echo esc_url($banner_url ?: $cover_url); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-75 transition duration-300">
+            <?php endif; ?>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/20"></div>
+            <div class="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                <a href="<?php echo esc_url(home_url('/assista?id=' . get_the_ID())); ?>" class="w-20 h-20 rounded-full bg-f5-red hover:bg-f5-red-700 flex items-center justify-center shadow-2xl hover:scale-110 transition-transform" aria-label="Reproduzir <?php echo esc_attr(get_the_title()); ?>">
+                    <svg class="w-9 h-9 fill-white ml-1" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </a>
+                <span class="text-xs font-mono font-bold uppercase tracking-widest text-white">Reproduzir em tela cheia</span>
+            </div>
+        </div>
+    </section>
+
     <!-- Core Split Grid — lg:grid-cols-3 — idêntico ao ContentDetailsPage.tsx -->
     <div class="max-w-7xl mx-auto px-6 md:px-8 grid grid-cols-1 lg:grid-cols-3 gap-12 mb-16">
 
