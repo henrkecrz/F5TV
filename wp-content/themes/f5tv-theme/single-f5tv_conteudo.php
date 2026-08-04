@@ -127,8 +127,8 @@ while (have_posts()): the_post();
             <?php endif; ?>
             <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/10"></div>
             <div class="absolute inset-0 flex items-center justify-center">
-                <a href="<?php echo esc_url(home_url('/assista?id=' . get_the_ID())); ?>" class="w-20 h-20 rounded-full bg-f5-red hover:bg-f5-red-700 flex items-center justify-center shadow-2xl hover:scale-110 transition-transform" aria-label="Reproduzir <?php echo esc_attr(get_the_title()); ?>">
-                    <svg class="w-9 h-9 fill-white ml-1" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <a href="<?php echo esc_url(home_url('/assista?id=' . get_the_ID())); ?>" class="w-24 h-24 md:w-28 md:h-28 rounded-full bg-f5-red hover:bg-f5-red-700 flex items-center justify-center shadow-[0_0_45px_rgba(220,38,38,.65)] hover:scale-110 transition-transform" aria-label="Reproduzir <?php echo esc_attr(get_the_title()); ?>">
+                    <svg class="w-11 h-11 md:w-14 md:h-14 fill-white ml-1.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                 </a>
             </div>
             <div class="absolute inset-x-0 bottom-0 px-4 md:px-6 pb-4 pt-16 bg-gradient-to-t from-black/95 to-transparent">
