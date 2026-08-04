@@ -132,7 +132,7 @@ if (did_action('elementor/loaded') && \Elementor\Plugin::$instance->db->is_built
                     </ul>
                 </div>
 
-                <a href="<?php echo esc_url(home_url('/cadastro?plan=plano-premium')); ?>" class="w-full text-center py-3 px-4 rounded-xl font-bold font-mono text-xs uppercase tracking-wider cursor-pointer transition duration-300 bg-f5-red hover:bg-f5-red-700 text-white shadow-lg shadow-f5-red-700/20">
+                <a href="<?php echo esc_url(home_url('/cadastro?plan=plano-premium')); ?>" class="w-full text-center py-3 px-4 rounded-xl font-bold font-mono text-xs uppercase tracking-wider cursor-pointer transition duration-300 bg-[#194b7a] hover:bg-[#2869a5] text-white">
                     Assinar Agora
                 </a>
             </div>

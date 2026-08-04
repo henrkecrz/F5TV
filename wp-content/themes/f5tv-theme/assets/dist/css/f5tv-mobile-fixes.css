@@ -56,6 +56,14 @@ a[href*="plano-basico"]:hover {
   background-color: #2869a5 !important;
 }
 
+a[href*="plano-premium"] {
+  background-color: #194b7a !important;
+}
+
+a[href*="plano-premium"]:hover {
+  background-color: #2869a5 !important;
+}
+
 #f5-landing-root > section,
 #f5tv-main > section {
   background-color: #071a33 !important;

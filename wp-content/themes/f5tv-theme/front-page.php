@@ -358,7 +358,7 @@ if (empty($contents)) {
                             <li>&bull; Acesso Antecipado às Séries Exclusivas</li>
                         </ul>
                     </div>
-                    <a href="<?php echo esc_url(home_url('/checkout?plan=plano-premium')); ?>" class="mt-8 bg-zinc-800 hover:bg-f5-red text-white text-center font-mono font-bold text-xs uppercase py-3 rounded-xl transition">Assinar Premium</a>
+                    <a href="<?php echo esc_url(home_url('/checkout?plan=plano-premium')); ?>" class="mt-8 bg-[#194b7a] hover:bg-[#2869a5] text-white text-center font-mono font-bold text-xs uppercase py-3 rounded-xl transition">Assinar Premium</a>
                 </div>
             </div>
         </div>
