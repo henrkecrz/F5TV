@@ -928,7 +928,7 @@ function f5tv_seed_program_catalog(): void
         if (!$post_id || is_wp_error($post_id)) continue;
 
         $base = F5TV_ASSETS_URI . '/programas/' . $program['slug'] . '/';
-        update_post_meta($post_id, 'cover_url', $base . $program['slug'] . '-9x16.jpg');
+        update_post_meta($post_id, 'cover_url', $base . $program['slug'] . '-16x9.jpg');
         update_post_meta($post_id, 'banner_url', $base . $program['slug'] . '-16x9.jpg');
         update_post_meta($post_id, 'genre', $program['genre']);
         update_post_meta($post_id, 'content_type', 'programa');
