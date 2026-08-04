@@ -16,6 +16,11 @@ body {
   background: #071a33 !important;
 }
 
+#f5tv-app > header,
+#f5tv-mobile-menu {
+  background-color: #071a33 !important;
+}
+
 .bg-f5-blue {
   background-color: #071a33 !important;
 }
