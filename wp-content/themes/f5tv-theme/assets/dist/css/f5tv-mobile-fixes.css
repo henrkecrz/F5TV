@@ -389,3 +389,90 @@ a[href*="plano-premium"]:hover {
     display: none !important;
   }
 }
+
+/* Mobile/tablet primary navigation: compact fixed dock inspired by social app bars. */
+.f5tv-mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  #f5tv-app > header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+  }
+
+  .f5tv-mobile-bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1100;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.25rem;
+    padding: 0.55rem 0.5rem calc(0.55rem + env(safe-area-inset-bottom));
+    background: rgba(6, 15, 31, 0.97);
+    border-top: 1px solid rgba(116, 145, 180, 0.22);
+    box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .f5tv-bottom-nav-item {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    flex-direction: column;
+    color: rgba(255, 255, 255, 0.58);
+    font: 700 9px/1.1 monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    transition: color .2s ease, transform .2s ease;
+  }
+
+  .f5tv-bottom-nav-item svg {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  .f5tv-bottom-nav-item:hover,
+  .f5tv-bottom-nav-item:focus-visible,
+  .f5tv-bottom-nav-item[aria-current="page"] {
+    color: #ef2b32;
+  }
+
+  .f5tv-bottom-nav-item:active {
+    transform: scale(.94);
+  }
+
+  #f5tv-main {
+    padding-bottom: calc(5.25rem + env(safe-area-inset-bottom));
+  }
+
+  #f5tv-app > footer {
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+/* Desktop header remains visible while scrolling, with a light glass effect. */
+@media (min-width: 1024px) {
+  #f5tv-app > header {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000 !important;
+    background: rgba(6, 9, 19, 0.84) !important;
+    border-bottom-color: rgba(148, 163, 184, 0.18) !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  #f5tv-main {
+    padding-top: 76px;
+  }
+}

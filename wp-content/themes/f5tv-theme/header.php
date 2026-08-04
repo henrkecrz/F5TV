@@ -98,10 +98,6 @@ if (!defined('ABSPATH')) {
 
             <!-- Lado Direito: Ícone do Personagem / Avatar + Menu Cascata do Assinante -->
             <div class="flex items-center gap-3">
-                <button type="button" id="f5tv-mobile-menu-btn" aria-expanded="false" aria-controls="f5tv-mobile-menu" class="lg:hidden relative z-[80] inline-flex items-center justify-center w-10 h-10 rounded-xl border border-zinc-700/80 bg-[#0e1424] text-zinc-200 hover:text-white hover:bg-[#161f36] transition cursor-pointer select-none" aria-label="Abrir menu">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                </button>
-
                 <a href="<?php echo esc_url(home_url('/planos/')); ?>" class="hidden lg:inline-flex whitespace-nowrap bg-f5-red hover:bg-f5-red-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition uppercase tracking-wider shadow-lg shadow-f5-red-700/20">
                     Assinatura em Breve
                 </a>
@@ -210,17 +206,23 @@ if (!defined('ABSPATH')) {
         </div>
     </header>
 
-    <div id="f5tv-mobile-menu" class="hidden lg:hidden fixed inset-x-0 top-[4.5rem] z-[75] bg-[#071a33] border-b border-zinc-700/80 shadow-2xl p-4">
-        <nav class="flex flex-col gap-1 text-xs font-mono font-bold tracking-widest text-zinc-200 uppercase">
-            <a href="<?php echo esc_url(home_url('/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Início</a>
-            <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Catálogo</a>
-            <a href="<?php echo esc_url(home_url('/minha-lista/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Minha Lista</a>
-            <a href="<?php echo esc_url(home_url('/ao-vivo/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Ao Vivo</a>
-            <a href="<?php echo esc_url(home_url('/programacao/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Programação</a>
-            <a href="<?php echo esc_url(home_url('/busca/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Busca</a>
-            <a href="<?php echo esc_url(home_url('/planos/')); ?>" class="px-3 py-3 rounded-lg text-f5-red hover:bg-f5-red/15 hover:text-white transition">Planos</a>
-        </nav>
-    </div>
+    <nav id="f5tv-mobile-bottom-nav" aria-label="Navegação principal" class="f5tv-mobile-bottom-nav">
+        <a href="<?php echo esc_url(home_url('/')); ?>" class="f5tv-bottom-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10Z"/><path d="M9 21v-7h6v7"/></svg><span>Início</span>
+        </a>
+        <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="f5tv-bottom-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5M16 4v5"/></svg><span>Catálogo</span>
+        </a>
+        <a href="<?php echo esc_url(home_url('/ao-vivo/')); ?>" class="f5tv-bottom-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="2.5" fill="currentColor"/><path d="M5.64 5.64a9 9 0 0 0 0 12.72M18.36 5.64a9 9 0 0 1 0 12.72M2.81 2.81a13 13 0 0 0 0 18.38M21.19 2.81a13 13 0 0 1 0 18.38"/></svg><span>Ao Vivo</span>
+        </a>
+        <a href="<?php echo esc_url(home_url('/minha-lista/')); ?>" class="f5tv-bottom-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m12 3 2.78 5.63 6.22.9-4.5 4.38 1.06 6.19L12 17.18l-5.56 2.92 1.06-6.19L3 9.53l6.22-.9L12 3Z"/></svg><span>Minha Lista</span>
+        </a>
+        <a href="<?php echo esc_url(home_url('/busca/')); ?>" class="f5tv-bottom-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><span>Busca</span>
+        </a>
+    </nav>
 
     <script>
     (function () {
@@ -241,8 +243,6 @@ if (!defined('ABSPATH')) {
     }());
 
     (function () {
-        var menuButton = document.getElementById('f5tv-mobile-menu-btn');
-        var mobileMenu = document.getElementById('f5tv-mobile-menu');
         var userButton = document.getElementById('f5tv-user-dropdown-btn');
         var userMenu = document.getElementById('f5tv-user-dropdown');
 
@@ -257,20 +257,6 @@ if (!defined('ABSPATH')) {
             element.classList.toggle('invisible', !visible);
             element.classList.toggle('pointer-events-none', !visible);
             element.classList.toggle('scale-95', !visible);
-        }
-
-        if (menuButton && mobileMenu) {
-            menuButton.addEventListener('click', function () {
-                var visible = mobileMenu.classList.contains('hidden');
-                setVisible(mobileMenu, visible);
-                menuButton.setAttribute('aria-expanded', visible ? 'true' : 'false');
-            });
-            mobileMenu.querySelectorAll('a').forEach(function (link) {
-                link.addEventListener('click', function () {
-                    setVisible(mobileMenu, false);
-                    menuButton.setAttribute('aria-expanded', 'false');
-                });
-            });
         }
 
         if (userButton && userMenu) {

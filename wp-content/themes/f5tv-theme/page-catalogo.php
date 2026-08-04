@@ -35,6 +35,16 @@ $catalog_genres = array_keys($catalog_genres);
                     <span class="text-[10px] font-mono font-bold tracking-[0.18em] text-zinc-500 uppercase">Explorar por categoria</span>
                     <span id="f5tv-catalog-count" class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider"><?php echo esc_html(count($program_query->posts)); ?> títulos</span>
                 </div>
+                <label class="f5tv-catalog-mobile-select relative block sm:hidden">
+                    <span class="sr-only">Filtrar catálogo por categoria</span>
+                    <select id="f5tv-catalog-select" class="w-full appearance-none rounded-xl border border-white/10 bg-white/5 px-4 py-3 pr-10 text-sm font-semibold text-white outline-none focus:border-f5-red">
+                        <option value="all">Todos os conteúdos</option>
+                        <?php foreach ($catalog_genres as $catalog_genre): $catalog_slug = sanitize_title($catalog_genre); ?>
+                            <option value="<?php echo esc_attr($catalog_slug); ?>"><?php echo esc_html($catalog_genre); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <svg class="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-f5-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                </label>
                 <div class="f5tv-catalog-filters flex items-center gap-2 overflow-x-auto pb-2 -mx-1 px-1" role="tablist" aria-label="Filtrar catálogo por categoria">
                     <button type="button" class="f5tv-catalog-filter is-active shrink-0 rounded-full px-4 py-2 text-xs font-bold transition" data-filter="all" role="tab" aria-selected="true">Todos</button>
                     <?php foreach ($catalog_genres as $catalog_genre): $catalog_slug = sanitize_title($catalog_genre); ?>
@@ -91,6 +101,10 @@ $catalog_genres = array_keys($catalog_genres);
         display: none;
     }
 
+    .f5tv-catalog-mobile-select {
+        display: none;
+    }
+
     .f5tv-catalog-filter {
         color: rgba(255, 255, 255, 0.58);
         background: rgba(255, 255, 255, 0.06);
@@ -104,6 +118,16 @@ $catalog_genres = array_keys($catalog_genres);
         border-color: #e52329;
         box-shadow: 0 8px 24px rgba(229, 35, 41, 0.2);
     }
+
+    @media (max-width: 639px) {
+        .f5tv-catalog-mobile-select {
+            display: block;
+        }
+
+        .f5tv-catalog-filters {
+            display: none;
+        }
+    }
 </style>
 
 <script>
@@ -113,14 +137,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const emptyState = document.getElementById('f5tv-catalog-empty');
     const count = document.getElementById('f5tv-catalog-count');
 
-    filters.forEach((filter) => filter.addEventListener('click', () => {
-        const selected = filter.dataset.filter;
+    function applyFilter(selected) {
         let visible = 0;
 
-        filters.forEach((button) => {
-            const active = button === filter;
-            button.classList.toggle('is-active', active);
-            button.setAttribute('aria-selected', active ? 'true' : 'false');
+        filters.forEach((filter) => {
+            const active = filter.dataset.filter === selected;
+            filter.classList.toggle('is-active', active);
+            filter.setAttribute('aria-selected', active ? 'true' : 'false');
         });
 
         cards.forEach((card) => {
@@ -131,7 +154,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (emptyState) emptyState.style.display = visible ? 'none' : '';
         if (count) count.textContent = `${visible} ${visible === 1 ? 'título' : 'títulos'}`;
-    }));
+    }
+
+    filters.forEach((filter) => filter.addEventListener('click', () => applyFilter(filter.dataset.filter)));
+    const select = document.getElementById('f5tv-catalog-select');
+    if (select) select.addEventListener('change', () => applyFilter(select.value));
 });
 </script>
 
