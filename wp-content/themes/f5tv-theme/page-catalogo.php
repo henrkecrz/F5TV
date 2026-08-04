@@ -23,7 +23,7 @@ $program_query = new WP_Query([
 
     <main class="max-w-7xl w-full mx-auto px-6 md:px-8 py-10">
         <?php if ($program_query->have_posts()): ?>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-5">
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-5 md:gap-6">
                 <?php while ($program_query->have_posts()): $program_query->the_post();
                     $post_id = get_the_ID();
                     $program_slug = sanitize_title(get_the_title($post_id));

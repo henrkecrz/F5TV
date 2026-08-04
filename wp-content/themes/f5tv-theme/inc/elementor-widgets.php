@@ -199,7 +199,7 @@ function f5tv_register_elementor_widgets($widgets_manager): void
                         </a>
                     </div>
 
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
                         <?php if (!empty($contents)): foreach ($contents as $item):
                             $cover = $item->cover ?? f5tv_get_field('cover_url', $item->ID) ?: get_the_post_thumbnail_url($item->ID, 'medium') ?: 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=600';
                             $genre = $item->genre ?? f5tv_get_field('genre', $item->ID) ?: 'Streaming';

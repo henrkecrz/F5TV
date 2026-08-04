@@ -120,7 +120,7 @@ if (empty($contents)) {
                 </a>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
                 <?php if (!empty($contents)): foreach ($contents as $item):
                     $program_slug = sanitize_title($item->title ?? get_the_title($item->ID));
                     $local_cover_path = F5TV_ASSETS_DIR . '/programas/' . $program_slug . '/' . $program_slug . '-16x9.jpg';
