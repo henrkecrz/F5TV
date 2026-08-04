@@ -12,9 +12,7 @@ if (!defined('ABSPATH')) {
     <footer class="mt-auto border-t border-white/5 bg-f5-blue py-12 px-4 sm:px-8">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
             <div class="flex flex-col gap-4">
-                <span class="text-2xl font-black tracking-tighter text-white uppercase">
-                    F5 <span class="text-f5-red">TV</span>
-                </span>
+                <img src="<?php echo esc_url(F5TV_ASSETS_URI . '/images/f5tv-logo-neg.png'); ?>" alt="F5 TV" class="h-10 w-auto object-contain" width="180" height="60">
                 <p class="text-white/50 text-xs leading-relaxed max-w-xs">
                     A plataforma premium de streaming e portal de conteúdos exclusivos da emissora F5 TV. Jornalismo tático, entretenimento, esportes e muito mais.
                 </p>

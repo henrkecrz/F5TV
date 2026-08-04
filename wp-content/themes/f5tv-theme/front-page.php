@@ -197,10 +197,7 @@ if (empty($contents)) {
 
             <!-- Left: logo + text -->
             <div class="flex items-center gap-4">
-                <!-- Logo textual igual ao header -->
-                <span class="text-2xl font-black tracking-tighter text-white uppercase leading-none select-none">
-                    F5 <span class="text-f5-red">TV</span>
-                </span>
+                <img src="<?php echo esc_url(F5TV_ASSETS_URI . '/images/f5tv-logo-neg.png'); ?>" alt="F5 TV" class="h-10 w-auto object-contain" width="180" height="60">
                 <div class="w-px h-8 bg-zinc-800"></div>
                 <div>
                     <p class="text-white text-sm font-semibold leading-tight">F5TV ao seu alcance</p>

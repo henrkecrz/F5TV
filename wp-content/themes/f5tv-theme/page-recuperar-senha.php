@@ -10,9 +10,7 @@ get_header();
     <div class="w-full max-w-md">
         <div class="text-center mb-8">
             <a href="<?php echo esc_url(home_url('/')); ?>" class="inline-block">
-                <span class="text-3xl font-black tracking-tighter text-white uppercase">
-                    F5 <span class="text-f5-red">TV</span>
-                </span>
+                <img src="<?php echo esc_url(F5TV_ASSETS_URI . '/images/f5tv-logo-neg.png'); ?>" alt="F5 TV" class="h-12 w-auto object-contain" width="180" height="60">
             </a>
             <p class="text-white/50 text-sm mt-4">Recupere o acesso à sua conta</p>
         </div>

@@ -27,9 +27,7 @@ get_header();
         <!-- Logo + subtítulo -->
         <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:28px;text-align:center;">
             <a href="<?php echo esc_url(home_url('/')); ?>" style="text-decoration:none;">
-                <span style="font-size:28px;font-weight:900;letter-spacing:-.04em;text-transform:uppercase;color:#fff;line-height:1;">
-                    F5 <span style="color:#dc2626;">TV</span>
-                </span>
+                <img src="<?php echo esc_url(F5TV_ASSETS_URI . '/images/f5tv-logo-neg.png'); ?>" alt="F5 TV" style="display:block;width:auto;height:48px;object-fit:contain;" width="180" height="60">
             </a>
             <p style="color:#71717a;font-size:13px;font-weight:500;margin:0;">Faça login para entrar na área exclusiva.</p>
         </div>
