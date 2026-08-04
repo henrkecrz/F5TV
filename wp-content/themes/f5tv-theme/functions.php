@@ -629,6 +629,8 @@ add_action('init', 'f5tv_ensure_cadastro_page_exists');
 add_action('after_switch_theme', 'f5tv_create_catalogo_page');
 add_action('init', 'f5tv_ensure_catalogo_page_exists');
 add_action('init', 'f5tv_register_catalogo_route', 1);
+add_action('after_switch_theme', 'f5tv_create_minha_lista_page');
+add_action('init', 'f5tv_ensure_minha_lista_page_exists');
 
 function f5tv_create_login_page(): void
 {
@@ -750,6 +752,39 @@ function f5tv_register_catalogo_route(): void
     if (get_option('f5tv_catalogo_rewrite_version') !== '1') {
         flush_rewrite_rules(false);
         update_option('f5tv_catalogo_rewrite_version', '1', false);
+    }
+}
+
+function f5tv_create_minha_lista_page(): void
+{
+    f5tv_ensure_minha_lista_page_exists();
+}
+
+function f5tv_ensure_minha_lista_page_exists(): void
+{
+    static $ran = false;
+    if ($ran) return;
+    $ran = true;
+
+    $existing = get_page_by_path('minha-lista', OBJECT, 'page');
+    if ($existing) {
+        if (get_post_meta($existing->ID, '_wp_page_template', true) !== 'page-minha-lista.php') {
+            update_post_meta($existing->ID, '_wp_page_template', 'page-minha-lista.php');
+        }
+        return;
+    }
+
+    $page_id = wp_insert_post([
+        'post_title'   => 'Minha Lista',
+        'post_name'    => 'minha-lista',
+        'post_status'  => 'publish',
+        'post_type'    => 'page',
+        'post_content' => '',
+        'post_author'  => 1,
+    ]);
+
+    if ($page_id && !is_wp_error($page_id)) {
+        update_post_meta($page_id, '_wp_page_template', 'page-minha-lista.php');
     }
 }
 
