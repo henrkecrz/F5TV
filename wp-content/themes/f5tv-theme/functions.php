@@ -797,8 +797,8 @@ add_filter('template_include', function ($template) {
         }
     }
 
-    if (is_page('login') || is_page('cadastro') || is_page('catalogo') || get_query_var('f5tv_catalogo') || $request_path === 'catalogo') {
-        $custom = get_template_directory() . (is_page('cadastro') ? '/page-cadastro.php' : (is_page('catalogo') ? '/page-catalogo.php' : '/page-login.php'));
+    if (is_page('login') || is_page('cadastro') || is_page('catalogo') || is_page('minha-lista') || get_query_var('f5tv_catalogo') || $request_path === 'catalogo') {
+        $custom = get_template_directory() . (is_page('cadastro') ? '/page-cadastro.php' : (is_page('catalogo') ? '/page-catalogo.php' : (is_page('minha-lista') ? '/page-minha-lista.php' : '/page-login.php')));
         if (file_exists($custom)) {
             return $custom;
         }
