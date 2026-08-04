@@ -69,6 +69,20 @@ if (!defined('ABSPATH')) {
     </script>
 
     <?php wp_head(); ?>
+    <style id="f5tv-header-critical-css">
+        #f5tv-app > header { display:block; width:100%; min-height:74px; background:rgba(6,9,19,.92); }
+        #f5tv-app > header > div { display:flex; align-items:center; justify-content:space-between; gap:1.5rem; width:100%; max-width:80rem; min-height:46px; margin:0 auto; }
+        #f5tv-app > header .f5tv-site-logo { display:block; width:auto !important; height:40px !important; max-width:180px !important; object-fit:contain; }
+        #f5tv-app > header > div > nav { display:flex; align-items:center; gap:1.25rem; }
+        #f5tv-app > header > div > nav a { color:rgba(255,255,255,.78); font:700 11px/1 monospace; letter-spacing:.12em; text-transform:uppercase; text-decoration:none; white-space:nowrap; }
+        #f5tv-app > header > div > nav a:hover { color:#fff; }
+        @media (max-width:1023px) {
+            #f5tv-app > header { min-height:68px; padding: .8rem 1rem; }
+            #f5tv-app > header > div { min-height:40px; }
+            #f5tv-app > header .f5tv-site-logo { height:36px !important; max-width:150px !important; }
+            #f5tv-app > header > div > nav { display:none; }
+        }
+    </style>
 </head>
 
 <body <?php body_class('bg-f5-blue text-white font-sans antialiased'); ?>>
