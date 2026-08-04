@@ -127,7 +127,7 @@ if (empty($contents)) {
                     $age_rating = $item->age_rating ?? f5tv_get_field('age_rating', $item->ID) ?: 'Livre';
                     $is_exclusive = $item->is_exclusive ?? f5tv_get_field('is_exclusive', $item->ID);
                 ?>
-                    <a href="<?php echo esc_url(get_permalink($item->ID)); ?>" class="group relative bg-f5-blue-950 border border-white/5 rounded-lg overflow-hidden cursor-pointer hover:border-f5-red/50 transform transition-all duration-300 hover:scale-[1.03] shadow-2xl block">
+                    <a href="<?php echo esc_url(home_url('/assista/?id=' . $item->ID . '&details=1')); ?>" class="group relative bg-f5-blue-950 border border-white/5 rounded-lg overflow-hidden cursor-pointer hover:border-f5-red/50 transform transition-all duration-300 hover:scale-[1.03] shadow-2xl block">
                         <div class="aspect-[4/5] relative w-full bg-f5-blue-900">
                             <img src="<?php echo esc_url($cover); ?>" alt="<?php echo esc_attr($item->post_title); ?>" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300">
                             <div class="absolute top-2.5 right-2.5 bg-f5-blue/90 text-[10px] font-mono font-bold text-f5-red px-2 py-0.5 rounded border border-white/5">

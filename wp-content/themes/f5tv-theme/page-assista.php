@@ -65,6 +65,40 @@ if ($content_post) {
     $next_ep_url = null;
 }
 
+// Details mode: cards open here first; playback starts only from the Play button.
+if ($content_post && isset($_GET['details']) && $_GET['details'] === '1') {
+    $genre_terms = get_the_terms($content_id, 'f5tv_genero');
+    $genre_name = ($genre_terms && !is_wp_error($genre_terms)) ? $genre_terms[0]->name : 'F5 TV';
+    $description = f5tv_get_field('full_description', $content_id) ?: f5tv_get_field('short_description', $content_id) ?: get_the_excerpt($content_id) ?: $content_post->post_content;
+    $play_url = home_url('/assista/?id=' . $content_id);
+    ?>
+    <div class="min-h-screen bg-f5-blue text-white font-sans selection:bg-f5-red selection:text-white">
+        <main class="max-w-7xl mx-auto px-6 md:px-8 py-8 md:py-12">
+            <a href="<?php echo esc_url(home_url('/series/')); ?>" class="inline-flex items-center gap-2 text-zinc-400 hover:text-white text-xs font-mono uppercase tracking-wider mb-8 transition">&larr; Voltar ao catálogo</a>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-start">
+                <section class="lg:col-span-3 rounded-2xl overflow-hidden border border-white/10 bg-black shadow-2xl">
+                    <div class="aspect-video relative bg-f5-blue-950">
+                        <?php if ($banner_url): ?><img src="<?php echo esc_url($banner_url); ?>" alt="<?php echo esc_attr($title); ?>" class="absolute inset-0 w-full h-full object-cover opacity-60"><?php endif; ?>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                        <a href="<?php echo esc_url($play_url); ?>" class="absolute inset-0 flex flex-col items-center justify-center gap-3 group" aria-label="Reproduzir <?php echo esc_attr($title); ?>">
+                            <span class="w-20 h-20 rounded-full bg-f5-red flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform"><svg class="w-9 h-9 fill-white ml-1" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+                            <span class="text-xs font-mono font-bold uppercase tracking-widest text-white">Play em tela cheia</span>
+                        </a>
+                    </div>
+                </section>
+                <section class="lg:col-span-2 flex flex-col gap-5">
+                    <span class="text-[10px] font-mono font-black tracking-[0.2em] text-f5-red uppercase"><?php echo esc_html($genre_name); ?></span>
+                    <h1 class="text-3xl md:text-5xl font-black leading-tight text-white"><?php echo esc_html($title); ?></h1>
+                    <div class="flex items-center gap-3 text-xs font-mono text-zinc-400"><span class="px-2 py-1 rounded bg-f5-blue-900 text-f5-red border border-white/10"><?php echo esc_html($age_rating); ?></span><span>Programa F5 TV</span></div>
+                    <p class="text-zinc-300 leading-relaxed text-sm md:text-base"><?php echo esc_html(wp_strip_all_tags($description)); ?></p>
+                    <a href="<?php echo esc_url($play_url); ?>" class="inline-flex w-fit items-center gap-2 bg-f5-red hover:bg-f5-red-700 text-white font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-wider font-mono transition"><svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Play</a>
+                </section>
+            </div>
+        </main>
+    </div>
+    <?php get_footer(); exit;
+}
+
 // Detectar tipo de vídeo
 $is_vimeo   = preg_match('/vimeo\.com\/(\d+)/i', $video_url, $vimeo_match);
 $is_youtube = preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/i', $video_url, $yt_match);
