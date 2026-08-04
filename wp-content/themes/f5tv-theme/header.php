@@ -199,7 +199,7 @@ if (!defined('ABSPATH')) {
         </div>
     </header>
 
-    <div id="f5tv-mobile-menu" class="hidden lg:hidden fixed inset-x-0 top-[4.5rem] z-[75] bg-[#060913] border-b border-zinc-700/80 shadow-2xl p-4">
+    <div id="f5tv-mobile-menu" class="hidden lg:hidden fixed inset-x-0 top-[4.5rem] z-[75] bg-[#071a33] border-b border-zinc-700/80 shadow-2xl p-4">
         <nav class="flex flex-col gap-1 text-xs font-mono font-bold tracking-widest text-zinc-200 uppercase">
             <a href="<?php echo esc_url(home_url('/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Início</a>
             <a href="<?php echo esc_url(home_url('/series/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Séries</a>
