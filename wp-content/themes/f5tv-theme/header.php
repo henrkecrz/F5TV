@@ -55,6 +55,19 @@ if (!defined('ABSPATH')) {
     <meta property="og:image" content="<?php echo esc_url(get_template_directory_uri()); ?>/assets/icons/icon-512.png">
     <meta name="twitter:card" content="summary_large_image">
 
+    <script>
+    (function () {
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+        function resetPageScroll() {
+            if (!window.location.hash) window.scrollTo(0, 0);
+        }
+        window.addEventListener('load', resetPageScroll, { once: true });
+        window.addEventListener('pageshow', function () {
+            window.setTimeout(resetPageScroll, 0);
+        });
+    }());
+    </script>
+
     <?php wp_head(); ?>
 </head>
 
