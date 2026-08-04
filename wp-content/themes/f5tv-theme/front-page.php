@@ -75,7 +75,18 @@ if (empty($contents)) {
     <section id="hero" class="relative h-auto min-h-[560px] lg:h-[560px] px-5 sm:px-8 pt-8 lg:pt-12 flex flex-col justify-end pb-10 lg:pb-16 overflow-hidden border-b border-white/5 bg-[#071a33]">
         <div class="absolute inset-0 bg-gradient-to-r from-[#071a33] via-[#071a33]/80 to-transparent z-10"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-[#071a33] to-transparent z-10"></div>
-        <div class="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=2025')] bg-cover bg-center opacity-65 grayscale-[0.25]"></div>
+        <div id="f5tv-hero-slideshow" class="absolute inset-0 z-0 overflow-hidden bg-[#071a33]" aria-label="Imagens da F5 TV">
+            <?php
+            $hero_slides = [
+                F5TV_ASSETS_URI . '/images/f5tv-hero-tv-1.jpg',
+                F5TV_ASSETS_URI . '/images/f5tv-hero-tv-2.jpg',
+                F5TV_ASSETS_URI . '/images/f5tv-hero-tv-3.jpg',
+            ];
+            foreach ($hero_slides as $slide_index => $slide_url):
+            ?>
+                <div class="f5tv-hero-slide absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-700 ease-in-out grayscale-[0.15]" style="background-image:url('<?php echo esc_url($slide_url); ?>');" aria-hidden="true"></div>
+            <?php endforeach; ?>
+        </div>
         
         <div class="max-w-4xl mx-auto w-full relative z-20 flex flex-col items-start gap-3 lg:gap-4 text-left">
             <div class="inline-flex items-center gap-2 bg-f5-red px-2.5 py-0.5 text-[10px] font-mono font-bold rounded uppercase tracking-widest text-white shadow">
@@ -106,6 +117,27 @@ if (empty($contents)) {
             </div>
         </div>
     </section>
+
+    <script>
+    (function () {
+        const slideshow = document.getElementById('f5tv-hero-slideshow');
+        if (!slideshow) return;
+        const slides = Array.from(slideshow.querySelectorAll('.f5tv-hero-slide'));
+        if (!slides.length) return;
+
+        let activeIndex = 0;
+        slides[activeIndex].classList.remove('opacity-0');
+        slides[activeIndex].classList.add('opacity-65');
+
+        window.setInterval(function () {
+            slides[activeIndex].classList.remove('opacity-65');
+            slides[activeIndex].classList.add('opacity-0');
+            activeIndex = (activeIndex + 1) % slides.length;
+            slides[activeIndex].classList.remove('opacity-0');
+            slides[activeIndex].classList.add('opacity-65');
+        }, 1500);
+    }());
+    </script>
 
     <!-- Catálogo de Conteúdo Section -->
     <section id="conteudo-previa" class="py-20 px-8 bg-f5-blue border-b border-white/5">
