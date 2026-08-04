@@ -17,7 +17,7 @@ $hero_content = get_posts([
 ]);
 
 $hero_bg = '';
-$hero_title = 'Uma nova forma de <span class="text-f5-red italic">fazer televisão.</span>';
+$hero_title = 'Uma nova forma de<br><span class="text-f5-red italic whitespace-nowrap">fazer televisão.</span>';
 $hero_desc = 'A F5 TV Streaming nasce para marcar uma nova etapa na televisão em Portugal. Escolha o que quer ver, quando quer ver e em qualquer ecrã.';
 
 if (!empty($hero_content)) {

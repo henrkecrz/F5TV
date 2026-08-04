@@ -156,7 +156,7 @@ export default function LandingPage({ plans, contents, onNavigate }: LandingPage
           </div>
 
           <h1 className="text-4xl sm:text-7xl font-black tracking-tighter leading-none text-white max-w-3xl">
-            Uma nova forma de <span className="text-red-600 italic">fazer televisão.</span>
+            Uma nova forma de<br /><span className="text-red-600 italic whitespace-nowrap">fazer televisão.</span>
           </h1>
 
           <p className="text-white/70 text-sm md:text-lg max-w-2xl leading-relaxed font-normal">

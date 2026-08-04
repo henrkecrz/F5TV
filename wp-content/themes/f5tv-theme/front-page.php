@@ -83,7 +83,7 @@ if (empty($contents)) {
             </div>
 
             <h1 class="text-4xl sm:text-7xl font-black tracking-tighter leading-none text-white max-w-3xl">
-                Uma nova forma de <span class="text-f5-red italic">fazer televisão.</span>
+                Uma nova forma de<br><span class="text-f5-red italic whitespace-nowrap">fazer televisão.</span>
             </h1>
 
             <p class="text-white/70 text-sm md:text-lg max-w-2xl leading-relaxed font-normal">
