@@ -13,6 +13,7 @@ export const SubscriberLayout: React.FC = () => {
   const [searchParams] = useSearchParams();
 
   const [showNotificationDrawer, setShowNotificationDrawer] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [searchVal, setSearchVal] = useState(searchParams.get('q') || '');
 
   if (!currentUser) {
@@ -56,7 +57,7 @@ export const SubscriberLayout: React.FC = () => {
     <div id="subscriber-layout-root" className="min-h-screen bg-[#050505] text-white flex flex-col relative font-sans selection:bg-[#ef4444] selection:text-white">
       
       {/* 1. Header Internal */}
-      <header className="sticky top-0 z-40 bg-[#050505]/95 backdrop-blur-md border-b border-white/5 px-6 md:px-8 h-20 flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-[#050505]/95 backdrop-blur-md border-b border-white/5 px-3 sm:px-6 md:px-8 h-16 sm:h-20 flex items-center justify-between">
         <div className="flex items-center gap-8">
           <div 
             onClick={() => {
@@ -104,7 +105,7 @@ export const SubscriberLayout: React.FC = () => {
         </div>
 
         {/* Right tools row */}
-        <div className="flex items-center gap-4 md:gap-5">
+        <div className="flex items-center gap-2 sm:gap-4 md:gap-5">
           
           {/* Search Box Form */}
           <form onSubmit={handleSearchSubmit} className="relative hidden md:block">
@@ -154,18 +155,29 @@ export const SubscriberLayout: React.FC = () => {
           </button>
 
           {/* Profile Quick menu dropdown details */}
-          <div className="relative group">
-            <button className="flex items-center gap-2 p-1 bg-zinc-950 hover:bg-zinc-900 rounded-full border border-white/5 transition pr-3 select-none">
-              <div className={`w-7 h-7 ${effectiveProfile.avatarColor || 'bg-red-600'} rounded-full text-xs font-extrabold flex items-center justify-center uppercase text-white shadow shadow-black`}>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setShowProfileMenu((open) => !open)}
+              aria-expanded={showProfileMenu}
+              aria-label="Abrir menu do usuário"
+              className="flex items-center gap-2 p-1 bg-zinc-950 hover:bg-zinc-900 rounded-full border border-white/5 transition pr-1 sm:pr-3 select-none cursor-pointer"
+            >
+              <div className={`w-8 h-8 ${effectiveProfile.avatarColor || 'bg-red-600'} rounded-full text-xs font-extrabold flex items-center justify-center uppercase text-white shadow shadow-black`}>
                 {profileChar}
               </div>
               <span className="text-xs font-bold text-zinc-300 hidden sm:inline max-w-24 truncate">{effectiveProfile.name}</span>
             </button>
 
             {/* Dropdown container */}
-            <div className="absolute right-0 top-10 pointer-events-none group-hover:pointer-events-auto opacity-0 group-hover:opacity-100 transition-all duration-200 mt-2 w-48 bg-zinc-950 border border-zinc-900 rounded-xl shadow-2xl p-2 z-50 flex flex-col gap-1">
+            <div className={`absolute right-0 top-full mt-2 w-52 bg-zinc-950 border border-zinc-900 rounded-xl shadow-2xl p-2 z-[70] flex flex-col gap-1 transition-all duration-200 ${
+              showProfileMenu
+                ? 'opacity-100 visible pointer-events-auto translate-y-0'
+                : 'opacity-0 invisible pointer-events-none -translate-y-1'
+            }`}>
               <Link
                 to="/app/minha-conta"
+                onClick={() => setShowProfileMenu(false)}
                 className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-lg transition"
               >
                 <Settings className="w-4 h-4" />
@@ -173,6 +185,7 @@ export const SubscriberLayout: React.FC = () => {
               </Link>
               <Link
                 to="/app/perfis"
+                onClick={() => setShowProfileMenu(false)}
                 className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-lg transition"
               >
                 <Users className="w-4 h-4" />
@@ -180,6 +193,7 @@ export const SubscriberLayout: React.FC = () => {
               </Link>
               <Link
                 to="/app/dispositivos"
+                onClick={() => setShowProfileMenu(false)}
                 className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-lg transition"
               >
                 <Tv className="w-4 h-4" />
@@ -188,6 +202,7 @@ export const SubscriberLayout: React.FC = () => {
               <div className="h-px bg-zinc-900 my-1" />
               <button
                 onClick={() => {
+                  setShowProfileMenu(false);
                   logout();
                   navigate('/landing');
                 }}
@@ -226,7 +241,7 @@ export const SubscriberLayout: React.FC = () => {
       </div>
 
       {/* MOBILE LOWER NAVIGATION BAR */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/95 border-t border-zinc-900 py-2.5 px-2 flex justify-around text-[9px] font-mono font-bold uppercase tracking-wider text-zinc-400">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-zinc-950/95 border-t border-zinc-900 py-2.5 px-2 flex justify-around text-[9px] font-mono font-bold uppercase tracking-wider text-zinc-400">
         <Link to="/app" className="flex flex-col items-center gap-1 hover:text-white">
           <Grid className="w-4 h-4" />
           <span>Início</span>

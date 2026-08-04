@@ -106,8 +106,8 @@ export default function App() {
             {/* Visual routing paths renderer */}
             <AppRoutes />
 
-            {/* F5 Model Playground bar */}
-            <PlaygroundToolbar />
+            {/* F5 Model Playground bar (development only) */}
+            {import.meta.env.DEV && <PlaygroundToolbar />}
 
           </div>
         </AuthProvider>
