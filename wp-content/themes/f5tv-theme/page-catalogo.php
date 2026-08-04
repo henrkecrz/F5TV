@@ -12,6 +12,13 @@ $program_query = new WP_Query([
     'orderby'        => 'title',
     'order'          => 'ASC',
 ]);
+
+$catalog_genres = [];
+foreach ($program_query->posts as $catalog_post) {
+    $catalog_genre = f5tv_get_field('genre', $catalog_post->ID) ?: 'F5 TV';
+    $catalog_genres[$catalog_genre] = true;
+}
+$catalog_genres = array_keys($catalog_genres);
 ?>
 
 <div class="min-h-screen bg-f5-blue text-white font-sans selection:bg-f5-red selection:text-white">
@@ -21,17 +28,31 @@ $program_query = new WP_Query([
         <p class="text-zinc-400 text-sm md:text-base font-semibold mt-4 max-w-2xl">Conheça os programas que fazem parte da nova televisão portuguesa.</p>
     </section>
 
-    <main class="max-w-7xl w-full mx-auto px-6 md:px-8 py-10">
+    <main class="max-w-7xl w-full mx-auto px-6 md:px-8 py-8 md:py-10">
         <?php if ($program_query->have_posts()): ?>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
+            <div class="mb-8 md:mb-10">
+                <div class="flex items-center justify-between gap-4 mb-3">
+                    <span class="text-[10px] font-mono font-bold tracking-[0.18em] text-zinc-500 uppercase">Explorar por categoria</span>
+                    <span id="f5tv-catalog-count" class="text-[10px] font-mono text-zinc-500 uppercase tracking-wider"><?php echo esc_html(count($program_query->posts)); ?> títulos</span>
+                </div>
+                <div class="f5tv-catalog-filters flex items-center gap-2 overflow-x-auto pb-2 -mx-1 px-1" role="tablist" aria-label="Filtrar catálogo por categoria">
+                    <button type="button" class="f5tv-catalog-filter is-active shrink-0 rounded-full px-4 py-2 text-xs font-bold transition" data-filter="all" role="tab" aria-selected="true">Todos</button>
+                    <?php foreach ($catalog_genres as $catalog_genre): $catalog_slug = sanitize_title($catalog_genre); ?>
+                        <button type="button" class="f5tv-catalog-filter shrink-0 rounded-full px-4 py-2 text-xs font-bold transition" data-filter="<?php echo esc_attr($catalog_slug); ?>" role="tab" aria-selected="false"><?php echo esc_html($catalog_genre); ?></button>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <div id="f5tv-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
                 <?php while ($program_query->have_posts()): $program_query->the_post();
                     $post_id = get_the_ID();
                     $cover = f5tv_get_16x9_image($post_id);
                     $genre = f5tv_get_field('genre', $post_id) ?: 'F5 TV';
+                    $genre_slug = sanitize_title($genre);
                     $age_rating = f5tv_get_field('age_rating', $post_id) ?: 'Livre';
                     $description = get_the_excerpt();
                 ?>
-                    <article class="group bg-f5-blue-950 border border-white/5 hover:border-f5-red/60 rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-xl">
+                    <article class="f5tv-catalog-card group bg-f5-blue-950 border border-white/5 hover:border-f5-red/60 rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-xl" data-genre="<?php echo esc_attr($genre_slug); ?>">
                         <a href="<?php echo esc_url(get_permalink($post_id)); ?>" class="block">
                             <div class="aspect-video relative bg-f5-blue-900">
                                 <?php if ($cover): ?>
@@ -48,6 +69,10 @@ $program_query = new WP_Query([
                     </article>
                 <?php endwhile; wp_reset_postdata(); ?>
             </div>
+            <div id="f5tv-catalog-empty" class="py-20 text-center" style="display:none">
+                <h2 class="text-lg font-bold text-zinc-300">Nenhum conteúdo nesta categoria</h2>
+                <p class="text-sm text-zinc-500 mt-2">Escolha outra categoria para continuar a explorar.</p>
+            </div>
         <?php else: ?>
             <div class="py-24 text-center">
                 <h2 class="text-xl font-bold text-zinc-300">Conteúdos disponíveis em breve</h2>
@@ -56,5 +81,58 @@ $program_query = new WP_Query([
         <?php endif; ?>
     </main>
 </div>
+
+<style>
+    .f5tv-catalog-filters {
+        scrollbar-width: none;
+    }
+
+    .f5tv-catalog-filters::-webkit-scrollbar {
+        display: none;
+    }
+
+    .f5tv-catalog-filter {
+        color: rgba(255, 255, 255, 0.58);
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .f5tv-catalog-filter:hover,
+    .f5tv-catalog-filter.is-active {
+        color: #fff;
+        background: #e52329;
+        border-color: #e52329;
+        box-shadow: 0 8px 24px rgba(229, 35, 41, 0.2);
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const filters = [...document.querySelectorAll('.f5tv-catalog-filter')];
+    const cards = [...document.querySelectorAll('.f5tv-catalog-card')];
+    const emptyState = document.getElementById('f5tv-catalog-empty');
+    const count = document.getElementById('f5tv-catalog-count');
+
+    filters.forEach((filter) => filter.addEventListener('click', () => {
+        const selected = filter.dataset.filter;
+        let visible = 0;
+
+        filters.forEach((button) => {
+            const active = button === filter;
+            button.classList.toggle('is-active', active);
+            button.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+
+        cards.forEach((card) => {
+            const show = selected === 'all' || card.dataset.genre === selected;
+            card.style.display = show ? '' : 'none';
+            if (show) visible++;
+        });
+
+        if (emptyState) emptyState.style.display = visible ? 'none' : '';
+        if (count) count.textContent = `${visible} ${visible === 1 ? 'título' : 'títulos'}`;
+    }));
+});
+</script>
 
 <?php get_footer(); ?>
