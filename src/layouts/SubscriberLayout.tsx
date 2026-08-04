@@ -339,7 +339,7 @@ export const SubscriberLayout: React.FC = () => {
       )}
 
       {/* Footer F5 */}
-      <footer className="border-t border-white/5 py-8 text-center text-zinc-600 font-semibold text-xs font-mono max-w-7xl mx-auto w-full px-6 mb-12 lg:mb-0">
+      <footer className="border-t border-white/5 py-8 text-center text-zinc-600 font-semibold text-xs font-mono max-w-7xl mx-auto w-full px-6">
         <p>© 2026 F5 TV | Premium streaming brasileiro. Todos os direitos reservados.</p>
       </footer>
     </div>

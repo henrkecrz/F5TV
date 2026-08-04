@@ -18,9 +18,16 @@ html,
 body,
 #root {
   width: 100%;
-  min-height: 100%;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
+}
+
+html,
+body,
+#f5tv-app,
+#f5-landing-root {
+  background-color: #030315;
 }
 
 *,
@@ -34,5 +41,20 @@ body {
   color: #f5f5f5;
   margin: 0 !important;
   padding: 0 !important;
+  min-height: 100vh;
   overflow-x: hidden;
+}
+
+#f5tv-app,
+#f5-landing-root,
+.wp-site-blocks {
+  min-height: 100vh;
+}
+
+@media (max-width: 767px) {
+  body,
+  #f5tv-app,
+  #f5-landing-root {
+    overflow-x: clip;
+  }
 }
