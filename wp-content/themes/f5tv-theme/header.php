@@ -63,7 +63,7 @@ if (!defined('ABSPATH')) {
 
 <div id="f5tv-app">
     <header class="sticky top-0 z-40 bg-[#060913]/95 backdrop-blur-md border-b border-zinc-800/80 px-4 sm:px-8 lg:px-0 py-3.5">
-        <div class="max-w-4xl mx-auto flex items-center justify-between gap-4 lg:px-8">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-6 lg:px-8">
             
             <!-- Logo F5 TV -->
             <a href="<?php echo esc_url(home_url('/')); ?>" class="flex items-center gap-3 group">
@@ -91,7 +91,7 @@ if (!defined('ABSPATH')) {
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
 
-                <a href="<?php echo esc_url(home_url('/planos/')); ?>" class="hidden lg:inline-flex bg-f5-red hover:bg-f5-red-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition uppercase tracking-wider shadow-lg shadow-f5-red-700/20">
+                <a href="<?php echo esc_url(home_url('/planos/')); ?>" class="hidden lg:inline-flex whitespace-nowrap bg-f5-red hover:bg-f5-red-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition uppercase tracking-wider shadow-lg shadow-f5-red-700/20">
                     Disponível em breve
                 </a>
 
