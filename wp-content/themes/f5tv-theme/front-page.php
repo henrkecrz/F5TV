@@ -94,8 +94,8 @@ if (empty($contents)) {
                 <a href="#planos" class="px-5 sm:px-8 py-3 sm:py-3.5 rounded bg-white text-black font-bold flex items-center justify-center gap-2 hover:bg-f5-red hover:text-white transition-colors cursor-pointer text-sm uppercase tracking-wider">
                     <span>Conteúdos em breve</span>
                 </a>
-                <a href="<?php echo esc_url(home_url('/area-do-assinante/')); ?>" class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-5 sm:px-8 py-3 sm:py-3.5 rounded font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition cursor-pointer text-sm uppercase tracking-wider">
-                    <span>&#9654; Explorar Prévia</span>
+                <a href="<?php echo esc_url(home_url('/series/')); ?>" class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-5 sm:px-8 py-3 sm:py-3.5 rounded font-bold flex items-center justify-center gap-2 hover:bg-white/20 transition cursor-pointer text-sm uppercase tracking-wider">
+                    <span>&#9654; Explorar a Programação</span>
                 </a>
             </div>
             
