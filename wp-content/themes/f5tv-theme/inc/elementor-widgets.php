@@ -316,7 +316,7 @@ function f5tv_register_elementor_widgets($widgets_manager): void
                                     <li>&bull; Suporte Técnico Via Ticket</li>
                                 </ul>
                             </div>
-                            <a href="<?php echo esc_url(home_url('/checkout?plan=plano-basico')); ?>" class="mt-8 bg-zinc-800 hover:bg-f5-red text-white text-center font-mono font-bold text-xs uppercase py-3 rounded-xl transition">Assinar Básico</a>
+                            <a href="<?php echo esc_url(home_url('/checkout?plan=plano-basico')); ?>" class="mt-8 bg-[#194b7a] hover:bg-[#2869a5] text-white text-center font-mono font-bold text-xs uppercase py-3 rounded-xl transition">Assinar Básico</a>
                         </div>
 
                         <div class="bg-f5-blue-950 border-2 border-f5-red p-8 rounded-2xl flex flex-col justify-between relative shadow-2xl">

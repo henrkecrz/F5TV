@@ -58,7 +58,7 @@ if (did_action('elementor/loaded') && \Elementor\Plugin::$instance->db->is_built
                     </ul>
                 </div>
 
-                <a href="<?php echo esc_url(home_url('/cadastro?plan=plano-basico')); ?>" class="w-full text-center py-3 px-4 rounded-xl font-bold font-mono text-xs uppercase tracking-wider cursor-pointer transition duration-300 bg-f5-blue-900 hover:bg-zinc-800 text-zinc-100">
+                <a href="<?php echo esc_url(home_url('/cadastro?plan=plano-basico')); ?>" class="w-full text-center py-3 px-4 rounded-xl font-bold font-mono text-xs uppercase tracking-wider cursor-pointer transition duration-300 bg-[#194b7a] hover:bg-[#2869a5] text-zinc-100">
                     Assinar Agora
                 </a>
             </div>
