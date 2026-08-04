@@ -155,8 +155,7 @@ if ($all_categories && !is_wp_error($all_categories)) {
                 <?php foreach ($series_list as $ser): ?>
                     <?php
                     $program_slug = sanitize_title($ser['title']);
-                    $local_cover_path = F5TV_ASSETS_DIR . '/programas/' . $program_slug . '/' . $program_slug . '-16x9.jpg';
-                    $card_cover = file_exists($local_cover_path) ? F5TV_ASSETS_URI . '/programas/' . $program_slug . '/' . $program_slug . '-16x9.jpg' : ($ser['coverUrl'] ?: $ser['bannerUrl']);
+                    $card_cover = f5tv_get_16x9_image($ser['id'] ?? 0, $ser['coverUrl'] ?: $ser['bannerUrl']);
                     ?>
                     <div class="group relative bg-f5-blue-950/80 border border-zinc-900 rounded-xl overflow-hidden cursor-pointer hover:border-red-600 transition shadow-lg shrink-0 flex flex-col">
                         <a href="<?php echo esc_url($ser['link']); ?>" class="flex flex-col flex-1">

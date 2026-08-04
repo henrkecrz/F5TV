@@ -57,11 +57,21 @@ if (!function_exists('f5tv_get_16x9_image')) {
     function f5tv_get_16x9_image($post_id, $fallback = ''): string {
         $post_id = is_object($post_id) && isset($post_id->ID) ? $post_id->ID : (int) $post_id;
         $slug = sanitize_title(get_the_title($post_id));
-        $local_path = F5TV_ASSETS_DIR . '/programas/' . $slug . '/' . $slug . '-16x9.jpg';
-        $local_url  = F5TV_ASSETS_URI . '/programas/' . $slug . '/' . $slug . '-16x9.jpg';
+        $local_candidates = [
+            [
+                'path' => F5TV_ASSETS_DIR . '/programas/' . $slug . '/' . $slug . '-16x9-v2.jpg',
+                'url'  => F5TV_ASSETS_URI . '/programas/' . $slug . '/' . $slug . '-16x9-v2.jpg',
+            ],
+            [
+                'path' => F5TV_ASSETS_DIR . '/programas/' . $slug . '/' . $slug . '-16x9.jpg',
+                'url'  => F5TV_ASSETS_URI . '/programas/' . $slug . '/' . $slug . '-16x9.jpg',
+            ],
+        ];
 
-        if ($slug && file_exists($local_path)) {
-            return $local_url;
+        foreach ($local_candidates as $candidate) {
+            if ($slug && file_exists($candidate['path'])) {
+                return $candidate['url'];
+            }
         }
 
         return (string) (f5tv_get_field('banner_url', $post_id)
@@ -950,8 +960,11 @@ function f5tv_seed_program_catalog(): void
         if (!$post_id || is_wp_error($post_id)) continue;
 
         $base = F5TV_ASSETS_URI . '/programas/' . $program['slug'] . '/';
-        update_post_meta($post_id, 'cover_url', $base . $program['slug'] . '-16x9.jpg');
-        update_post_meta($post_id, 'banner_url', $base . $program['slug'] . '-16x9.jpg');
+        $asset_name = file_exists(F5TV_ASSETS_DIR . '/programas/' . $program['slug'] . '/' . $program['slug'] . '-16x9-v2.jpg')
+            ? $program['slug'] . '-16x9-v2.jpg'
+            : $program['slug'] . '-16x9.jpg';
+        update_post_meta($post_id, 'cover_url', $base . $asset_name);
+        update_post_meta($post_id, 'banner_url', $base . $asset_name);
         update_post_meta($post_id, 'genre', $program['genre']);
         update_post_meta($post_id, 'content_type', 'programa');
         update_post_meta($post_id, 'age_rating', 'Livre');
