@@ -1,0 +1,299 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "color": {
+      "palette": [
+        { "slug": "f5-blue", "name": "F5 Blue", "color": "#030315" },
+        { "slug": "f5-red", "name": "F5 Red", "color": "#dc2626" },
+        { "slug": "f5-red-950", "name": "F5 Red 950", "color": "#450a0a" },
+        { "slug": "f5-red-900", "name": "F5 Red 900", "color": "#7f1d1d" },
+        { "slug": "f5-red-800", "name": "F5 Red 800", "color": "#991b1b" },
+        { "slug": "f5-red-700", "name": "F5 Red 700", "color": "#b91c1c" },
+        { "slug": "f5-red-600", "name": "F5 Red 600", "color": "#dc2626" },
+        { "slug": "f5-red-500", "name": "F5 Red 500", "color": "#ef4444" },
+        { "slug": "f5-red-400", "name": "F5 Red 400", "color": "#f87171" },
+        { "slug": "f5-red-300", "name": "F5 Red 300", "color": "#fca5a5" },
+        { "slug": "f5-red-200", "name": "F5 Red 200", "color": "#fecaca" },
+        { "slug": "f5-red-100", "name": "F5 Red 100", "color": "#fee2e2" },
+        { "slug": "f5-red-50", "name": "F5 Red 50", "color": "#fef2f2" },
+        { "slug": "f5-surface", "name": "F5 Surface", "color": "#0a0a0a" },
+        { "slug": "f5-card", "name": "F5 Card", "color": "#151515" },
+        { "slug": "zinc-450", "name": "Zinc 450", "color": "#71717a" },
+        { "slug": "zinc-550", "name": "Zinc 550", "color": "#52525b" },
+        { "slug": "zinc-650", "name": "Zinc 650", "color": "#3f3f46" },
+        { "slug": "zinc-50", "name": "Zinc 50", "color": "#fafafa" },
+        { "slug": "zinc-100", "name": "Zinc 100", "color": "#f4f4f5" },
+        { "slug": "zinc-200", "name": "Zinc 200", "color": "#e4e4e7" },
+        { "slug": "zinc-300", "name": "Zinc 300", "color": "#d4d4d8" },
+        { "slug": "zinc-400", "name": "Zinc 400", "color": "#a1a1aa" },
+        { "slug": "zinc-500", "name": "Zinc 500", "color": "#71717a" },
+        { "slug": "zinc-600", "name": "Zinc 600", "color": "#52525b" },
+        { "slug": "zinc-700", "name": "Zinc 700", "color": "#3f3f46" },
+        { "slug": "zinc-800", "name": "Zinc 800", "color": "#27272a" },
+        { "slug": "zinc-850", "name": "Zinc 850", "color": "#1f1f23" },
+        { "slug": "zinc-900", "name": "Zinc 900", "color": "#18181b" },
+        { "slug": "zinc-950", "name": "Zinc 950", "color": "#09090b" },
+        { "slug": "black", "name": "Black", "color": "#000000" },
+        { "slug": "white", "name": "White", "color": "#ffffff" },
+        { "slug": "emerald-600", "name": "Emerald 600", "color": "#059669" },
+        { "slug": "indigo-600", "name": "Indigo 600", "color": "#4f46e5" },
+        { "slug": "amber-500", "name": "Amber 500", "color": "#f59e0b" },
+        { "slug": "rose-500", "name": "Rose 500", "color": "#f43f5e" },
+        { "slug": "transparent", "name": "Transparent", "color": "transparent" }
+      ],
+      "gradients": [
+        { "slug": "f5-hero", "name": "F5 Hero Gradient", "gradient": "linear-gradient(135deg, #030315 0%, #151515 50%, #030315 100%)" },
+        { "slug": "f5-red-gradient", "name": "F5 Red Gradient", "gradient": "linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)" },
+        { "slug": "f5-card-gradient", "name": "F5 Card Gradient", "gradient": "linear-gradient(145deg, #151515 0%, #0a0a0a 100%)" },
+        { "slug": "f5-glass", "name": "F5 Glass Gradient", "gradient": "linear-gradient(145deg, rgba(21, 21, 21, 0.8) 0%, rgba(10, 10, 10, 0.9) 100%)" }
+      ],
+      "duotone": [
+        { "slug": "f5-duotone", "name": "F5 Duotone", "colors": ["#030315", "#dc2626"] }
+      ]
+    },
+    "typography": {
+      "fontFamilies": [
+        { "slug": "sans", "name": "Sans", "fontFamily": "\"Inter\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif" },
+        { "slug": "mono", "name": "Mono", "fontFamily": "\"JetBrains Mono\", \"Fira Code\", monospace" }
+      ],
+      "fontSizes": [
+        { "slug": "xs", "name": "Extra Small", "size": "0.75rem" },
+        { "slug": "sm", "name": "Small", "size": "0.875rem" },
+        { "slug": "base", "name": "Base", "size": "1rem" },
+        { "slug": "lg", "name": "Large", "size": "1.125rem" },
+        { "slug": "xl", "name": "Extra Large", "size": "1.25rem" },
+        { "slug": "2xl", "name": "2X Large", "size": "1.5rem" },
+        { "slug": "3xl", "name": "3X Large", "size": "1.875rem" },
+        { "slug": "4xl", "name": "4X Large", "size": "2.25rem" },
+        { "slug": "5xl", "name": "5X Large", "size": "3rem" },
+        { "slug": "6xl", "name": "6X Large", "size": "3.75rem" },
+        { "slug": "7xl", "name": "7X Large", "size": "4.5rem" },
+        { "slug": "8xl", "name": "8X Large", "size": "6rem" }
+      ],
+      "fontWeights": [
+        { "slug": "normal", "name": "Normal", "weight": 400 },
+        { "slug": "medium", "name": "Medium", "weight": 500 },
+        { "slug": "semibold", "name": "Semibold", "weight": 600 },
+        { "slug": "bold", "name": "Bold", "weight": 700 },
+        { "slug": "extrabold", "name": "Extra Bold", "weight": 800 }
+      ],
+      "lineHeights": [
+        { "slug": "tight", "name": "Tight", "value": 1.1 },
+        { "slug": "snug", "name": "Snug", "value": 1.25 },
+        { "slug": "normal", "name": "Normal", "value": 1.5 },
+        { "slug": "relaxed", "name": "Relaxed", "value": 1.625 },
+        { "slug": "loose", "name": "Loose", "value": 2 }
+      ]
+    },
+    "spacing": {
+      "spacingScale": {
+        "steps": 16,
+        "mediumStep": 1
+      },
+      "spacingSizes": [
+        { "slug": "0", "name": "0", "size": "0" },
+        { "slug": "1", "name": "1", "size": "0.25rem" },
+        { "slug": "2", "name": "2", "size": "0.5rem" },
+        { "slug": "3", "name": "3", "size": "0.75rem" },
+        { "slug": "4", "name": "4", "size": "1rem" },
+        { "slug": "5", "name": "5", "size": "1.25rem" },
+        { "slug": "6", "name": "6", "size": "1.5rem" },
+        { "slug": "8", "name": "8", "size": "2rem" },
+        { "slug": "10", "name": "10", "size": "2.5rem" },
+        { "slug": "12", "name": "12", "size": "3rem" },
+        { "slug": "16", "name": "16", "size": "4rem" },
+        { "slug": "20", "name": "20", "size": "5rem" },
+        { "slug": "24", "name": "24", "size": "6rem" },
+        { "slug": "32", "name": "32", "size": "8rem" }
+      ],
+      "units": ["px", "rem", "em", "%", "vw", "vh"]
+    },
+    "layout": {
+      "contentSize": "1200px",
+      "wideSize": "1440px",
+      "fullSize": "100%"
+    },
+    "border": {
+      "radius": {
+        "none": "0",
+        "sm": "0.25rem",
+        "default": "0.375rem",
+        "md": "0.5rem",
+        "lg": "0.75rem",
+        "xl": "1rem",
+        "2xl": "1.5rem",
+        "full": "9999px"
+      },
+      "width": {
+        "thin": "1px",
+        "default": "2px",
+        "thick": "4px"
+      },
+      "styles": ["solid", "dashed", "dotted", "double"]
+    },
+    "shadow": {
+      "presets": [
+        { "slug": "f5-sm", "name": "F5 Small", "shadow": "0 1px 2px 0 rgba(0, 0, 0, 0.05)" },
+        { "slug": "f5", "name": "F5 Default", "shadow": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)" },
+        { "slug": "f5-md", "name": "F5 Medium", "shadow": "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)" },
+        { "slug": "f5-lg", "name": "F5 Large", "shadow": "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" },
+        { "slug": "f5-xl", "name": "F5 XL", "shadow": "0 25px 50px -12px rgba(0, 0, 0, 0.25)" },
+        { "slug": "f5-red-glow", "name": "F5 Red Glow", "shadow": "0 0 20px rgba(220, 38, 38, 0.4)" },
+        { "slug": "f5-inner", "name": "F5 Inner", "shadow": "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)" }
+      ]
+    },
+    "custom": {
+      "f5tv": {
+        "breakpoints": {
+          "sm": "640px",
+          "md": "768px",
+          "lg": "1024px",
+          "xl": "1280px",
+          "2xl": "1536px"
+        },
+        "zIndex": {
+          "dropdown": 100,
+          "sticky": 200,
+          "fixed": 300,
+          "modal-backdrop": 400,
+          "modal": 500,
+          "popover": 600,
+          "tooltip": 700,
+          "toast": 800
+        },
+        "transitions": {
+          "fast": "150ms ease",
+          "normal": "200ms ease",
+          "slow": "300ms ease"
+        }
+      }
+    },
+    "blocks": {
+      "core/image": {
+        "color": {
+          "duotone": true,
+          "gradients": true
+        }
+      },
+      "core/cover": {
+        "color": {
+          "gradients": true
+        }
+      },
+      "core/buttons": {
+        "color": {
+          "gradients": true
+        }
+      }
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "var(--wp--preset--color--f5-blue)",
+      "text": "var(--wp--preset--color--white)",
+      "link": "var(--wp--preset--color--f5-red)"
+    },
+    "typography": {
+      "fontFamily": "var(--wp--preset--font-family--sans)",
+      "fontSize": "var(--wp--preset--font-size--base)",
+      "lineHeight": "var(--wp--preset--line-height--normal)",
+      "fontWeight": "var(--wp--preset--font-weight--normal)"
+    },
+    "spacing": {
+      "padding": "var(--wp--preset--spacing--4)",
+      "blockGap": "var(--wp--preset--spacing--6)"
+    },
+    "layout": {
+      "contentSize": "var(--wp--preset--layout--contentSize)",
+      "wideSize": "var(--wp--preset--layout--wideSize)"
+    },
+    "blocks": {
+      "core/button": {
+        "color": {
+          "background": "var(--wp--preset--color--f5-red)",
+          "text": "var(--wp--preset--color--white)"
+        },
+        "typography": {
+          "fontWeight": "var(--wp--preset--font-weight--semibold)"
+        },
+        "border": {
+          "radius": "var(--wp--preset--border--radius--md)"
+        },
+        "spacing": {
+          "padding": {
+            "top": "var(--wp--preset--spacing--3)",
+            "right": "var(--wp--preset--spacing--6)",
+            "bottom": "var(--wp--preset--spacing--3)",
+            "left": "var(--wp--preset--spacing--6)"
+          }
+        },
+        "__experimental": {
+          "style": {
+            "variations": {
+              "primary": {
+                "color": {
+                  "background": "var(--wp--preset--color--f5-red)",
+                  "text": "var(--wp--preset--color--white)"
+                }
+              },
+              "secondary": {
+                "color": {
+                  "background": "var(--wp--preset--color--f5-card)",
+                  "text": "var(--wp--preset--color--zinc-100)"
+                },
+                "border": {
+                  "color": "var(--wp--preset--color--zinc-700)",
+                  "width": "var(--wp--preset--border--width--thin)"
+                }
+              },
+              "outline": {
+                "color": {
+                  "background": "transparent",
+                  "text": "var(--wp--preset--color--f5-red)"
+                },
+                "border": {
+                  "color": "var(--wp--preset--color--f5-red)",
+                  "width": "var(--wp--preset--border--width--thin)"
+                }
+              }
+            }
+          }
+        }
+      },
+      "core/heading": {
+        "typography": {
+          "fontFamily": "var(--wp--preset--font-family--sans)",
+          "fontWeight": "var(--wp--preset--font-weight--bold)"
+        }
+      },
+      "core/cover": {
+        "color": {
+          "overlay": "var(--wp--preset--color--f5-blue)"
+        }
+      },
+      "core/group": {
+        "color": {
+          "background": "var(--wp--preset--color--f5-card)"
+        }
+      }
+    }
+  },
+  "templateParts": [
+    { "area": "header", "name": "header", "title": "Header" },
+    { "area": "footer", "name": "footer", "title": "Footer" },
+    { "area": "general", "name": "hero-section", "title": "Hero Section" },
+    { "area": "general", "name": "content-grid", "title": "Content Grid" },
+    { "area": "general", "name": "plans-section", "title": "Plans Section" },
+    { "area": "general", "name": "live-tv-section", "title": "Live TV Section" }
+  ],
+  "patterns": [
+    "f5tv/hero-banner",
+    "f5tv/content-carousel",
+    "f5tv/plan-card",
+    "f5tv/channel-grid",
+    "f5tv/live-schedule",
+    "f5tv/episode-list",
+    "f5tv/featured-content"
+  ]
+}

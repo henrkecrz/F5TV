@@ -1,0 +1,83 @@
+{
+    "name": "F5 TV — Streaming Premium",
+    "short_name": "F5 TV",
+    "description": "Séries originais, documentários investigativos, jornalismo 24h e esportes ao vivo. Streaming premium nacional.",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "background_color": "#030315",
+    "theme_color": "#030315",
+    "lang": "pt-BR",
+    "categories": ["entertainment", "video"],
+    "icons": [
+        {
+            "src": "/wp-content/themes/f5tv-theme/assets/icons/icon-48.png",
+            "sizes": "48x48",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/wp-content/themes/f5tv-theme/assets/icons/icon-72.png",
+            "sizes": "72x72",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/wp-content/themes/f5tv-theme/assets/icons/icon-96.png",
+            "sizes": "96x96",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/wp-content/themes/f5tv-theme/assets/icons/icon-144.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/wp-content/themes/f5tv-theme/assets/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/wp-content/themes/f5tv-theme/assets/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/wp-content/themes/f5tv-theme/assets/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "F5 TV — Tela Inicial"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Séries",
+            "short_name": "Séries",
+            "description": "Ver catálogo de séries",
+            "url": "/series/",
+            "icons": [{"src": "/wp-content/themes/f5tv-theme/assets/icons/icon-96.png", "sizes": "96x96"}]
+        },
+        {
+            "name": "Ao Vivo",
+            "short_name": "Ao Vivo",
+            "description": "Sinal ao vivo F5 TV",
+            "url": "/ao-vivo/",
+            "icons": [{"src": "/wp-content/themes/f5tv-theme/assets/icons/icon-96.png", "sizes": "96x96"}]
+        },
+        {
+            "name": "Minha Lista",
+            "short_name": "Minha Lista",
+            "description": "Minha lista de conteúdos",
+            "url": "/minha-lista/",
+            "icons": [{"src": "/wp-content/themes/f5tv-theme/assets/icons/icon-96.png", "sizes": "96x96"}]
+        }
+    ]
+}
