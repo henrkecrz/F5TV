@@ -201,7 +201,7 @@
       "fontWeight": "var(--wp--preset--font-weight--normal)"
     },
     "spacing": {
-      "padding": "var(--wp--preset--spacing--4)",
+      "padding": "0",
       "blockGap": "var(--wp--preset--spacing--6)"
     },
     "layout": {
