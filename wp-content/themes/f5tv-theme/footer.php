@@ -51,7 +51,7 @@ if (!defined('ABSPATH')) {
                 &copy; <?php echo esc_html(date('Y')); ?> F5 TV Brasil. All rights reserved.
             </span>
             <span class="text-white/40">
-                Desenvolvido por
+                Desenvolvido por Henrique Vasconselos e
                 <a href="https://conectacomunicacao.pt" target="_blank" rel="noopener noreferrer" class="text-white/70 hover:text-f5-red transition">
                     Conecta Comunicação
                 </a>
