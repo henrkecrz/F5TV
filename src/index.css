@@ -13,10 +13,26 @@
 }
 
 @layer base {
+  html,
+  body,
+  #root {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
   body {
     background-color: #050505;
     color: #ffffff;
     font-family: var(--font-sans);
+    overflow-x: hidden;
   }
 }
 
