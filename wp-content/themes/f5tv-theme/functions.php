@@ -748,10 +748,11 @@ function f5tv_ensure_catalogo_page_exists(): void
 function f5tv_register_catalogo_route(): void
 {
     add_rewrite_rule('^catalogo/?$', 'index.php?f5tv_catalogo=1', 'top');
+    add_rewrite_rule('^minha-lista/?$', 'index.php?f5tv_minha_lista=1', 'top');
 
-    if (get_option('f5tv_catalogo_rewrite_version') !== '1') {
+    if (get_option('f5tv_catalogo_rewrite_version') !== '2') {
         flush_rewrite_rules(false);
-        update_option('f5tv_catalogo_rewrite_version', '1', false);
+        update_option('f5tv_catalogo_rewrite_version', '2', false);
     }
 }
 
@@ -790,6 +791,7 @@ function f5tv_ensure_minha_lista_page_exists(): void
 
 add_filter('query_vars', function ($vars) {
     $vars[] = 'f5tv_catalogo';
+    $vars[] = 'f5tv_minha_lista';
     return $vars;
 });
 
@@ -832,8 +834,8 @@ add_filter('template_include', function ($template) {
         }
     }
 
-    if (is_page('login') || is_page('cadastro') || is_page('catalogo') || is_page('minha-lista') || get_query_var('f5tv_catalogo') || $request_path === 'catalogo') {
-        $custom = get_template_directory() . (is_page('cadastro') ? '/page-cadastro.php' : (is_page('catalogo') ? '/page-catalogo.php' : (is_page('minha-lista') ? '/page-minha-lista.php' : '/page-login.php')));
+    if (is_page('login') || is_page('cadastro') || is_page('catalogo') || is_page('minha-lista') || get_query_var('f5tv_catalogo') || get_query_var('f5tv_minha_lista') || $request_path === 'catalogo' || $request_path === 'minha-lista') {
+        $custom = get_template_directory() . (is_page('cadastro') ? '/page-cadastro.php' : ((is_page('catalogo') || get_query_var('f5tv_catalogo') || $request_path === 'catalogo') ? '/page-catalogo.php' : ((is_page('minha-lista') || get_query_var('f5tv_minha_lista') || $request_path === 'minha-lista') ? '/page-minha-lista.php' : '/page-login.php')));
         if (file_exists($custom)) {
             return $custom;
         }
