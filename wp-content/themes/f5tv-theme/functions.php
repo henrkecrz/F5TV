@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('F5TV_THEME_VERSION', '1.0.7');
+define('F5TV_THEME_VERSION', '1.0.8');
 define('F5TV_THEME_DIR', get_template_directory());
 define('F5TV_THEME_URI', get_template_directory_uri());
 define('F5TV_ASSETS_DIR', F5TV_THEME_DIR . '/assets');

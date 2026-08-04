@@ -22,7 +22,16 @@ body {
 
 #f5-landing-root > section,
 #f5tv-main > section {
-  background-color: #071a33;
+  background-color: #071a33 !important;
+}
+
+#f5-landing-root [class*="bg-[#050505"],
+#f5-landing-root .bg-black {
+  background-color: #06152b !important;
+}
+
+#f5-landing-root [class*="from-[#100c0c]"] {
+  background-image: linear-gradient(to bottom, #101c32, #06152b) !important;
 }
 
 #hero {
