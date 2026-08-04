@@ -611,6 +611,8 @@ add_action('init', function () {
  */
 add_action('after_switch_theme', 'f5tv_create_login_page');
 add_action('init', 'f5tv_ensure_login_page_exists');
+add_action('after_switch_theme', 'f5tv_create_cadastro_page');
+add_action('init', 'f5tv_ensure_cadastro_page_exists');
 
 function f5tv_create_login_page(): void
 {
@@ -650,6 +652,40 @@ function f5tv_ensure_login_page_exists(): void
     }
 }
 
+function f5tv_create_cadastro_page(): void
+{
+    f5tv_ensure_cadastro_page_exists();
+}
+
+function f5tv_ensure_cadastro_page_exists(): void
+{
+    static $ran = false;
+    if ($ran) return;
+    $ran = true;
+
+    $existing = get_page_by_path('cadastro', OBJECT, 'page');
+    if ($existing) {
+        $current_template = get_post_meta($existing->ID, '_wp_page_template', true);
+        if ($current_template !== 'page-cadastro.php') {
+            update_post_meta($existing->ID, '_wp_page_template', 'page-cadastro.php');
+        }
+        return;
+    }
+
+    $page_id = wp_insert_post([
+        'post_title'   => 'Cadastro',
+        'post_name'    => 'cadastro',
+        'post_status'  => 'publish',
+        'post_type'    => 'page',
+        'post_content' => '',
+        'post_author'  => 1,
+    ]);
+
+    if ($page_id && !is_wp_error($page_id)) {
+        update_post_meta($page_id, '_wp_page_template', 'page-cadastro.php');
+    }
+}
+
 /**
  * 4. Após falha de login WP (wp-login.php?login=failed),
  *    garantir que o redirect vai para /login?login=failed
@@ -680,8 +716,8 @@ add_filter('lostpassword_url', function ($lostpassword_url, $redirect) {
  *    Método mais confiável — não depende de post_meta
  */
 add_filter('template_include', function ($template) {
-    if (is_page('login')) {
-        $custom = get_template_directory() . '/page-login.php';
+    if (is_page('login') || is_page('cadastro')) {
+        $custom = get_template_directory() . (is_page('cadastro') ? '/page-cadastro.php' : '/page-login.php');
         if (file_exists($custom)) {
             return $custom;
         }
