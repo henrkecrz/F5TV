@@ -61,6 +61,16 @@ if (!defined('ABSPATH')) {
 <body <?php body_class('bg-f5-blue text-white font-sans antialiased'); ?>>
 <?php wp_body_open(); ?>
 
+<div id="f5tv-preloader" role="status" aria-label="A carregar a F5 TV">
+    <div class="f5tv-preloader-orbit f5tv-preloader-orbit-one"></div>
+    <div class="f5tv-preloader-orbit f5tv-preloader-orbit-two"></div>
+    <div class="f5tv-preloader-logo-wrap">
+        <span class="f5tv-preloader-scan"></span>
+        <img src="<?php echo esc_url(F5TV_ASSETS_URI . '/images/f5tv-logo-neg.png'); ?>" alt="F5 TV" class="f5tv-preloader-logo" width="180" height="60">
+    </div>
+    <span class="f5tv-preloader-label">A preparar a sua experiência</span>
+</div>
+
 <div id="f5tv-app">
     <header class="sticky top-0 z-40 bg-[#060913]/95 backdrop-blur-md border-b border-zinc-800/80 px-4 sm:px-8 lg:px-0 py-3.5">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-6 lg:px-8">
@@ -211,6 +221,23 @@ if (!defined('ABSPATH')) {
     </div>
 
     <script>
+    (function () {
+        var preloader = document.getElementById('f5tv-preloader');
+        if (!preloader) return;
+        function finishLoading() {
+            preloader.classList.add('is-hidden');
+            window.setTimeout(function () {
+                if (preloader.parentNode) preloader.parentNode.removeChild(preloader);
+            }, 700);
+        }
+        if (document.readyState === 'complete') {
+            window.setTimeout(finishLoading, 250);
+        } else {
+            window.addEventListener('load', finishLoading, { once: true });
+            window.setTimeout(finishLoading, 4500);
+        }
+    }());
+
     (function () {
         var menuButton = document.getElementById('f5tv-mobile-menu-btn');
         var mobileMenu = document.getElementById('f5tv-mobile-menu');

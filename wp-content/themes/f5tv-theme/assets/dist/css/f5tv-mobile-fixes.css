@@ -8,6 +8,102 @@ body {
   overflow-x: hidden !important;
 }
 
+#f5tv-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 200000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow: hidden;
+  background: #06152b;
+  transition: opacity .6s ease, visibility .6s ease;
+}
+
+#f5tv-preloader.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.f5tv-preloader-logo-wrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 180px;
+  height: 110px;
+  animation: f5-preloader-float 2.2s ease-in-out infinite;
+}
+
+.f5tv-preloader-logo {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: auto;
+  height: 76px;
+  max-width: 180px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, .38)) drop-shadow(0 0 24px rgba(220, 38, 38, .34));
+  animation: f5-preloader-glow 1.8s ease-in-out infinite;
+}
+
+.f5tv-preloader-logo-wrap::before {
+  content: "";
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(37, 99, 160, .28), transparent 68%);
+  filter: blur(8px);
+}
+
+.f5tv-preloader-scan {
+  position: absolute;
+  z-index: 3;
+  width: 150px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .9), transparent);
+  box-shadow: 0 0 14px rgba(255, 255, 255, .7);
+  animation: f5-preloader-scan 1.6s ease-in-out infinite;
+}
+
+.f5tv-preloader-orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 1px solid rgba(78, 146, 207, .18);
+  border-radius: 50%;
+  transform: rotate(-25deg);
+  animation: f5-preloader-orbit 4s linear infinite;
+}
+
+.f5tv-preloader-orbit-one { width: 300px; height: 92px; margin: -46px 0 0 -150px; }
+.f5tv-preloader-orbit-two { width: 360px; height: 120px; margin: -60px 0 0 -180px; transform: rotate(32deg); animation-direction: reverse; animation-duration: 5s; }
+
+.f5tv-preloader-label {
+  color: rgba(255, 255, 255, .54);
+  font: 700 10px/1 monospace;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  animation: f5-preloader-label 1.8s ease-in-out infinite;
+}
+
+@keyframes f5-preloader-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes f5-preloader-glow { 0%, 100% { filter: drop-shadow(0 0 8px rgba(255,255,255,.38)) drop-shadow(0 0 20px rgba(220,38,38,.28)); } 50% { filter: drop-shadow(0 0 14px rgba(255,255,255,.72)) drop-shadow(0 0 34px rgba(220,38,38,.54)); } }
+@keyframes f5-preloader-scan { 0% { transform: translateY(-48px); opacity: 0; } 20%, 80% { opacity: 1; } 100% { transform: translateY(48px); opacity: 0; } }
+@keyframes f5-preloader-orbit { from { transform: rotate(-25deg) rotate(0deg); } to { transform: rotate(-25deg) rotate(360deg); } }
+@keyframes f5-preloader-label { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .f5tv-preloader-logo-wrap,
+  .f5tv-preloader-logo,
+  .f5tv-preloader-scan,
+  .f5tv-preloader-orbit,
+  .f5tv-preloader-label { animation: none !important; }
+}
+
 #f5tv-app,
 #f5-landing-root,
 .wp-site-blocks {
