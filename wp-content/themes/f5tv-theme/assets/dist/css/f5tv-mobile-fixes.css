@@ -38,6 +38,10 @@ body {
 }
 
 @media (max-width: 639px) {
+  #f5tv-app > footer {
+    padding-bottom: 1.25rem !important;
+  }
+
   #f5tv-app > header .f5tv-site-logo {
     height: 30px !important;
     max-width: 120px !important;
