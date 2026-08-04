@@ -71,7 +71,21 @@ body {
 }
 
 @media (min-width: 1024px) {
+  #f5tv-mobile-menu-btn {
+    display: none !important;
+  }
+
   #f5tv-mobile-menu {
+    display: none !important;
+  }
+
+  #f5tv-app > header nav {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  #f5tv-app > header nav {
     display: none !important;
   }
 }
