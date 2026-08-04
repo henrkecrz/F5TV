@@ -70,7 +70,7 @@ if (!defined('ABSPATH')) {
 
     <?php wp_head(); ?>
     <style id="f5tv-header-critical-css">
-        #f5tv-app > header { display:block; width:100%; min-height:74px; background:rgba(6,9,19,.92); }
+        #f5tv-app > header { display:block; width:100%; min-height:74px; background:rgba(6,9,19,.84); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }
         #f5tv-app > header > div { display:flex; align-items:center; justify-content:space-between; gap:1.5rem; width:100%; max-width:80rem; min-height:46px; margin:0 auto; }
         #f5tv-app > header .f5tv-site-logo { display:block; width:auto !important; height:40px !important; max-width:180px !important; object-fit:contain; }
         #f5tv-app > header > div > nav { display:flex; align-items:center; gap:1.25rem; }
