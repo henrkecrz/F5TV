@@ -21,6 +21,15 @@ body {
   background-color: #071a33 !important;
 }
 
+/* Content cards: a subtle consistent radius across the site. */
+.f5tv-card,
+.f5tv-archive-grid > article,
+#f5-landing-root a.group.relative.bg-f5-blue-950,
+#f5tv-main a.group.relative.bg-f5-blue-950 {
+  border-radius: 10px !important;
+  overflow: hidden !important;
+}
+
 #f5tv-app > header .f5tv-site-logo {
   display: block !important;
   width: auto !important;
