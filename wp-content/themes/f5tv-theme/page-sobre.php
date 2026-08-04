@@ -54,18 +54,18 @@ get_header();
         <section class="border-t border-zinc-900 pt-12 flex flex-col gap-6 font-semibold text-zinc-300 text-sm leading-relaxed max-w-3xl">
             <h2 class="text-2xl font-black text-white tracking-tight">Uma nova forma de fazer televisão</h2>
             <p>
-                A F5 TV Streaming nasce para marcar uma nova etapa na televisão em Portugal. Como 1ª TV Streaming de Portugal, assumimos uma posição pioneira num mercado em transformação, onde a televisão deixou de estar limitada a horários, grelhas e formatos convencionais. Hoje, o público escolhe o que quer ver, quando quer ver e através de diferentes ecrãs. É nesse novo território que a F5 se posiciona.
+                A F5 TV Streaming chega para inaugurar uma nova forma de fazer televisão em Portugal. Como 1ª TV Streaming de Portugal, assumimos um lugar pioneiro num mercado que está a mudar — e que já não cabe em horários fixos, grelhas rígidas ou formatos previsíveis. Hoje, cada pessoa escolhe o que quer ver, no momento certo e no ecrã que prefere. É nessa liberdade que a F5 TV encontra o seu lugar.
             </p>
             <p>
-                Somos uma plataforma de televisão concebida para reunir informação, entretenimento, cultura, entrevistas, opinião, negócios, lifestyle e conteúdos especiais, aproximando diferentes públicos de histórias, ideias e protagonistas que merecem ser vistos e ouvidos.
+                Reunimos informação, entretenimento, cultura, entrevistas, opinião, negócios, lifestyle e conteúdos especiais numa experiência pensada para despertar curiosidade e criar ligação. Aqui, cada programa tem uma história, cada voz tem espaço e cada espectador pode encontrar algo que lhe diz respeito.
             </p>
             <p>
-                Na F5TV acreditamos que a televisão do futuro não será apenas aquela que transmite conteúdos. Será aquela que cria relevância, estabelece ligações e acompanha a transformação da sociedade. Por isso, construímos uma experiência de televisão mais flexível, contemporânea e conectada com o seu tempo, com conteúdos próprios e parceiros, formatos diferenciados e uma visão aberta ao que acontece em Portugal e no mundo.
+                Acreditamos numa televisão que não se limita a transmitir: uma televisão que informa, inspira, surpreende e participa na conversa do seu tempo. Por isso, criamos conteúdos próprios e em parceria, exploramos novos formatos e acompanhamos o que acontece em Portugal e no mundo — sempre com uma linguagem próxima, atual e feita para os novos ecrãs.
             </p>
             <p>
-                A F5TV é televisão sem fronteiras de horário, de espaço ou de formato. É televisão para uma nova geração de espectadores. É conteúdo que encontra o seu público. É comunicação que permanece para além do ecrã.
+                A F5 TV é televisão sem fronteiras de horário, espaço ou formato. É conteúdo que encontra o seu público, ideias que geram conversa e histórias que continuam depois do ecrã. Uma televisão para quem gosta de descobrir, participar e ver mais.
             </p>
-            <p class="text-lg font-black text-white">F5 TV Streaming. O futuro da televisão começa aqui.</p>
+            <p class="text-lg font-black text-white">F5 TV Streaming. O futuro da televisão começa aqui — e começa consigo.</p>
         </section>
     </main>
 </div>
