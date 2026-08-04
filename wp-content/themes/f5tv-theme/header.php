@@ -207,6 +207,11 @@ if (!defined('ABSPATH')) {
             <a href="<?php echo esc_url(home_url('/programacao/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Programação</a>
             <a href="<?php echo esc_url(home_url('/busca/')); ?>" class="px-3 py-3 rounded-lg hover:bg-f5-red/15 hover:text-white transition">Busca</a>
             <a href="<?php echo esc_url(home_url('/planos/')); ?>" class="px-3 py-3 rounded-lg text-f5-red hover:bg-f5-red/15 hover:text-white transition">Planos</a>
+            <?php if (!is_user_logged_in()): ?>
+                <div class="my-2 border-t border-white/10"></div>
+                <a href="<?php echo esc_url(home_url('/login/')); ?>" class="px-3 py-3 rounded-lg text-f5-red hover:bg-f5-red/15 hover:text-white transition">Entrar</a>
+                <a href="<?php echo esc_url(home_url('/cadastro/')); ?>" class="px-3 py-3 rounded-lg text-white hover:bg-f5-red/15 hover:text-white transition">Cadastrar</a>
+            <?php endif; ?>
         </nav>
     </div>
 
