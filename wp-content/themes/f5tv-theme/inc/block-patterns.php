@@ -33,7 +33,7 @@ function f5tv_register_block_patterns(): void
 
 <!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->
 <div class="wp-block-buttons"><!-- wp:button {"className":"is-style-fill"} -->
-<div class="wp-block-button is-style-fill"><span class="wp-block-button__link wp-element-button">Disponível em breve</span></div>
+<div class="wp-block-button is-style-fill"><span class="wp-block-button__link wp-element-button">Assinatura em Breve</span></div>
 <!-- /wp:button -->
 
 <!-- wp:button {"className":"is-style-outline"} -->
@@ -62,7 +62,7 @@ function f5tv_register_block_patterns(): void
 <!-- /wp:list -->
 <!-- wp:buttons -->
 <div class="wp-block-buttons"><!-- wp:button {"width":100} -->
-<div class="wp-block-button has-custom-width wp-block-button__width-100"><span class="wp-block-button__link wp-element-button">Disponível em breve</span></div>
+<div class="wp-block-button has-custom-width wp-block-button__width-100"><span class="wp-block-button__link wp-element-button">Assinatura em Breve</span></div>
 <!-- /wp:button --></div>
 <!-- /wp:buttons --></div>
 <!-- /wp:column --></div>

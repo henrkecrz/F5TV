@@ -194,7 +194,7 @@ $plans = get_posts([
                         <span class="text-xs font-mono tracking-widest font-bold uppercase text-white/40"><?php echo esc_html(get_the_title($plan)); ?></span>
                         <p class="text-sm font-semibold text-f5-red">Conteúdos por assinatura disponíveis em breve!</p>
                         <span class="w-full font-bold px-4 py-3.5 rounded text-xs text-center uppercase font-mono flex items-center justify-center gap-2 bg-white/10 text-white/60 border border-white/10">
-                            Disponível em breve
+                            Assinatura em Breve
                         </span>
                     </div>
 

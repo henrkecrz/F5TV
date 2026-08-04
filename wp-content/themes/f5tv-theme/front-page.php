@@ -331,7 +331,7 @@ if (empty($contents)) {
                             <li>&bull; Suporte Técnico Via Ticket</li>
                         </ul>
                     </div>
-                    <span class="mt-8 bg-[#194b7a]/60 text-white/80 text-center font-mono font-bold text-xs uppercase py-3 rounded-xl">Disponível em breve</span>
+                    <span class="mt-8 bg-[#194b7a]/60 text-white/80 text-center font-mono font-bold text-xs uppercase py-3 rounded-xl">Assinatura em Breve</span>
                 </div>
 
                 <div class="bg-f5-blue-950 border-2 border-f5-red p-8 rounded-2xl flex flex-col justify-between relative shadow-2xl">
@@ -345,7 +345,7 @@ if (empty($contents)) {
                             <li>&bull; Downloads Offline Ilimitados</li>
                         </ul>
                     </div>
-                    <span class="mt-8 bg-f5-red/50 text-white/80 text-center font-mono font-bold text-xs uppercase py-3 rounded-xl">Disponível em breve</span>
+                    <span class="mt-8 bg-f5-red/50 text-white/80 text-center font-mono font-bold text-xs uppercase py-3 rounded-xl">Assinatura em Breve</span>
                 </div>
 
                 <div class="bg-f5-blue-950 border border-white/5 p-8 rounded-2xl flex flex-col justify-between">
@@ -358,7 +358,7 @@ if (empty($contents)) {
                             <li>&bull; Acesso Antecipado às Séries Exclusivas</li>
                         </ul>
                     </div>
-                    <span class="mt-8 bg-[#194b7a]/60 text-white/80 text-center font-mono font-bold text-xs uppercase py-3 rounded-xl">Disponível em breve</span>
+                    <span class="mt-8 bg-[#194b7a]/60 text-white/80 text-center font-mono font-bold text-xs uppercase py-3 rounded-xl">Assinatura em Breve</span>
                 </div>
             </div>
         </div>

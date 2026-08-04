@@ -108,7 +108,7 @@ if (!defined('ABSPATH')) {
                 </button>
 
                 <a href="<?php echo esc_url(home_url('/planos/')); ?>" class="hidden lg:inline-flex whitespace-nowrap bg-f5-red hover:bg-f5-red-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition uppercase tracking-wider shadow-lg shadow-f5-red-700/20">
-                    Disponível em breve
+                    Assinatura em Breve
                 </a>
 
                 <!-- Dropdown Menu de Personagem / Assinante -->

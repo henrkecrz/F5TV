@@ -57,7 +57,7 @@ if (did_action('elementor/loaded') && \Elementor\Plugin::$instance->db->is_built
                     </ul>
                 </div>
 
-                <span class="w-full text-center py-3 px-4 rounded-xl font-bold font-mono text-xs uppercase tracking-wider bg-[#194b7a]/60 text-white/80">Disponível em breve</span>
+                        <span class="w-full text-center py-3 px-4 rounded-xl font-bold font-mono text-xs uppercase tracking-wider bg-[#194b7a]/60 text-white/80">Assinatura em Breve</span>
             </div>
 
             <!-- Plano Família -->
@@ -87,7 +87,7 @@ if (did_action('elementor/loaded') && \Elementor\Plugin::$instance->db->is_built
                     </ul>
                 </div>
 
-                <span class="w-full text-center py-3 px-4 rounded-xl font-bold font-mono text-xs uppercase tracking-wider bg-[#194b7a]/60 text-white/80">Disponível em breve</span>
+                        <span class="w-full text-center py-3 px-4 rounded-xl font-bold font-mono text-xs uppercase tracking-wider bg-[#194b7a]/60 text-white/80">Assinatura em Breve</span>
             </div>
 
             <!-- Plano Premium (Recomendado) -->
@@ -125,7 +125,7 @@ if (did_action('elementor/loaded') && \Elementor\Plugin::$instance->db->is_built
                     </ul>
                 </div>
 
-                <span class="w-full text-center py-3 px-4 rounded-xl font-bold font-mono text-xs uppercase tracking-wider bg-[#194b7a]/60 text-white/80">Disponível em breve</span>
+                        <span class="w-full text-center py-3 px-4 rounded-xl font-bold font-mono text-xs uppercase tracking-wider bg-[#194b7a]/60 text-white/80">Assinatura em Breve</span>
             </div>
         </div>
 
