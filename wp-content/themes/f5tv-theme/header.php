@@ -62,8 +62,8 @@ if (!defined('ABSPATH')) {
 <?php wp_body_open(); ?>
 
 <div id="f5tv-app">
-    <header class="sticky top-0 z-40 bg-[#060913]/95 backdrop-blur-md border-b border-zinc-800/80 px-4 sm:px-8 py-3.5">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+    <header class="sticky top-0 z-40 bg-[#060913]/95 backdrop-blur-md border-b border-zinc-800/80 px-4 sm:px-8 lg:px-0 py-3.5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4 lg:px-8">
             
             <!-- Logo F5 TV -->
             <a href="<?php echo esc_url(home_url('/')); ?>" class="flex items-center gap-3 group">
