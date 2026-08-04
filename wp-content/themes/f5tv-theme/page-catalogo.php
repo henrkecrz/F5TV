@@ -33,7 +33,7 @@ $program_query = new WP_Query([
                 ?>
                     <article class="group bg-f5-blue-950 border border-white/5 hover:border-f5-red/60 rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-1 shadow-xl">
                         <a href="<?php echo esc_url(home_url('/assista?id=' . $post_id)); ?>" class="block">
-                            <div class="aspect-[4/3] relative bg-f5-blue-900">
+                            <div class="aspect-[4/5] relative bg-f5-blue-900">
                                 <?php if ($cover): ?>
                                     <img src="<?php echo esc_url($cover); ?>" alt="<?php the_title_attribute(); ?>" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition duration-300">
                                 <?php endif; ?>

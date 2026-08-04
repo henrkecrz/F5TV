@@ -155,12 +155,12 @@ if ($all_categories && !is_wp_error($all_categories)) {
                 <?php foreach ($series_list as $ser): ?>
                     <div class="group relative bg-f5-blue-950/80 border border-zinc-900 rounded-xl overflow-hidden cursor-pointer hover:border-red-600 transition shadow-lg shrink-0 flex flex-col">
                         <a href="<?php echo esc_url($ser['link']); ?>" class="flex flex-col flex-1">
-                            <div class="aspect-[16/9] w-full bg-f5-blue-900 overflow-hidden relative">
+                            <div class="aspect-[4/5] w-full bg-f5-blue-900 overflow-hidden relative">
                                 <img
-                                    src="<?php echo esc_url($ser['bannerUrl']); ?>"
+                                    src="<?php echo esc_url($ser['coverUrl'] ?: $ser['bannerUrl']); ?>"
                                     alt="<?php echo esc_attr($ser['title']); ?>"
                                     referrerpolicy="no-referrer"
-                                    class="w-full h-full object-cover opacity-60 group-hover:opacity-90 group-hover:scale-[1.02] transition duration-300"
+                                    class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition duration-300"
                                 >
                                 <div class="absolute top-2 left-2 bg-f5-red text-[9px] font-bold text-white px-1.5 py-0.5 rounded uppercase font-mono tracking-wider">
                                     SÉRIE F5 TV
@@ -206,7 +206,7 @@ if ($all_categories && !is_wp_error($all_categories)) {
                         ?>
                             <div class="group relative bg-f5-blue-950 border border-zinc-900 hover:border-red-600 rounded-lg overflow-hidden cursor-pointer transition transform hover:-translate-y-1 block animate-fade-in">
                                 <a href="<?php echo esc_url(get_permalink($item->ID)); ?>" class="block">
-                                    <div class="aspect-[3/4] relative bg-f5-blue-900">
+                                    <div class="aspect-[4/5] relative bg-f5-blue-900">
                                         <img
                                             src="<?php echo esc_url($cover); ?>"
                                             alt="<?php echo esc_attr($item->post_title); ?>"
