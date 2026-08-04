@@ -6,16 +6,7 @@
 
 get_header();
 
-// Se a página estiver sendo editada ou tiver sido construída via Elementor, renderizar the_content()
-if (did_action('elementor/loaded') && \Elementor\Plugin::$instance->db->is_built_with_elementor(get_the_ID())) {
-    echo '<main id="elementor-front-page-content" class="min-h-screen bg-f5-blue text-white font-sans">';
-    while (have_posts()): the_post();
-        the_content();
-    endwhile;
-    echo '</main>';
-    get_footer();
-    return;
-}
+// Renderizar sempre o design premium da Landing Page (ignora Elementor intencionalmente)
 
 // Carregar a Landing Page oficial de alta fidelidade
 $contents = get_posts([
@@ -200,8 +191,131 @@ if (empty($contents)) {
         </div>
     </section>
 
+    <!-- ══ PWA — Instalar App ══ -->
+    <section id="instalar-app" class="py-10 px-8 border-b border-white/5" style="background:#060913;">
+        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+
+            <!-- Left: logo + text -->
+            <div class="flex items-center gap-4">
+                <!-- Logo textual igual ao header -->
+                <span class="text-2xl font-black tracking-tighter text-white uppercase leading-none select-none">
+                    F5 <span class="text-f5-red">TV</span>
+                </span>
+                <div class="w-px h-8 bg-zinc-800"></div>
+                <div>
+                    <p class="text-white text-sm font-semibold leading-tight">F5TV ao seu alcance</p>
+                    <p class="text-zinc-500 text-xs mt-0.5">Adicione à tela inicial · Sem loja · Grátis</p>
+                </div>
+            </div>
+
+            <!-- Right: store badges -->
+            <div class="flex flex-wrap items-center justify-center sm:justify-end gap-3">
+
+                <!-- Google Play badge -->
+                <button id="f5-btn-android" title="Instalar no Android"
+                        class="group flex items-center gap-3 bg-black border border-zinc-800 hover:border-zinc-600 rounded-xl px-5 py-2.5 transition-all duration-200 hover:scale-105">
+                    <!-- Google Play SVG logo -->
+                    <svg class="w-6 h-6 flex-shrink-0" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="#EA4335" d="M27.3 9.6L267.1 249 27 488.4C13.8 481.3 5 467.5 5 451.8V60.2C5 44.5 13.8 30.7 27.3 9.6z"/>
+                        <path fill="#FBBC05" d="M369.7 196.7L293.8 272 27.3 9.6C36.8 1.1 49.8-2.2 62.4 3.2l307.3 193.5z"/>
+                        <path fill="#4285F4" d="M369.7 315.3L62.4 508.8c-12.5 5.4-25.6 2.1-35-6.4L293.8 272l75.9 43.3z"/>
+                        <path fill="#34A853" d="M499.4 256c0 13.7-7.6 27-22.4 35l-107.3 60.3L293.8 272l75.9-75.3L477 196.7c14.7 8 22.4 21.3 22.4 35z"/>
+                    </svg>
+                    <div class="text-left">
+                        <div class="text-zinc-400 text-[10px] leading-none uppercase tracking-wide">Get it on</div>
+                        <div class="text-white text-sm font-semibold leading-tight">Google Play</div>
+                    </div>
+                </button>
+
+                <!-- Apple App Store badge -->
+                <button id="f5-btn-ios" title="Instalar no iPhone / iPad"
+                        class="group flex items-center gap-3 bg-black border border-zinc-800 hover:border-zinc-600 rounded-xl px-5 py-2.5 transition-all duration-200 hover:scale-105">
+                    <!-- Apple logo SVG -->
+                    <svg class="w-6 h-6 flex-shrink-0 fill-white" viewBox="0 0 814 1000" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-57.8-155.5-127.4C46 790.7 0 663.9 0 541.8c0-195.4 127.4-298.5 252.8-298.5 66.1 0 121.2 43.4 162.7 43.4 39.5 0 101.1-46 176.3-46 28.5 0 130.9 2.6 198.3 99.2zm-234-181.5c31.1-36.9 53.1-88.1 53.1-139.3 0-7.1-.6-14.3-1.9-20.1-50.6 1.9-110.8 33.7-147.1 75.8-28.5 32.4-55.1 83.6-55.1 135.5 0 7.8 1.3 15.6 1.9 18.1 3.2.6 8.4 1.3 13.6 1.3 45.4 0 102.5-30.4 135.5-71.3z"/>
+                    </svg>
+                    <div class="text-left">
+                        <div class="text-zinc-400 text-[10px] leading-none uppercase tracking-wide">Download on the</div>
+                        <div class="text-white text-sm font-semibold leading-tight">App Store</div>
+                    </div>
+                </button>
+
+                <!-- Microsoft / Windows badge -->
+                <button id="f5-btn-windows" title="Instalar no Windows"
+                        class="group flex items-center gap-3 bg-black border border-zinc-800 hover:border-zinc-600 rounded-xl px-5 py-2.5 transition-all duration-200 hover:scale-105">
+                    <!-- Windows logo SVG -->
+                    <svg class="w-6 h-6 flex-shrink-0" viewBox="0 0 88 88" xmlns="http://www.w3.org/2000/svg">
+                        <path fill="#F25022" d="M0 0h42v42H0z"/>
+                        <path fill="#7FBA00" d="M46 0h42v42H46z"/>
+                        <path fill="#00A4EF" d="M0 46h42v42H0z"/>
+                        <path fill="#FFB900" d="M46 46h42v42H46z"/>
+                    </svg>
+                    <div class="text-left">
+                        <div class="text-zinc-400 text-[10px] leading-none uppercase tracking-wide">Get it from</div>
+                        <div class="text-white text-sm font-semibold leading-tight">Microsoft</div>
+                    </div>
+                </button>
+
+            </div>
+        </div>
+
+        <!-- Modal iOS instructions (hidden by default) -->
+        <div id="f5-ios-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);align-items:flex-end;justify-content:center;">
+            <div style="background:#111;border:1px solid #333;border-radius:20px 20px 0 0;padding:28px 24px 36px;max-width:480px;width:100%;text-align:center;">
+                <div style="width:40px;height:4px;background:#444;border-radius:2px;margin:0 auto 20px;"></div>
+                <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/icons/apple-touch-icon.png" style="width:64px;border-radius:14px;margin:0 auto 12px;">
+                <h3 style="color:#fff;font-size:17px;font-weight:800;margin:0 0 6px;">Adicionar à Tela de Início</h3>
+                <p style="color:#888;font-size:13px;line-height:1.6;margin:0 0 20px;">
+                    No <b style="color:#fff;">Safari</b>, toque em
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#007AFF" style="vertical-align:middle;margin:0 2px"><path d="M16 5l-1.42 1.42-1.59-1.59V16h-1.98V4.83L9.42 6.42 8 5l4-4 4 4zm4 5v11c0 1.1-.9 2-2 2H6c-1.11 0-2-.9-2-2V10c0-1.11.89-2 2-2h3v2H6v11h12V10h-3V8h3c1.1 0 2 .89 2 2z"/></svg>
+                    e selecione <b style="color:#fff;">"Adicionar ao Ecrã de Início"</b>
+                </p>
+                <button onclick="document.getElementById('f5-ios-modal').style.display='none'"
+                        style="width:100%;padding:12px;background:#dc2626;color:#fff;border:none;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+    (function () {
+        var prompt = null;
+
+        window.addEventListener('beforeinstallprompt', function(e) {
+            e.preventDefault();
+            prompt = e;
+        });
+
+        function wireInstall(id, fallback) {
+            var btn = document.getElementById(id);
+            if (!btn) return;
+            btn.addEventListener('click', function() {
+                if (prompt) {
+                    prompt.prompt();
+                    prompt.userChoice.then(function() { prompt = null; });
+                } else {
+                    alert(fallback);
+                }
+            });
+        }
+
+        wireInstall('f5-btn-android',
+            'Android (Chrome): Menu ⋮ → "Adicionar à tela inicial"');
+        wireInstall('f5-btn-windows',
+            'Windows (Chrome): ícone ⊕ na barra → Instalar\nWindows (Edge): Menu … → Aplicativos → Instalar este site');
+
+        var btnIOS = document.getElementById('f5-btn-ios');
+        var modal  = document.getElementById('f5-ios-modal');
+        if (btnIOS && modal) {
+            btnIOS.addEventListener('click', function() { modal.style.display = 'flex'; });
+            modal.addEventListener('click', function(e) { if (e.target === modal) modal.style.display = 'none'; });
+        }
+    })();
+    </script>
     <!-- Planos de Assinatura Section -->
     <section id="planos" class="py-24 px-8 bg-f5-blue border-b border-white/5">
+
         <div class="max-w-7xl mx-auto">
             <div class="text-left max-w-2xl mb-18 flex flex-col gap-3">
                 <span class="text-[10px] font-mono font-bold tracking-[0.2em] text-f5-red uppercase">PREÇOS TRANSPARENTES</span>

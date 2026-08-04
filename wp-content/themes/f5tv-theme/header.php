@@ -12,9 +12,52 @@ if (!defined('ABSPATH')) {
 <html <?php language_attributes(); ?>>
 <head>
     <meta charset="<?php bloginfo('charset'); ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <!-- ══ PWA — Web App Manifest ══ -->
+    <link rel="manifest" href="<?php echo esc_url(home_url('/manifest.json')); ?>">
+
+    <!-- ══ Theme / Brand colors ══ -->
+    <meta name="theme-color" content="#030315">
+    <meta name="msapplication-TileColor" content="#030315">
+    <meta name="msapplication-TileImage" content="<?php echo esc_url(get_template_directory_uri()); ?>/assets/icons/icon-144.png">
+
+    <!-- ══ iOS / Safari — Add to Home Screen ══ -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="F5 TV">
+    <link rel="apple-touch-icon" href="<?php echo esc_url(get_template_directory_uri()); ?>/assets/icons/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="<?php echo esc_url(get_template_directory_uri()); ?>/assets/icons/apple-touch-icon-152.png">
+
+    <!-- iOS Splash Screens (portrait) -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-startup-image"
+          media="screen and (device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3)"
+          href="<?php echo esc_url(get_template_directory_uri()); ?>/assets/icons/icon-512.png">
+    <link rel="apple-touch-startup-image"
+          media="screen and (device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3)"
+          href="<?php echo esc_url(get_template_directory_uri()); ?>/assets/icons/icon-512.png">
+    <link rel="apple-touch-startup-image"
+          media="screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)"
+          href="<?php echo esc_url(get_template_directory_uri()); ?>/assets/icons/icon-512.png">
+
+    <!-- ══ Favicons ══ -->
+    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo esc_url(get_template_directory_uri()); ?>/assets/icons/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?php echo esc_url(get_template_directory_uri()); ?>/assets/icons/favicon-16.png">
+    <link rel="shortcut icon" href="<?php echo esc_url(get_template_directory_uri()); ?>/assets/icons/favicon-32.png">
+
+    <!-- ══ SEO / Social ══ -->
+    <meta name="description" content="<?php echo is_singular() ? get_the_excerpt() : 'F5 TV — Séries originais, documentários investigativos, jornalismo 24h e esportes ao vivo. Streaming premium nacional.'; ?>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="F5 TV">
+    <meta property="og:title" content="<?php wp_title('|', true, 'right'); ?> F5 TV">
+    <meta property="og:description" content="Streaming premium nacional. Séries, documentários e ao vivo.">
+    <meta property="og:image" content="<?php echo esc_url(get_template_directory_uri()); ?>/assets/icons/icon-512.png">
+    <meta name="twitter:card" content="summary_large_image">
+
     <?php wp_head(); ?>
 </head>
+
 <body <?php body_class('bg-f5-blue text-white font-sans antialiased'); ?>>
 <?php wp_body_open(); ?>
 
