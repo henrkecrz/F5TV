@@ -775,14 +775,15 @@ add_filter('lostpassword_url', function ($lostpassword_url, $redirect) {
  *    Método mais confiável — não depende de post_meta
  */
 add_filter('template_include', function ($template) {
-    if (is_singular('f5tv_conteudo')) {
+    $request_path = isset($_SERVER['REQUEST_URI']) ? trim((string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/') : '';
+    $is_content_details_route = (bool) preg_match('#^assista/[^/]+$#', $request_path);
+    if (is_singular('f5tv_conteudo') || $is_content_details_route) {
         $content_template = get_template_directory() . '/single-f5tv_conteudo.php';
         if (file_exists($content_template)) {
             return $content_template;
         }
     }
 
-    $request_path = isset($_SERVER['REQUEST_URI']) ? trim((string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/') : '';
     if (is_page('login') || is_page('cadastro') || is_page('catalogo') || get_query_var('f5tv_catalogo') || $request_path === 'catalogo') {
         $custom = get_template_directory() . (is_page('cadastro') ? '/page-cadastro.php' : (is_page('catalogo') ? '/page-catalogo.php' : '/page-login.php'));
         if (file_exists($custom)) {
