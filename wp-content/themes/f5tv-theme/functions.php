@@ -490,7 +490,21 @@ add_action('rest_api_init', function () {
             }
             $user_id = get_current_user_id();
             $list    = get_user_meta($user_id, 'f5tv_minha_lista', true) ?: [];
-            return rest_ensure_response(['list' => array_values(array_unique((array)$list))]);
+            $ids = array_values(array_unique(array_map('intval', (array) $list)));
+            $items = [];
+            foreach ($ids as $saved_id) {
+                $saved_post = get_post($saved_id);
+                if (!$saved_post || $saved_post->post_status !== 'publish') continue;
+                $terms = get_the_terms($saved_id, 'f5tv_genero');
+                $items[] = [
+                    'id'       => $saved_id,
+                    'title'    => get_the_title($saved_id),
+                    'coverUrl' => f5tv_get_field('cover_url', $saved_id) ?: get_the_post_thumbnail_url($saved_id, 'medium'),
+                    'genre'    => ($terms && !is_wp_error($terms)) ? $terms[0]->name : 'F5 TV',
+                    'url'      => get_permalink($saved_id),
+                ];
+            }
+            return rest_ensure_response(['list' => $ids, 'items' => $items]);
         },
         'permission_callback' => '__return_true',
     ]);
@@ -544,7 +558,6 @@ add_action('rest_api_init', function () {
  * Adiciona f5tvRestNonce como variável JS global
  */
 add_action('wp_head', function () {
-    if (!is_singular(['f5tv_conteudo', 'f5tv_serie'])) return;
     $user_id  = get_current_user_id();
     $list     = $user_id ? (array)(get_user_meta($user_id, 'f5tv_minha_lista', true) ?: []) : [];
     echo '<script>window.f5tvRest=' . json_encode([
