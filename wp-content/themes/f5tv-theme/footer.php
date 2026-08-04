@@ -19,6 +19,12 @@ if (!defined('ABSPATH')) {
                 <span class="text-white/30 text-[10px] font-mono tracking-wider mt-4 block">
                     &copy; <?php echo esc_html(date('Y')); ?> F5 TV Brasil. All rights reserved.
                 </span>
+                <p class="text-white/40 text-[10px] leading-relaxed mt-1">
+                    Desenvolvido por
+                    <a href="https://conectacomunicacao.pt" target="_blank" rel="noopener noreferrer" class="text-white/70 hover:text-f5-red transition">
+                        Conecta Comunicação
+                    </a>
+                </p>
             </div>
 
             <div class="flex flex-col gap-4">
