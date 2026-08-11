@@ -1124,8 +1124,32 @@ function f5tv_seed_program_episodes(): void
                 update_post_meta($episode_id, 'thumbnail_url', get_post_meta($program_id, 'cover_url', true));
             }
         }
+        f5tv_normalize_series_seasons($series_id);
     }
     update_option('f5tv_program_episodes_seed_version', '1', false);
+}
+
+/** Mantém a numeração das temporadas contínua mesmo após importações anteriores. */
+function f5tv_normalize_series_seasons(int $series_id): void
+{
+    $seasons = get_posts([
+        'post_type' => 'f5tv_temporada',
+        'post_status' => ['publish', 'draft'],
+        'posts_per_page' => -1,
+        'meta_query' => [['key' => 'series_id', 'value' => $series_id, 'compare' => '=']],
+        'meta_key' => 'number',
+        'orderby' => 'meta_value_num',
+        'order' => 'ASC',
+    ]);
+    foreach ($seasons as $index => $season) {
+        $number = $index + 1;
+        if ((int) get_post_meta($season->ID, 'number', true) !== $number) {
+            update_post_meta($season->ID, 'number', $number);
+        }
+        if (preg_match('/^Temporada\s+\d+$/i', $season->post_title)) {
+            wp_update_post(['ID' => $season->ID, 'post_title' => 'Temporada ' . $number]);
+        }
+    }
 }
 
 
