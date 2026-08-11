@@ -944,6 +944,7 @@ add_action('template_redirect', function () {
  * A rotina é idempotente: cria uma vez e atualiza as capas/descritivos sem duplicar posts.
  */
 add_action('init', 'f5tv_seed_program_catalog', 30);
+add_action('init', 'f5tv_seed_program_episodes', 31);
 function f5tv_seed_program_catalog(): void
 {
     static $ran = false;
@@ -1030,6 +1031,101 @@ function f5tv_seed_program_catalog(): void
             wp_set_object_terms($post_id, $program['genre'], 'f5tv_genero', false);
         }
     }
+}
+
+/**
+ * Cria uma estrutura demonstrativa de séries, temporadas e episódios para o catálogo editorial.
+ * Usa slugs estáveis para ser seguro em novas execuções e não duplicar conteúdo.
+ */
+function f5tv_seed_program_episodes(): void
+{
+    static $ran = false;
+    if ($ran || !post_type_exists('f5tv_conteudo') || !post_type_exists('f5tv_serie')) return;
+    $ran = true;
+
+    $programs = [
+        ['slug' => 'bela-escala', 'title' => 'Bela Escala'],
+        ['slug' => 'conexao-imob', 'title' => 'Conexão Imob'],
+        ['slug' => 'essencia-lusa', 'title' => 'Essência Lusa'],
+        ['slug' => 'maria-joao-tv', 'title' => 'Maria João TV'],
+        ['slug' => 'no-sofa-com-a-rainha', 'title' => 'No Sofá com a Rainha'],
+        ['slug' => 'street-talk', 'title' => 'Street Talk'],
+        ['slug' => 'vozes-que-empreendem', 'title' => 'Vozes que Empreendem'],
+    ];
+    $sample_video = 'https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4';
+
+    foreach ($programs as $program) {
+        $program_ids = get_posts([
+            'post_type' => 'f5tv_conteudo',
+            'name' => $program['slug'],
+            'post_status' => 'any',
+            'posts_per_page' => 1,
+            'fields' => 'ids',
+        ]);
+        $program_id = !empty($program_ids) ? absint($program_ids[0]) : 0;
+        if (!$program_id) continue;
+
+        $series_slug = 'serie-' . $program['slug'];
+        $series = get_page_by_path($series_slug, OBJECT, 'f5tv_serie');
+        if (!$series) {
+            $series_id = wp_insert_post([
+                'post_type' => 'f5tv_serie',
+                'post_status' => 'publish',
+                'post_title' => $program['title'] . ' - Série',
+                'post_name' => $series_slug,
+                'post_content' => 'Acompanhe todos os episódios de ' . $program['title'] . '.',
+            ]);
+            if (!$series_id || is_wp_error($series_id)) continue;
+            $series = get_post($series_id);
+        }
+        $series_id = absint($series->ID);
+        update_post_meta($program_id, 'series_id', $series_id);
+        update_post_meta($series_id, 'cover_url', get_post_meta($program_id, 'cover_url', true));
+        update_post_meta($series_id, 'banner_url', get_post_meta($program_id, 'banner_url', true));
+
+        for ($season_number = 1; $season_number <= 2; $season_number++) {
+            $season_slug = $series_slug . '-temporada-' . $season_number;
+            $season = get_page_by_path($season_slug, OBJECT, 'f5tv_temporada');
+            if (!$season) {
+                $season_id = wp_insert_post([
+                    'post_type' => 'f5tv_temporada',
+                    'post_status' => 'publish',
+                    'post_title' => 'Temporada ' . $season_number,
+                    'post_name' => $season_slug,
+                    'post_parent' => $series_id,
+                ]);
+                if (!$season_id || is_wp_error($season_id)) continue;
+                $season = get_post($season_id);
+            }
+            $season_id = absint($season->ID);
+            update_post_meta($season_id, 'series_id', $series_id);
+            update_post_meta($season_id, 'number', $season_number);
+
+            for ($episode_number = 1; $episode_number <= 3; $episode_number++) {
+                $episode_slug = $season_slug . '-episodio-' . $episode_number;
+                $episode = get_page_by_path($episode_slug, OBJECT, 'f5tv_episodio');
+                if (!$episode) {
+                    $episode_id = wp_insert_post([
+                        'post_type' => 'f5tv_episodio',
+                        'post_status' => 'publish',
+                        'post_title' => 'Episódio ' . $episode_number . ' - ' . $program['title'],
+                        'post_name' => $episode_slug,
+                        'post_parent' => $season_id,
+                    ]);
+                    if (!$episode_id || is_wp_error($episode_id)) continue;
+                    $episode = get_post($episode_id);
+                }
+                $episode_id = absint($episode->ID);
+                update_post_meta($episode_id, 'season_id', $season_id);
+                update_post_meta($episode_id, 'content_id', $program_id);
+                update_post_meta($episode_id, 'number', $episode_number);
+                update_post_meta($episode_id, 'duration', '45 min');
+                update_post_meta($episode_id, 'video_url', $sample_video);
+                update_post_meta($episode_id, 'thumbnail_url', get_post_meta($program_id, 'cover_url', true));
+            }
+        }
+    }
+    update_option('f5tv_program_episodes_seed_version', '1', false);
 }
 
 
