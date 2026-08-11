@@ -23,11 +23,13 @@ while (have_posts()): the_post();
     </div>
 
     <div class="f5tv-channel-player">
-        <?php if ($stream_url): ?>
+        <?php if ($stream_url && is_user_logged_in()): ?>
             <video controls autoplay class="f5tv-video-player f5tv-live-player">
-                <source src="<?php echo esc_url($stream_url); ?>" type="application/x-mpegURL">
+                <source src="<?php echo esc_url(add_query_arg('_wpnonce', wp_create_nonce('wp_rest'), rest_url('f5tv/v1/live/stream/' . get_the_ID()))); ?>" type="application/x-mpegURL">
                 Seu navegador não suporta reprodução de vídeo.
             </video>
+        <?php elseif ($stream_url): ?>
+            <a href="<?php echo esc_url(add_query_arg('redirect_to', get_permalink(), home_url('/login/'))); ?>" class="f5tv-button f5tv-button-primary">Entrar grátis para assistir ao vivo</a>
         <?php endif; ?>
     </div>
 

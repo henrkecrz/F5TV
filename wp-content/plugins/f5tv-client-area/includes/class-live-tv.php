@@ -51,7 +51,9 @@ class F5TV_Live_TV
                 'id'        => get_post_field('post_name', $post_id),
                 'name'      => get_the_title(),
                 'logoText'  => get_field('logo_text', $post_id) ?: 'F5',
-                'streamUrl' => get_field('stream_url', $post_id) ?: '',
+                'streamUrl' => get_field('stream_url', $post_id)
+                    ? add_query_arg('_wpnonce', wp_create_nonce('wp_rest'), rest_url('f5tv/v1/live/stream/' . $post_id))
+                    : '',
                 'active'    => (bool) get_field('active', $post_id),
                 'status'    => get_field('status', $post_id) ?: 'online',
                 'category'  => $category,

@@ -28,7 +28,11 @@ function f5tv_register_rest_routes(): void
     register_rest_route('f5tv/v1', '/live/stream/(?P<id>\d+)', [
         'methods' => WP_REST_Server::READABLE,
         'callback' => 'f5tv_rest_handle_live_stream',
-        'permission_callback' => '__return_true',
+        'permission_callback' => static function () {
+            return is_user_logged_in()
+                ? true
+                : new WP_Error('f5tv_login_required', 'Crie uma conta gratuita para assistir.', ['status' => 401]);
+        },
     ]);
 
     // Rota: Planos e Cupons
@@ -173,7 +177,9 @@ function f5tv_rest_handle_catalog(WP_REST_Request $request): WP_REST_Response
             'coverUrl'         => f5tv_get_16x9_image($post_id, 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=1280'),
             'bannerUrl'        => f5tv_get_16x9_image($post_id, 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=1280'),
             'trailerUrl'       => get_field('trailer_url', $post_id) ?: '',
-            'videoUrl'         => get_field('video_url', $post_id) ?: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+            'videoUrl'         => get_field('video_url', $post_id)
+                ? add_query_arg('_wpnonce', wp_create_nonce('wp_rest'), rest_url('f5tv/v1/playback/' . rawurlencode(f5tv_create_playback_token($post_id))))
+                : '',
             'status'           => get_post_status($post_id) === 'publish' ? 'published' : 'draft',
             'isFeatured'       => (bool) get_field('is_featured', $post_id),
             'isFree'           => (bool) get_field('is_free', $post_id),
@@ -204,7 +210,7 @@ function f5tv_rest_handle_catalog(WP_REST_Request $request): WP_REST_Response
                 'coverUrl'         => 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=600',
                 'bannerUrl'        => 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=1200',
                 'trailerUrl'       => '',
-                'videoUrl'         => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                'videoUrl'         => '',
                 'status'           => 'published',
                 'isFeatured'       => true,
                 'isFree'           => false,
@@ -229,7 +235,7 @@ function f5tv_rest_handle_catalog(WP_REST_Request $request): WP_REST_Response
                 'coverUrl'         => 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=600',
                 'bannerUrl'        => 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1200',
                 'trailerUrl'       => '',
-                'videoUrl'         => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+                'videoUrl'         => '',
                 'status'           => 'published',
                 'isFeatured'       => false,
                 'isFree'           => true,
@@ -254,7 +260,7 @@ function f5tv_rest_handle_catalog(WP_REST_Request $request): WP_REST_Response
                 'coverUrl'         => 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=600',
                 'bannerUrl'        => 'https://images.unsplash.com/photo-1594909122845-11baa439b7bf?q=80&w=1200',
                 'trailerUrl'       => '',
-                'videoUrl'         => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                'videoUrl'         => '',
                 'status'           => 'published',
                 'isFeatured'       => false,
                 'isFree'           => false,
@@ -279,7 +285,7 @@ function f5tv_rest_handle_catalog(WP_REST_Request $request): WP_REST_Response
                 'coverUrl'         => 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?q=80&w=600',
                 'bannerUrl'        => 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?q=80&w=1200',
                 'trailerUrl'       => '',
-                'videoUrl'         => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+                'videoUrl'         => '',
                 'status'           => 'published',
                 'isFeatured'       => false,
                 'isFree'           => false,
@@ -304,7 +310,7 @@ function f5tv_rest_handle_catalog(WP_REST_Request $request): WP_REST_Response
                 'coverUrl'         => 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=600',
                 'bannerUrl'        => 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1200',
                 'trailerUrl'       => '',
-                'videoUrl'         => 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+                'videoUrl'         => '',
                 'status'           => 'published',
                 'isFeatured'       => false,
                 'isFree'           => false,
@@ -409,7 +415,9 @@ function f5tv_rest_handle_live(WP_REST_Request $request): WP_REST_Response
             'name'        => get_the_title(),
             'description' => get_the_content(),
             'logoText'    => get_field('logo_text', $post_id) ?: 'F5',
-            'streamUrl'   => get_field('stream_url', $post_id) ?: '',
+            'streamUrl'   => get_field('stream_url', $post_id)
+                ? add_query_arg('_wpnonce', wp_create_nonce('wp_rest'), rest_url('f5tv/v1/live/stream/' . $post_id))
+                : '',
             'active'      => (bool) get_field('active', $post_id),
             'status'      => get_field('status', $post_id) ?: 'online',
             'category'    => $category,

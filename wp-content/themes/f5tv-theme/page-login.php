@@ -4,9 +4,12 @@
  * Design system F5TV — pixel-perfect com AuthPages.tsx / LoginScreen
  */
 
-// Se já logado, redirecionar
+$requested_redirect = isset($_GET['redirect_to']) ? esc_url_raw(wp_unslash($_GET['redirect_to'])) : '';
+$login_redirect = wp_validate_redirect($requested_redirect, home_url('/area-do-assinante/'));
+
+// Se já logado, redirecionar para o destino solicitado.
 if (is_user_logged_in()) {
-    wp_redirect(home_url('/area-do-assinante/'));
+    wp_safe_redirect($login_redirect);
     exit;
 }
 
@@ -135,7 +138,7 @@ get_header();
                 Entrar
             </button>
 
-            <input type="hidden" name="redirect_to" value="<?php echo esc_url(home_url('/area-do-assinante/')); ?>">
+            <input type="hidden" name="redirect_to" value="<?php echo esc_url($login_redirect); ?>">
             <input type="hidden" name="testcookie" value="1">
         </form>
 

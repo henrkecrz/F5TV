@@ -9,4 +9,5 @@ return [
     'db_pass' => 'replace_with_mysql_password',
     'cors_origin' => '*',
     'api_key' => 'replace_with_private_admin_api_key',
+    'allow_sandbox_checkout' => false,
 ];

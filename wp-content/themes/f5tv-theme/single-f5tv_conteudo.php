@@ -218,10 +218,11 @@ while (have_posts()): the_post();
             <!-- CTA Action buttons — idêntico ao ContentDetailsPage.tsx -->
             <div class="flex flex-wrap gap-3.5">
                 <?php if ($video_url): ?>
-                    <a href="<?php echo esc_url(home_url('/assista?id=' . get_the_ID())); ?>"
+                    <?php $program_watch_url = home_url('/assista?id=' . get_the_ID()); $program_cta_url = is_user_logged_in() ? $program_watch_url : add_query_arg('redirect_to', $program_watch_url, home_url('/login/')); ?>
+                    <a href="<?php echo esc_url($program_cta_url); ?>"
                        class="bg-f5-red hover:bg-f5-red-700 text-white font-bold py-3.5 px-7 rounded-xl text-xs tracking-wider uppercase font-mono flex items-center justify-center gap-2 cursor-pointer transition shadow-lg shadow-f5-red-700/10">
                         <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                        <span><?php echo $has_series ? 'Assistir Ep. 1' : 'Assistir Agora'; ?></span>
+                        <span><?php echo is_user_logged_in() ? ($has_series ? 'Assistir Ep. 1' : 'Assistir Agora') : 'Entrar grátis para assistir'; ?></span>
                     </a>
                 <?php endif; ?>
 
@@ -290,7 +291,8 @@ while (have_posts()): the_post();
                                         $ep_video  = f5tv_get_field('video_url', $ep->ID);
                                         $ep_thumb  = f5tv_get_field('thumbnail_url', $ep->ID) ?: get_the_post_thumbnail_url($ep->ID, 'medium');
                                         $ep_desc   = get_post_field('post_excerpt', $ep->ID) ?: f5tv_get_field('short_description', $ep->ID) ?: '';
-                                        $ep_link   = $ep_video ? home_url('/assista?id=' . $ep->ID) : '#';
+                                        $episode_parent_id = $linked_series_id ?: get_the_ID();
+                                        $ep_link   = $ep_video ? home_url('/assista?id=' . $episode_parent_id . '&episodeId=' . $ep->ID) : '#';
                                     ?>
                                         <a href="<?php echo esc_url($ep_link); ?>"
                                            class="bg-f5-blue-950/30 hover:bg-f5-blue-950 border border-zinc-900 hover:border-zinc-800 p-4 rounded-xl flex gap-4 items-center cursor-pointer group transition duration-200">

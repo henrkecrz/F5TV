@@ -16,6 +16,7 @@ try {
         $stmt->execute([$id]);
         $content = $stmt->fetch();
         if (!$content) json_response(['error' => 'CONTENT_NOT_FOUND'], 404);
+        $content['video_url'] = '';
 
         $reviews = $pdo->prepare("SELECT id, content_id, profile_name, avatar_color, rating, comment, status, created_at FROM reviews WHERE content_id = ? AND status = 'published' ORDER BY created_at DESC");
         $reviews->execute([$id]);
@@ -50,7 +51,14 @@ try {
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
 
-    json_response(['contents' => $stmt->fetchAll()]);
+    $contents = $stmt->fetchAll();
+    foreach ($contents as &$content) {
+        $content['video_url'] = '';
+    }
+    unset($content);
+
+    json_response(['contents' => $contents]);
 } catch (Throwable $e) {
-    json_response(['error' => 'SERVER_ERROR', 'message' => $e->getMessage()], 500);
+    error_log('F5TV catalog API error: ' . $e->getMessage());
+    json_response(['error' => 'SERVER_ERROR', 'message' => 'Não foi possível carregar o catálogo.'], 500);
 }

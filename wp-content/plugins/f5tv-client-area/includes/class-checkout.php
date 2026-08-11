@@ -13,7 +13,6 @@ class F5TV_Checkout
     public function __construct()
     {
         add_action('rest_api_init', [$this, 'register_routes']);
-        add_action('woocommerce_subscription_status_updated', [$this, 'sync_subscription_status'], 10, 3);
     }
 
     public function register_routes(): void

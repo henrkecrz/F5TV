@@ -11,6 +11,11 @@ while (have_posts()): the_post();
     $duration = get_field('duration');
     $video_url = get_field('video_url');
     $thumbnail_url = get_field('thumbnail_url');
+    $content_id = absint(get_post_meta(get_the_ID(), 'content_id', true));
+    if (!$content_id && $season_id) {
+        $content_id = absint(get_post_meta($season_id, 'series_id', true));
+    }
+    $watch_url = home_url('/assista?id=' . $content_id . '&episodeId=' . get_the_ID());
 ?>
 
 <div class="f5tv-episode-single">
@@ -18,11 +23,10 @@ while (have_posts()): the_post();
         <?php if ($thumbnail_url): ?>
             <img src="<?php echo esc_url($thumbnail_url); ?>" alt="<?php the_title(); ?>" class="f5tv-episode-thumbnail">
         <?php endif; ?>
-        <?php if ($video_url): ?>
-            <video controls poster="<?php echo esc_url($thumbnail_url); ?>" class="f5tv-video-player">
-                <source src="<?php echo esc_url($video_url); ?>" type="application/x-mpegURL">
-                Seu navegador não suporta reprodução de vídeo.
-            </video>
+        <?php if ($video_url && is_user_logged_in()): ?>
+            <a href="<?php echo esc_url($watch_url); ?>" class="f5tv-button f5tv-button-primary">Assistir episódio</a>
+        <?php elseif ($video_url): ?>
+            <a href="<?php echo esc_url(add_query_arg('redirect_to', $watch_url, home_url('/login/'))); ?>" class="f5tv-button f5tv-button-primary">Entrar grátis para assistir</a>
         <?php endif; ?>
     </div>
 

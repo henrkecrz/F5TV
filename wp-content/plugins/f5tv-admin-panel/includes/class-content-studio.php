@@ -532,7 +532,7 @@ class F5TV_Admin_Content_Studio
         $post = $post_id ? get_post($post_id) : null;
 
         if ($post && in_array($post->post_type, ['f5tv_conteudo', 'f5tv_serie'], true)) {
-            wp_delete_post($post_id, true);
+            wp_trash_post($post_id);
         }
 
         wp_safe_redirect(admin_url('admin.php?page=f5tv-content-studio&deleted=1'));
@@ -662,8 +662,8 @@ class F5TV_Admin_Content_Studio
                 'fields' => 'ids',
                 'meta_query' => [['key' => 'season_id', 'value' => $season_id, 'compare' => '=']],
             ]);
-            foreach ($episodes as $episode_id) wp_delete_post($episode_id, true);
-            wp_delete_post($season_id, true);
+            foreach ($episodes as $episode_id) wp_trash_post($episode_id);
+            wp_trash_post($season_id);
         }
 
         wp_safe_redirect(admin_url('admin.php?page=f5tv-content-studio&action=edit&id=' . $series_id . '&saved=1'));
@@ -677,7 +677,7 @@ class F5TV_Admin_Content_Studio
         $episode_id = absint($_POST['episode_id'] ?? 0);
         $parent_id = absint($_POST['parent_id'] ?? 0);
         if ($episode_id && get_post_type($episode_id) === 'f5tv_episodio') {
-            wp_delete_post($episode_id, true);
+            wp_trash_post($episode_id);
         }
         wp_safe_redirect(admin_url('admin.php?page=f5tv-content-studio&action=edit&id=' . $parent_id . '&saved=1'));
         exit;

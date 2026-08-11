@@ -9,9 +9,13 @@ get_header();
 ?>
 <main class="min-h-[55vh] bg-f5-blue text-white flex items-center justify-center px-6 py-20">
     <div class="max-w-2xl text-center">
-        <span class="text-f5-red font-mono font-black text-xs tracking-widest uppercase">ASSINATURAS EM BREVE</span>
-        <h1 class="text-3xl md:text-5xl font-black tracking-tight mt-3">Conteúdos por assinatura disponíveis em breve!</h1>
-        <p class="text-white/60 text-sm md:text-base mt-5">A área de assinatura ainda não está disponível. Em breve teremos novidades.</p>
+        <span class="text-f5-red font-mono font-black text-xs tracking-widest uppercase">ACESSO GRATUITO</span>
+        <h1 class="text-3xl md:text-5xl font-black tracking-tight mt-3">Crie sua conta e assista gratuitamente</h1>
+        <p class="text-white/60 text-sm md:text-base mt-5">Neste lançamento não há cobrança. Basta entrar ou criar uma conta gratuita para assistir aos programas, séries e canais ao vivo.</p>
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <a href="<?php echo esc_url(home_url('/cadastro/')); ?>" class="rounded-lg bg-f5-red px-6 py-3 text-xs font-black uppercase tracking-wider text-white">Criar conta grátis</a>
+            <a href="<?php echo esc_url(home_url('/login/')); ?>" class="rounded-lg border border-white/20 px-6 py-3 text-xs font-black uppercase tracking-wider text-white">Já tenho conta</a>
+        </div>
     </div>
 </main>
 <?php

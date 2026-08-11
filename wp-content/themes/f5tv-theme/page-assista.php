@@ -5,12 +5,18 @@
  * Suporta Vimeo (SDK controls=0), YouTube (IFrame API controls=0) e MP4 nativo.
  */
 
-get_header();
-
 $content_id   = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $episode_id   = isset($_GET['episodeId']) ? intval($_GET['episodeId']) : 0;
 $is_trailer   = isset($_GET['trailer']) && $_GET['trailer'] === 'true';
 $content_post = $content_id ? get_post($content_id) : null;
+
+if ($content_post && !$is_trailer && !is_user_logged_in()) {
+    $return_url = home_url(wp_unslash($_SERVER['REQUEST_URI'] ?? '/assista/'));
+    wp_safe_redirect(add_query_arg('redirect_to', $return_url, home_url('/login/')));
+    exit;
+}
+
+get_header();
 
 if ($content_post) {
     $video_url   = f5tv_get_field('video_url', $content_id) ?: '';
@@ -103,6 +109,9 @@ $is_youtube = !$is_vimeo && !empty($yt_id);
 $is_mp4     = !$is_vimeo && !$is_youtube;
 $playback_token = ($content_id && $video_url) ? f5tv_create_playback_token($content_id, $episode_id, $is_trailer) : '';
 $playback_url = $playback_token ? rest_url('f5tv/v1/playback/' . rawurlencode($playback_token)) : '';
+if ($playback_url && is_user_logged_in()) {
+    $playback_url = add_query_arg('_wpnonce', wp_create_nonce('wp_rest'), $playback_url);
+}
 ?>
 
 <div id="f5-player-root"

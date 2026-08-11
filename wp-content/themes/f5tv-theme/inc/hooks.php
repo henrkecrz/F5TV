@@ -8,6 +8,22 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+/** Mantém navegação pública e protege somente páginas pessoais da conta. */
+add_action('template_redirect', 'f5tv_require_login_for_member_pages', 5);
+function f5tv_require_login_for_member_pages(): void
+{
+    if (is_admin() || is_user_logged_in()) return;
+
+    $path = trim((string) parse_url(wp_unslash($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH), '/');
+    $slug = basename($path);
+    $protected = ['area-do-assinante', 'minha-lista', 'continuar-assistindo', 'minha-conta', 'dispositivos'];
+    if (!in_array($slug, $protected, true)) return;
+
+    $return_url = home_url('/' . $slug . '/');
+    wp_safe_redirect(add_query_arg('redirect_to', $return_url, home_url('/login/')));
+    exit;
+}
+
 /**
  * Filtro de Capability Customizada: Controla o acesso de visualização a posts/vídeos
  */

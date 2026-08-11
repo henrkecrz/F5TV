@@ -63,7 +63,7 @@ class F5TV_Admin_Channels
         check_admin_referer('f5tv_delete_channel');
         $id = absint($_POST['channel_id'] ?? 0);
         if ($id && get_post_type($id) === 'f5tv_canal') {
-            wp_delete_post($id, true);
+            wp_trash_post($id);
         }
         wp_safe_redirect(admin_url('admin.php?page=f5tv-live-channels&deleted=1'));
         exit;

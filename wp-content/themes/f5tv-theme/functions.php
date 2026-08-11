@@ -142,6 +142,12 @@ add_action('rest_api_init', function (): void {
 
             $content_id = absint($payload['content'] ?? 0);
             $episode_id = absint($payload['episode'] ?? 0);
+
+            // Nesta fase o catálogo é gratuito, mas a reprodução completa exige conta.
+            if (empty($payload['trailer']) && !is_user_logged_in()) {
+                return new WP_Error('f5tv_login_required', 'Crie uma conta gratuita para assistir.', ['status' => 401]);
+            }
+
             $url = $content_id ? (string) get_post_meta($content_id, 'video_url', true) : '';
             if (!empty($payload['trailer'])) {
                 $url = $content_id ? (string) get_post_meta($content_id, 'trailer_url', true) : '';
@@ -674,7 +680,7 @@ add_action('wp_head', function () {
 add_filter('login_url', function ($login_url, $redirect, $force_reauth) {
     $custom = home_url('/login/');
     if ($redirect) {
-        $custom = add_query_arg('redirect_to', urlencode($redirect), $custom);
+        $custom = add_query_arg('redirect_to', $redirect, $custom);
     }
     return $custom;
 }, 10, 3);
@@ -895,7 +901,12 @@ add_action('wp_login_failed', function ($username) {
     $referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
     // Só redirecionar se viemos do nosso form (não do wp-login.php nativo)
     if ($referrer && strpos($referrer, 'wp-login.php') === false) {
-        wp_redirect(home_url('/login/?login=failed'));
+        $login_url = add_query_arg('login', 'failed', home_url('/login/'));
+        $requested_redirect = isset($_POST['redirect_to']) ? esc_url_raw(wp_unslash($_POST['redirect_to'])) : '';
+        if ($requested_redirect) {
+            $login_url = add_query_arg('redirect_to', wp_validate_redirect($requested_redirect, home_url('/area-do-assinante/')), $login_url);
+        }
+        wp_safe_redirect($login_url);
         exit;
     }
 });
@@ -950,7 +961,7 @@ add_action('init', 'f5tv_seed_series_demo', 33);
 function f5tv_seed_program_catalog(): void
 {
     static $ran = false;
-    if ($ran || !post_type_exists('f5tv_conteudo')) return;
+    if ($ran || get_option('f5tv_program_catalog_seed_version') === '1' || !post_type_exists('f5tv_conteudo')) return;
     $ran = true;
 
     $programs = [
@@ -1033,6 +1044,7 @@ function f5tv_seed_program_catalog(): void
             wp_set_object_terms($post_id, $program['genre'], 'f5tv_genero', false);
         }
     }
+    update_option('f5tv_program_catalog_seed_version', '1', false);
 }
 
 /**
@@ -1042,7 +1054,7 @@ function f5tv_seed_program_catalog(): void
 function f5tv_seed_program_episodes(): void
 {
     static $ran = false;
-    if ($ran || !post_type_exists('f5tv_conteudo') || !post_type_exists('f5tv_serie')) return;
+    if ($ran || get_option('f5tv_program_episodes_seed_version') === '2' || !post_type_exists('f5tv_conteudo') || !post_type_exists('f5tv_serie')) return;
     $ran = true;
 
     $programs = [
@@ -1149,7 +1161,7 @@ function f5tv_normalize_series_seasons(int $series_id): void
 function f5tv_seed_live_demo(): void
 {
     static $ran = false;
-    if ($ran || !post_type_exists('f5tv_canal') || !post_type_exists('f5tv_programacao')) return;
+    if ($ran || get_option('f5tv_live_demo_seed_version') === '1' || !post_type_exists('f5tv_canal') || !post_type_exists('f5tv_programacao')) return;
     $ran = true;
 
     $channels = [
@@ -1205,13 +1217,14 @@ function f5tv_seed_live_demo(): void
             update_post_meta($post_id, '_f5tv_demo_schedule', 1);
         }
     }
+    update_option('f5tv_live_demo_seed_version', '1', false);
 }
 
 /** Popula séries demonstrativas independentes, com temporadas e episódios próprios. */
 function f5tv_seed_series_demo(): void
 {
     static $ran = false;
-    if ($ran || !post_type_exists('f5tv_serie') || !post_type_exists('f5tv_temporada') || !post_type_exists('f5tv_episodio')) return;
+    if ($ran || get_option('f5tv_series_demo_seed_version') === '1' || !post_type_exists('f5tv_serie') || !post_type_exists('f5tv_temporada') || !post_type_exists('f5tv_episodio')) return;
     $ran = true;
 
     $series = [
@@ -1266,6 +1279,7 @@ function f5tv_seed_series_demo(): void
         }
         f5tv_normalize_series_seasons($series_id);
     }
+    update_option('f5tv_series_demo_seed_version', '1', false);
 }
 
 

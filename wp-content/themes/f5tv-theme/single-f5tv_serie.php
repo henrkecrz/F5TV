@@ -193,7 +193,7 @@ while (have_posts()): the_post();
                 }
                 // Determinar link do botão principal
                 if ($first_ep_id) {
-                    $play_url = home_url('/assista?id=' . $first_ep_id);
+                    $play_url = home_url('/assista?id=' . get_the_ID() . '&episodeId=' . $first_ep_id);
                     $play_label = 'Assistir Ep. 1';
                 } elseif ($serie_video_url) {
                     $play_url = home_url('/assista?id=' . get_the_ID());
@@ -204,10 +204,11 @@ while (have_posts()): the_post();
                 }
                 ?>
                 <?php if ($play_url): ?>
-                <a href="<?php echo esc_url($play_url); ?>"
+                <?php $series_cta_url = is_user_logged_in() ? $play_url : add_query_arg('redirect_to', $play_url, home_url('/login/')); ?>
+                <a href="<?php echo esc_url($series_cta_url); ?>"
                    class="bg-f5-red hover:bg-f5-red-700 text-white font-bold py-3.5 px-7 rounded-xl text-xs tracking-wider uppercase font-mono flex items-center justify-center gap-2 cursor-pointer transition shadow-lg shadow-f5-red-700/10">
                     <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    <span><?php echo esc_html($play_label); ?></span>
+                    <span><?php echo esc_html(is_user_logged_in() ? $play_label : 'Entrar grátis para assistir'); ?></span>
                 </a>
                 <?php else: ?>
                 <span class="bg-zinc-800 text-zinc-500 font-bold py-3.5 px-7 rounded-xl text-xs tracking-wider uppercase font-mono flex items-center gap-2 cursor-not-allowed border border-zinc-700">
@@ -273,7 +274,7 @@ while (have_posts()): the_post();
                                         $ep_video = f5tv_get_field('video_url', $ep->ID);
                                         $ep_thumb = f5tv_get_field('thumbnail_url', $ep->ID) ?: get_the_post_thumbnail_url($ep->ID, 'medium') ?: $banner_url;
                                         $ep_desc  = get_post_field('post_excerpt', $ep->ID) ?: f5tv_get_field('short_description', $ep->ID) ?: '';
-                                        $ep_link  = $ep_video ? home_url('/assista?id=' . $ep->ID) : '#';
+                                        $ep_link  = $ep_video ? home_url('/assista?id=' . get_the_ID() . '&episodeId=' . $ep->ID) : '#';
                                     ?>
                                         <a href="<?php echo esc_url($ep_link); ?>"
                                            class="bg-f5-blue-950/30 hover:bg-f5-blue-950 border border-zinc-900 hover:border-zinc-800 p-4 rounded-xl flex gap-4 items-center cursor-pointer group transition duration-200">

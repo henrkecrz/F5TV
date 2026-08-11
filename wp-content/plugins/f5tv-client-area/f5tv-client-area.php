@@ -46,10 +46,9 @@ add_action('plugins_loaded', function () {
     new F5TV_Auth();
     new F5TV_Subscription();
     new F5TV_Client_REST_API();
-    new F5TV_Content_Access();
+    // Detalhes permanecem públicos; a autorização acontece no endpoint de reprodução.
     new F5TV_Watch_History();
-    new F5TV_My_List();
-    new F5TV_Devices();
+    // Minha Lista e Dispositivos já são registrados pela API central.
     new F5TV_Live_TV();
     new F5TV_Checkout();
 });
@@ -99,16 +98,13 @@ function f5tv_shortcode_player(array $atts = []): string
         return '<p class="f5tv-player-error">Vídeo não encontrado.</p>';
     }
 
-    ob_start();
-    ?>
-    <div class="f5tv-player-wrapper" data-content-id="<?php echo esc_attr($content_id); ?>">
-        <video id="f5tv-player" controls poster="<?php echo esc_url($poster_url); ?>">
-            <source src="<?php echo esc_url($video_url); ?>" type="application/x-mpegURL">
-            Seu navegador não suporta reprodução de vídeo.
-        </video>
-    </div>
-    <?php
-    return ob_get_clean();
+    $watch_url = home_url('/assista?id=' . $content_id);
+    if (!is_user_logged_in()) {
+        $login_url = add_query_arg('redirect_to', $watch_url, home_url('/login/'));
+        return '<p class="f5tv-player-login"><a href="' . esc_url($login_url) . '">Entrar grátis para assistir</a></p>';
+    }
+
+    return '<p class="f5tv-player-watch"><a href="' . esc_url($watch_url) . '">Assistir agora</a></p>';
 }
 
 add_shortcode('f5tv_profile_selector', 'f5tv_shortcode_profile_selector');

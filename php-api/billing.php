@@ -33,6 +33,14 @@ try {
     }
 
     if ($action === 'checkout') {
+        require_api_key();
+        if (empty($config['allow_sandbox_checkout'])) {
+            json_response([
+                'error' => 'CHECKOUT_DISABLED',
+                'message' => 'Use o checkout oficial do WordPress.',
+            ], 501);
+        }
+
         $body = input_json();
         $userId = $body['userId'] ?? 'user-assinante';
         $planId = $body['planId'] ?? 'plano-premium';
@@ -93,5 +101,6 @@ try {
     if (isset($pdo) && $pdo->inTransaction()) {
         $pdo->rollBack();
     }
-    json_response(['error' => 'SERVER_ERROR', 'message' => $e->getMessage()], 500);
+    error_log('F5TV billing API error: ' . $e->getMessage());
+    json_response(['error' => 'SERVER_ERROR', 'message' => 'Não foi possível concluir a operação.'], 500);
 }

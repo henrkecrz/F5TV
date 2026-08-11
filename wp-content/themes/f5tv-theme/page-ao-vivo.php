@@ -4,6 +4,11 @@
  * Central operacional de canais ao vivo e grade atual.
  */
 
+if (!is_user_logged_in()) {
+    wp_safe_redirect(add_query_arg('redirect_to', home_url('/ao-vivo/'), home_url('/login/')));
+    exit;
+}
+
 get_header();
 
 $now = current_time('timestamp');
@@ -70,7 +75,7 @@ foreach ($channel_posts as $channel) {
         'logo' => get_post_meta($channel->ID, 'logo_text', true) ?: 'F5',
         'category' => ($terms && !is_wp_error($terms)) ? $terms[0]->name : 'Geral',
         'status' => get_post_meta($channel->ID, 'status', true) ?: 'offline',
-        'stream' => rest_url('f5tv/v1/live/stream/' . $channel->ID),
+        'stream' => add_query_arg('_wpnonce', wp_create_nonce('wp_rest'), rest_url('f5tv/v1/live/stream/' . $channel->ID)),
         'live' => $live_program,
         'next' => $next_program,
         'programs' => $channel_schedule,
@@ -151,7 +156,7 @@ foreach ($channels as $channel) {
     </div>
 </main>
 
-<?php if ($active_channel): ?><script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script><script>
+<?php if ($active_channel): ?><script src="https://cdn.jsdelivr.net/npm/hls.js@1.6.13/dist/hls.min.js"></script><script>
 (function(){
     const player = document.getElementById('f5tv-live-player');
     const state = document.getElementById('f5tv-player-state');

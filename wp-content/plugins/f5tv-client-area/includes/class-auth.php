@@ -14,6 +14,9 @@ class F5TV_Auth
     {
         // Registrar endpoints da REST API para autenticação e perfis
         add_action('rest_api_init', [$this, 'register_auth_routes']);
+        add_filter('authenticate', [$this, 'limit_wp_login_attempts'], 30, 3);
+        add_action('wp_login_failed', [$this, 'record_wp_login_failure']);
+        add_action('wp_login', [$this, 'clear_wp_login_limit'], 10, 2);
     }
 
     public function register_auth_routes(): void
@@ -66,6 +69,42 @@ class F5TV_Auth
         return is_user_logged_in();
     }
 
+    private function rate_limit_key(string $action, string $identity = ''): string
+    {
+        $ip = sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+        return 'f5tv_' . $action . '_' . hash('sha256', strtolower($identity) . '|' . $ip);
+    }
+
+    private function increment_rate_limit(string $key, int $ttl): int
+    {
+        $attempts = (int) get_transient($key) + 1;
+        set_transient($key, $attempts, $ttl);
+        return $attempts;
+    }
+
+    public function limit_wp_login_attempts($user, string $username, string $password)
+    {
+        if ($username && (int) get_transient($this->rate_limit_key('login', $username)) >= 5) {
+            return new WP_Error('f5tv_login_limited', 'Muitas tentativas. Aguarde 15 minutos e tente novamente.');
+        }
+        return $user;
+    }
+
+    public function record_wp_login_failure(string $username): void
+    {
+        if ($username !== '') {
+            $this->increment_rate_limit($this->rate_limit_key('login', $username), 15 * MINUTE_IN_SECONDS);
+        }
+    }
+
+    public function clear_wp_login_limit(string $username, WP_User $user): void
+    {
+        delete_transient($this->rate_limit_key('login', $username));
+        if ($user->user_email) {
+            delete_transient($this->rate_limit_key('login', $user->user_email));
+        }
+    }
+
     /**
      * Handler: Login
      */
@@ -78,17 +117,24 @@ class F5TV_Auth
             return new WP_REST_Response(['message' => 'Email e senha são obrigatórios.'], 400);
         }
 
+        $limit_key = $this->rate_limit_key('login', $username);
+        if ((int) get_transient($limit_key) >= 5) {
+            return new WP_REST_Response(['message' => 'Muitas tentativas. Aguarde 15 minutos e tente novamente.'], 429);
+        }
+
         $creds = [
             'user_login'    => $username,
             'user_password' => $password,
             'remember'      => true,
         ];
 
-        $user = wp_signon($creds, false);
+        $user = wp_signon($creds, is_ssl());
 
         if (is_wp_error($user)) {
             return new WP_REST_Response(['message' => 'Credenciais inválidas.'], 401);
         }
+
+        delete_transient($limit_key);
 
         // Sucesso no login, retornar dados do usuário
         $user_plan = get_user_meta($user->ID, 'f5tv_plan', true);
@@ -121,6 +167,19 @@ class F5TV_Auth
             return new WP_REST_Response(['message' => 'Preencha todos os campos.'], 400);
         }
 
+        if (!is_email($email)) {
+            return new WP_REST_Response(['message' => 'Informe um email válido.'], 400);
+        }
+
+        if (strlen($password) < 8) {
+            return new WP_REST_Response(['message' => 'A senha precisa ter pelo menos 8 caracteres.'], 400);
+        }
+
+        $register_key = $this->rate_limit_key('register');
+        if ((int) get_transient($register_key) >= 5) {
+            return new WP_REST_Response(['message' => 'Limite de cadastros atingido. Tente novamente mais tarde.'], 429);
+        }
+
         if (email_exists($email)) {
             return new WP_REST_Response(['message' => 'Este email já está cadastrado.'], 400);
         }
@@ -130,6 +189,8 @@ class F5TV_Auth
         if (is_wp_error($user_id)) {
             return new WP_REST_Response(['message' => 'Erro ao criar usuário.'], 500);
         }
+
+        $this->increment_rate_limit($register_key, HOUR_IN_SECONDS);
 
         // Configurar nome de exibição e meta padrão
         wp_update_user([

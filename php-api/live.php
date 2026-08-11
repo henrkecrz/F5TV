@@ -29,8 +29,9 @@ try {
         json_response(['schedule' => $stmt->fetchAll()]);
     }
 
-    $stmt = $pdo->query("SELECT id, name, description, logo_text, stream_url, active, status, category FROM channels WHERE active = 1 ORDER BY name ASC");
+    $stmt = $pdo->query("SELECT id, name, description, logo_text, active, status, category FROM channels WHERE active = 1 ORDER BY name ASC");
     json_response(['channels' => $stmt->fetchAll()]);
 } catch (Throwable $e) {
-    json_response(['error' => 'SERVER_ERROR', 'message' => $e->getMessage()], 500);
+    error_log('F5TV live API error: ' . $e->getMessage());
+    json_response(['error' => 'SERVER_ERROR', 'message' => 'Não foi possível carregar a programação.'], 500);
 }
