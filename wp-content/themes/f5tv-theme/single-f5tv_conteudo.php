@@ -131,34 +131,94 @@ while (have_posts()): the_post();
         'video'       => 'Programa',
     ];
     $content_type_label = $content_type_labels[$content_type] ?? 'Programa';
+    $hero_description = wp_trim_words(
+        wp_strip_all_tags($short_description ?: $full_description),
+        34,
+        '...'
+    );
+    $episode_total = count($program_episodes);
+    if ($episode_total === 0 && $has_series && !empty($all_seasons)) {
+        foreach ($all_seasons as $hero_season) {
+            $episode_total += (int) count(get_posts([
+                'post_type'      => 'f5tv_episodio',
+                'post_status'    => 'publish',
+                'posts_per_page' => -1,
+                'fields'         => 'ids',
+                'meta_query'     => [[
+                    'key'     => 'season_id',
+                    'value'   => $hero_season->ID,
+                    'compare' => '=',
+                ]],
+            ]));
+        }
+    }
 ?>
 
 <div id="content-details-page" class="min-h-screen bg-f5-blue text-zinc-300 font-sans animate-fade-in selection:bg-f5-red selection:text-white">
 
-    <!-- Breadcrumb -->
-    <div class="max-w-7xl mx-auto px-6 md:px-8 pt-6">
-        <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="inline-flex items-center gap-1 text-zinc-500 hover:text-white transition text-xs font-mono font-bold uppercase">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-            <span>Voltar ao catálogo</span>
-        </a>
-    </div>
-
-    <!-- Main Hero Header — idêntico ao ContentDetailsPage.tsx hero section -->
-    <section class="relative h-[45vh] md:h-[55vh] flex items-end p-6 md:p-12 border-b border-zinc-900 bg-black overflow-hidden select-none mb-8">
+    <!-- Apresentação cinematográfica com informações e ações acima da dobra. -->
+    <section class="f5tv-cinematic-hero relative bg-black overflow-hidden select-none mb-10">
         <?php if ($banner_url): ?>
-            <div class="absolute inset-0 bg-cover bg-center opacity-30 md:opacity-50" style="background-image: url('<?php echo esc_url($banner_url); ?>');"></div>
+            <div class="f5tv-cinematic-hero__image absolute inset-0 bg-cover" style="background-image: url('<?php echo esc_url($banner_url); ?>');"></div>
         <?php endif; ?>
-        <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent"></div>
+        <div class="f5tv-cinematic-hero__shade absolute inset-0"></div>
 
-        <div class="relative z-10 max-w-7xl mx-auto w-full flex items-end justify-between gap-6">
-            <div class="flex flex-col items-start gap-3 max-w-3xl">
-                <div class="inline-flex items-center gap-1.5 bg-f5-red text-white font-mono font-black text-[10px] tracking-wider uppercase px-2 py-0.5 rounded-sm">
-                    <?php echo esc_html($category_name); ?>
+        <div class="f5tv-cinematic-hero__content relative z-10 max-w-7xl mx-auto w-full px-6 md:px-8">
+            <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="f5tv-cinematic-hero__back inline-flex items-center gap-2">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 5l-7 7 7 7"/></svg>
+                <span>Voltar aos programas</span>
+            </a>
+
+            <div class="f5tv-cinematic-hero__copy">
+                <div class="flex flex-wrap items-center gap-2 mb-4">
+                    <span class="f5tv-cinematic-hero__eyebrow">F5 Original</span>
+                    <span class="f5tv-cinematic-hero__category"><?php echo esc_html($content_type_label); ?></span>
                 </div>
-                <h1 class="text-3xl md:text-5xl font-black tracking-tight leading-none text-white"><?php the_title(); ?></h1>
-                <?php if ($short_description): ?>
-                    <p class="text-zinc-400 text-xs md:text-sm font-semibold max-w-2xl"><?php echo esc_html($short_description); ?></p>
+
+                <h1><?php the_title(); ?></h1>
+
+                <div class="f5tv-cinematic-hero__metadata" aria-label="Informações do programa">
+                    <?php if ($year): ?><span><?php echo esc_html($year); ?></span><?php endif; ?>
+                    <?php if ($duration): ?><span><?php echo esc_html($duration); ?></span><?php endif; ?>
+                    <span class="is-rating"><?php echo esc_html($age_rating); ?></span>
+                    <?php if ($genre_name): ?><span><?php echo esc_html($genre_name); ?></span><?php endif; ?>
+                    <?php if ($episode_total > 0): ?><span><?php echo esc_html($episode_total); ?> episódios</span><?php endif; ?>
+                    <span class="is-access">Grátis com login</span>
+                </div>
+
+                <?php if ($hero_description): ?>
+                    <p class="f5tv-cinematic-hero__description"><?php echo esc_html($hero_description); ?></p>
                 <?php endif; ?>
+
+                <div class="f5tv-cinematic-hero__actions">
+                    <?php if ($video_url): ?>
+                        <a href="<?php echo esc_url($watch_cta_url); ?>" class="f5tv-cinematic-hero__button is-primary">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                            <span><?php echo is_user_logged_in() ? 'Assistir agora' : 'Entrar grátis para assistir'; ?></span>
+                        </a>
+                    <?php endif; ?>
+
+                    <?php if ($trailer_url): ?>
+                        <a href="<?php echo esc_url($trailer_watch_url); ?>" class="f5tv-cinematic-hero__button is-secondary">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                            <span>Assistir trailer</span>
+                        </a>
+                    <?php elseif ($trailer_admin_url): ?>
+                        <a href="<?php echo esc_url($trailer_admin_url); ?>" class="f5tv-cinematic-hero__button is-secondary">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4h2v7h7v2h-7v7h-2v-7H4v-2h7V4z"/></svg>
+                            <span>Cadastrar trailer</span>
+                        </a>
+                    <?php else: ?>
+                        <span class="f5tv-cinematic-hero__button is-secondary is-disabled" aria-disabled="true">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                            <span>Trailer em breve</span>
+                        </span>
+                    <?php endif; ?>
+
+                    <a href="#sobre-programa" class="f5tv-cinematic-hero__info" aria-label="Ver mais informações">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10v7M12 7h.01"/></svg>
+                    </a>
+                </div>
             </div>
         </div>
     </section>
@@ -240,6 +300,37 @@ while (have_posts()): the_post();
     </section>
 
     <style>
+    .f5tv-cinematic-hero { min-height: clamp(570px, 76vh, 780px); display: flex; align-items: stretch; border-bottom: 1px solid rgba(255,255,255,.07); }
+    .f5tv-cinematic-hero__image { background-position: center 28%; transform: scale(1.015); }
+    .f5tv-cinematic-hero__shade { background: linear-gradient(90deg, rgba(2,8,21,.99) 0%, rgba(2,8,21,.9) 32%, rgba(2,8,21,.26) 68%, rgba(2,8,21,.12) 100%), linear-gradient(0deg, #061831 0%, rgba(6,24,49,.5) 20%, transparent 58%), linear-gradient(180deg, rgba(2,8,21,.52), transparent 25%); }
+    .f5tv-cinematic-hero__content { display: flex; flex-direction: column; justify-content: center; padding-top: 66px; padding-bottom: 72px; }
+    .f5tv-cinematic-hero__back { position: absolute; top: 27px; color: rgba(255,255,255,.62); font: 800 10px/1 monospace; letter-spacing: .09em; text-transform: uppercase; transition: color .2s ease; }
+    .f5tv-cinematic-hero__back:hover { color: #fff; }
+    .f5tv-cinematic-hero__back svg { width: 17px; fill: none; stroke: currentColor; stroke-width: 2; }
+    .f5tv-cinematic-hero__copy { width: min(680px, 58vw); }
+    .f5tv-cinematic-hero__eyebrow, .f5tv-cinematic-hero__category { display: inline-flex; min-height: 27px; align-items: center; padding: 0 9px; border-radius: 4px; font: 900 9px/1 monospace; letter-spacing: .12em; text-transform: uppercase; }
+    .f5tv-cinematic-hero__eyebrow { background: #e50914; color: #fff; }
+    .f5tv-cinematic-hero__category { border: 1px solid rgba(255,255,255,.2); background: rgba(4,12,26,.5); color: rgba(255,255,255,.75); backdrop-filter: blur(8px); }
+    .f5tv-cinematic-hero h1 { max-width: 760px; margin: 0; color: #fff; font-size: clamp(42px, 6vw, 86px); font-weight: 950; letter-spacing: -.055em; line-height: .91; text-wrap: balance; text-shadow: 0 6px 36px rgba(0,0,0,.52); }
+    .f5tv-cinematic-hero__metadata { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 24px; color: rgba(255,255,255,.82); font: 800 11px/1 monospace; }
+    .f5tv-cinematic-hero__metadata span { position: relative; }
+    .f5tv-cinematic-hero__metadata span + span::before { content: ""; display: inline-block; width: 3px; height: 3px; margin: 0 12px 2px 0; border-radius: 50%; background: rgba(255,255,255,.38); }
+    .f5tv-cinematic-hero__metadata .is-rating { padding: 3px 6px; border: 1px solid rgba(255,255,255,.42); border-radius: 3px; }
+    .f5tv-cinematic-hero__metadata .is-rating::before, .f5tv-cinematic-hero__metadata .is-access::before { display: none; }
+    .f5tv-cinematic-hero__metadata .is-access { color: #48db8b; }
+    .f5tv-cinematic-hero__description { max-width: 620px; margin: 22px 0 0; color: rgba(244,247,252,.84); font-size: clamp(14px, 1.25vw, 18px); font-weight: 600; line-height: 1.62; text-shadow: 0 2px 14px rgba(0,0,0,.85); }
+    .f5tv-cinematic-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 11px; margin-top: 27px; }
+    .f5tv-cinematic-hero__button { display: inline-flex; min-height: 50px; align-items: center; justify-content: center; gap: 10px; padding: 0 21px; border: 1px solid transparent; border-radius: 8px; font: 900 11px/1 monospace; letter-spacing: .04em; text-transform: uppercase; transition: transform .2s ease, background .2s ease, border-color .2s ease; }
+    .f5tv-cinematic-hero__button:hover { transform: translateY(-2px); }
+    .f5tv-cinematic-hero__button svg { width: 20px; fill: currentColor; }
+    .f5tv-cinematic-hero__button.is-primary { background: #fff; color: #071326; box-shadow: 0 12px 35px rgba(0,0,0,.26); }
+    .f5tv-cinematic-hero__button.is-primary:hover { background: #e50914; color: #fff; }
+    .f5tv-cinematic-hero__button.is-secondary { border-color: rgba(255,255,255,.26); background: rgba(31,42,60,.76); color: #fff; backdrop-filter: blur(12px); }
+    .f5tv-cinematic-hero__button.is-secondary:hover { background: rgba(50,63,84,.95); border-color: rgba(255,255,255,.5); }
+    .f5tv-cinematic-hero__button.is-disabled { color: rgba(255,255,255,.48); cursor: not-allowed; }
+    .f5tv-cinematic-hero__button.is-disabled:hover { transform: none; }
+    .f5tv-cinematic-hero__info { display: grid; width: 50px; height: 50px; place-items: center; border: 1px solid rgba(255,255,255,.25); border-radius: 50%; background: rgba(4,12,26,.55); color: #fff; backdrop-filter: blur(10px); }
+    .f5tv-cinematic-hero__info svg { width: 23px; fill: none; stroke: currentColor; stroke-width: 1.8; }
     .f5tv-detail-player { border: 1px solid rgba(255,255,255,.14); border-radius: 24px; box-shadow: 0 32px 90px rgba(0,0,0,.48), 0 0 0 1px rgba(229,9,20,.08); isolation: isolate; }
     .f5tv-detail-player::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255,255,255,.04); pointer-events: none; }
     .f5tv-detail-player__image { opacity: .82; transform: scale(1.005); transition: opacity .5s ease, transform 1.2s ease; }
@@ -275,6 +366,18 @@ while (have_posts()): the_post();
     .f5tv-detail-player__hint span svg { width: 14px; flex: 0 0 auto; fill: currentColor; }
     .f5tv-detail-player__hint a { color: #ff3340; font-weight: 900; text-transform: uppercase; white-space: nowrap; }
     @media (max-width: 700px) {
+        .f5tv-cinematic-hero { min-height: 620px; }
+        .f5tv-cinematic-hero__image { background-position: 66% top; }
+        .f5tv-cinematic-hero__shade { background: linear-gradient(0deg, #061831 4%, rgba(6,24,49,.91) 35%, rgba(2,8,21,.2) 73%), linear-gradient(90deg, rgba(2,8,21,.4), rgba(2,8,21,.06)); }
+        .f5tv-cinematic-hero__content { justify-content: flex-end; padding-top: 70px; padding-bottom: 46px; }
+        .f5tv-cinematic-hero__copy { width: 100%; }
+        .f5tv-cinematic-hero h1 { font-size: clamp(36px, 12vw, 54px); }
+        .f5tv-cinematic-hero__metadata { margin-top: 17px; gap: 8px 10px; }
+        .f5tv-cinematic-hero__metadata span + span::before { margin-right: 8px; }
+        .f5tv-cinematic-hero__description { display: -webkit-box; overflow: hidden; font-size: 14px; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+        .f5tv-cinematic-hero__actions { flex-wrap: nowrap; }
+        .f5tv-cinematic-hero__button { min-height: 48px; padding: 0 15px; font-size: 9px; }
+        .f5tv-cinematic-hero__info { display: none; }
         .f5tv-detail-player-section { padding-left: 14px; padding-right: 14px; }
         .f5tv-detail-player { min-height: 300px; border-radius: 16px; }
         .f5tv-detail-player__top { align-items: flex-start; }
@@ -290,7 +393,7 @@ while (have_posts()): the_post();
     </style>
 
     <!-- Core Split Grid — lg:grid-cols-3 — idêntico ao ContentDetailsPage.tsx -->
-    <div class="max-w-7xl mx-auto px-6 md:px-8 grid grid-cols-1 lg:grid-cols-3 gap-12 mb-16">
+    <div id="sobre-programa" class="max-w-7xl mx-auto px-6 md:px-8 grid grid-cols-1 lg:grid-cols-3 gap-12 mb-16 scroll-mt-24">
 
         <!-- LEFT: col-span-2 -->
         <div class="lg:col-span-2 flex flex-col gap-6">
