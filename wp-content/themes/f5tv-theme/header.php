@@ -75,8 +75,8 @@ if (!defined('ABSPATH')) {
     $f5tv_favicon_url = get_template_directory_uri() . '/assets/icons/favicon-32.png';
     $f5tv_favicon_version = file_exists($f5tv_favicon_path) ? filemtime($f5tv_favicon_path) : null;
     ?>
-    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo esc_url(add_query_arg('v', $f5tv_favicon_version, $f5tv_favicon_url)); ?>">
-    <link rel="shortcut icon" type="image/png" href="<?php echo esc_url(add_query_arg('v', $f5tv_favicon_version, $f5tv_favicon_url)); ?>">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo esc_url(add_query_arg(['v' => $f5tv_favicon_version, 'brand' => 'f5tv-logo'], $f5tv_favicon_url)); ?>">
+    <link rel="shortcut icon" type="image/png" href="<?php echo esc_url(add_query_arg(['v' => $f5tv_favicon_version, 'brand' => 'f5tv-logo'], $f5tv_favicon_url)); ?>">
     <style id="f5tv-header-critical-css">
         #f5tv-app > header { display:block; width:100%; min-height:74px; background:rgba(6,9,19,.84); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); }
         #f5tv-app > header > div { display:flex; align-items:center; justify-content:space-between; gap:1.5rem; width:100%; max-width:80rem; min-height:46px; margin:0 auto; }
