@@ -945,6 +945,7 @@ add_action('template_redirect', function () {
  */
 add_action('init', 'f5tv_seed_program_catalog', 30);
 add_action('init', 'f5tv_seed_program_episodes', 31);
+add_action('init', 'f5tv_seed_live_demo', 32);
 function f5tv_seed_program_catalog(): void
 {
     static $ran = false;
@@ -1139,6 +1140,68 @@ function f5tv_normalize_series_seasons(int $series_id): void
         }
         if (preg_match('/^Temporada\s+\d+$/i', $season->post_title)) {
             wp_update_post(['ID' => $season->ID, 'post_title' => 'Temporada ' . $number]);
+        }
+    }
+}
+
+/** Popula canais e uma grade de hoje para a área Ao Vivo poder ser visualizada. */
+function f5tv_seed_live_demo(): void
+{
+    static $ran = false;
+    if ($ran || !post_type_exists('f5tv_canal') || !post_type_exists('f5tv_programacao')) return;
+    $ran = true;
+
+    $channels = [
+        ['slug' => 'f5-tv-ao-vivo', 'title' => 'F5 TV Ao Vivo', 'logo' => 'F5 TV', 'category' => 'Geral', 'stream' => 'https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4'],
+        ['slug' => 'f5-news', 'title' => 'F5 News', 'logo' => 'F5 NEWS', 'category' => 'Jornalismo', 'stream' => 'https://assets.mixkit.co/videos/preview/mixkit-camera-viewfinder-screen-recording-close-up-34304-large.mp4'],
+        ['slug' => 'f5-esportes', 'title' => 'F5 Esportes', 'logo' => 'F5 SPORT', 'category' => 'Esportes', 'stream' => 'https://assets.mixkit.co/videos/preview/mixkit-stadium-lights-shining-brightly-over-the-field-28406-large.mp4'],
+        ['slug' => 'f5-documentarios', 'title' => 'F5 Documentários', 'logo' => 'F5 DOCS', 'category' => 'Documentários', 'stream' => 'https://assets.mixkit.co/videos/preview/mixkit-forest-fire-burning-at-night-42284-large.mp4'],
+    ];
+    $channel_ids = [];
+    foreach ($channels as $channel) {
+        $post = get_page_by_path($channel['slug'], OBJECT, 'f5tv_canal');
+        if (!$post) {
+            $post_id = wp_insert_post(['post_type' => 'f5tv_canal', 'post_status' => 'publish', 'post_title' => $channel['title'], 'post_name' => $channel['slug'], 'post_content' => 'Canal demonstrativo F5 TV.']);
+            if (!$post_id || is_wp_error($post_id)) continue;
+            $post = get_post($post_id);
+        }
+        $channel_id = absint($post->ID);
+        $channel_ids[] = $channel_id;
+        update_post_meta($channel_id, 'logo_text', $channel['logo']);
+        update_post_meta($channel_id, 'stream_url', esc_url_raw($channel['stream']));
+        update_post_meta($channel_id, 'status', 'online');
+        update_post_meta($channel_id, 'active', 1);
+        update_post_meta($channel_id, '_f5tv_demo_channel', 1);
+        if (taxonomy_exists('f5tv_categoria')) wp_set_object_terms($channel_id, $channel['category'], 'f5tv_categoria', false);
+    }
+
+    $today = current_time('Y-m-d');
+    $now_minutes = ((int) current_time('H') * 60) + (int) current_time('i');
+    $base = floor($now_minutes / 30) * 30;
+    if ($base > 1080) $base = 1080;
+    $shows = [
+        ['title' => 'F5 Agora', 'host' => 'Redação F5 TV', 'offset' => 0, 'duration' => 90, 'status' => 'live'],
+        ['title' => 'F5 Entrevista Especial', 'host' => 'Juliana Beltrão', 'offset' => 90, 'duration' => 90, 'status' => 'scheduled'],
+        ['title' => 'Panorama F5', 'host' => 'Sandro Albuquerque', 'offset' => 180, 'duration' => 60, 'status' => 'scheduled'],
+        ['title' => 'Noite F5 Documentários', 'host' => 'Produção F5 TV', 'offset' => 240, 'duration' => 90, 'status' => 'scheduled'],
+    ];
+    foreach ($channel_ids as $channel_index => $channel_id) {
+        $existing = get_posts(['post_type' => 'f5tv_programacao', 'post_status' => 'any', 'posts_per_page' => 1, 'meta_query' => [['key' => '_f5tv_demo_schedule', 'value' => '1', 'compare' => '='], ['key' => 'channel_id', 'value' => $channel_id, 'compare' => '='], ['key' => 'date', 'value' => $today, 'compare' => '=']]]);
+        if ($existing) continue;
+        foreach ($shows as $show_index => $show) {
+            $start_minutes = $base + $show['offset'];
+            $end_minutes = min($start_minutes + $show['duration'], 1439);
+            $format_time = static function (int $minutes): string { return sprintf('%02d:%02d:00', intdiv($minutes, 60), $minutes % 60); };
+            $post_id = wp_insert_post(['post_type' => 'f5tv_programacao', 'post_status' => 'publish', 'post_title' => $show['title'] . ($channel_index ? ' · Canal ' . ($channel_index + 1) : ''), 'post_content' => 'Programação demonstrativa F5 TV.']);
+            if (!$post_id || is_wp_error($post_id)) continue;
+            update_post_meta($post_id, 'channel_id', $channel_id);
+            update_post_meta($post_id, 'host', $show['host']);
+            update_post_meta($post_id, 'date', $today);
+            update_post_meta($post_id, 'start_time', $format_time($start_minutes));
+            update_post_meta($post_id, 'end_time', $format_time($end_minutes));
+            update_post_meta($post_id, 'status', $show_index === 0 ? 'live' : $show['status']);
+            update_post_meta($post_id, 'is_featured', $show_index === 0 ? 1 : 0);
+            update_post_meta($post_id, '_f5tv_demo_schedule', 1);
         }
     }
 }
