@@ -55,6 +55,36 @@ if ($content_post) {
         }
     }
 
+    $episode_cards = [];
+    $direct_episodes = get_posts([
+        'post_type' => 'f5tv_episodio',
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+        'meta_query' => [['key' => 'content_id', 'value' => $content_id, 'compare' => '=']],
+        'meta_key' => 'number',
+        'orderby' => 'meta_value_num',
+        'order' => 'ASC',
+    ]);
+    if ($direct_episodes) {
+        $episode_cards = $direct_episodes;
+    } else {
+        $series_id = absint(get_post_meta($content_id, 'series_id', true));
+        if ($series_id) {
+            $season_ids = get_posts([
+                'post_type' => 'f5tv_temporada', 'post_status' => 'publish', 'posts_per_page' => -1,
+                'fields' => 'ids', 'meta_query' => [['key' => 'series_id', 'value' => $series_id, 'compare' => '=']],
+                'meta_key' => 'number', 'orderby' => 'meta_value_num', 'order' => 'ASC',
+            ]);
+            if ($season_ids) {
+                $episode_cards = get_posts([
+                    'post_type' => 'f5tv_episodio', 'post_status' => 'publish', 'posts_per_page' => -1,
+                    'meta_query' => [['key' => 'season_id', 'value' => $season_ids, 'compare' => 'IN']],
+                    'meta_key' => 'number', 'orderby' => 'meta_value_num', 'order' => 'ASC',
+                ]);
+            }
+        }
+    }
+
     $back_url = get_permalink($content_id) ?: home_url('/catalogo/');
 } else {
     $video_url   = '';
@@ -121,7 +151,7 @@ $playback_url = $playback_token ? rest_url('f5tv/v1/playback/' . rawurlencode($p
     <!-- ── CENTER PLAY BUTTON ── -->
     <div id="f5-center-btn"
          style="position:absolute;z-index:20;display:flex;align-items:center;justify-content:center;width:80px;height:80px;background:rgba(220,38,38,.92);border-radius:50%;box-shadow:0 8px 40px rgba(0,0,0,.6);transition:transform .15s,opacity .25s;cursor:pointer;"
-         title="Reproduzir">
+         title="Reproduzir" role="button" tabindex="0" aria-label="Reproduzir">
         <svg id="f5-center-icon" width="34" height="34" viewBox="0 0 24 24" fill="white">
             <path d="M8 5v14l11-7z"/>
         </svg>
@@ -136,6 +166,7 @@ $playback_url = $playback_token ? rest_url('f5tv/v1/playback/' . rawurlencode($p
             <?php if ($subtitle): ?>
             <p style="font-size:13px;color:#a1a1aa;margin:0;"><?php echo esc_html($subtitle); ?></p>
             <?php endif; ?>
+            <span id="f5-play-state-label" class="f5-play-state" aria-live="polite">Pronto para reproduzir</span>
         </div>
         <a href="<?php echo esc_url($back_url); ?>" id="f5-close-btn"
            style="width:44px;height:44px;border-radius:50%;background:rgba(10,10,48,.7);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;color:#d4d4d8;text-decoration:none;transition:background .2s,color .2s;"
@@ -171,25 +202,28 @@ $playback_url = $playback_token ? rest_url('f5tv/v1/playback/' . rawurlencode($p
             <!-- LEFT -->
             <div style="display:flex;align-items:center;gap:4px;">
                 <!-- Play/Pause -->
-                <button id="f5-play-btn" class="f5-ctrl-btn" title="Reproduzir (k)">
+                    <button id="f5-play-btn" class="f5-ctrl-btn f5-ctrl-btn-primary" type="button" title="Reproduzir ou pausar (barra de espaço)">
                     <svg id="f5-play-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                    <span class="f5-control-label">Reproduzir</span>
                 </button>
 
                 <!-- Next episode -->
                 <?php if ($next_ep_url): ?>
-                <a href="<?php echo esc_url($next_ep_url); ?>" class="f5-ctrl-btn" title="Próximo episódio">
+                <a href="<?php echo esc_url($next_ep_url); ?>" class="f5-ctrl-btn f5-next-btn" title="Próximo episódio">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                    <span class="f5-control-label">Próximo</span>
                 </a>
                 <?php endif; ?>
 
                 <!-- Volume group -->
                 <div id="f5-vol-group" style="display:flex;align-items:center;gap:4px;">
-                    <button id="f5-mute-btn" class="f5-ctrl-btn" title="Mudo (m)">
+                    <button id="f5-mute-btn" class="f5-ctrl-btn" type="button" title="Ativar ou desativar som">
                         <svg id="f5-vol-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
                             <path id="f5-vol-path" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
                         </svg>
+                        <span class="f5-control-label">Som</span>
                     </button>
-                    <div id="f5-vol-slider-wrap" style="width:0;overflow:hidden;transition:width .2s;display:flex;align-items:center;">
+                    <div id="f5-vol-slider-wrap" style="width:112px;overflow:hidden;transition:width .2s;display:flex;align-items:center;">
                         <input id="f5-vol-slider" type="range" min="0" max="1" step="0.02" value="0.85"
                                style="width:80px;height:3px;accent-color:#dc2626;cursor:pointer;background:rgba(255,255,255,.2);border-radius:2px;"
                                aria-label="Volume">
@@ -207,25 +241,34 @@ $playback_url = $playback_token ? rest_url('f5tv/v1/playback/' . rawurlencode($p
             <!-- RIGHT -->
             <div style="display:flex;align-items:center;gap:2px;">
                 <!-- Quality badge -->
-                <button class="f5-ctrl-btn" style="font-size:11px;font-family:monospace;font-weight:700;letter-spacing:.05em;padding:3px 7px;border:1px solid rgba(255,255,255,.25);border-radius:3px;line-height:1.4;" title="Qualidade">
-                    HD
+                <button id="f5-quality-btn" class="f5-ctrl-btn f5-text-btn" type="button" title="Escolher qualidade">
+                    <span class="f5-quality-value">HD</span><span class="f5-control-label">Qualidade</span>
                 </button>
 
                 <!-- Settings -->
-                <button class="f5-ctrl-btn" title="Configurações">
+                <button id="f5-settings-btn" class="f5-ctrl-btn" type="button" title="Abrir configurações">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
                     </svg>
+                    <span class="f5-control-label">Configurações</span>
                 </button>
 
                 <!-- Fullscreen -->
-                <button id="f5-fs-btn" class="f5-ctrl-btn" title="Tela cheia (f)">
+                <button id="f5-fs-btn" class="f5-ctrl-btn" type="button" title="Abrir tela cheia">
                     <svg id="f5-fs-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                         <path id="f5-fs-path" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
                     </svg>
+                    <span class="f5-control-label">Tela cheia</span>
                 </button>
             </div>
         </div>
+    </div>
+
+    <div id="f5-player-menu" class="f5-player-menu" aria-hidden="true">
+        <div class="f5-menu-title">Configurações de reprodução <button type="button" id="f5-menu-close" aria-label="Fechar configurações">×</button></div>
+        <div class="f5-menu-row"><span>Velocidade</span><div class="f5-menu-options"><button type="button" class="f5-speed-btn" data-speed="0.75">0.75x</button><button type="button" class="f5-speed-btn active" data-speed="1">1x</button><button type="button" class="f5-speed-btn" data-speed="1.25">1.25x</button><button type="button" class="f5-speed-btn" data-speed="1.5">1.5x</button><button type="button" class="f5-speed-btn" data-speed="2">2x</button></div></div>
+        <div class="f5-menu-row"><span>Qualidade</span><div class="f5-menu-options"><button type="button" class="f5-quality-option active" data-quality="auto">Auto</button><button type="button" class="f5-quality-option" data-quality="720p">HD</button><button type="button" class="f5-quality-option" data-quality="1080p">Full HD</button></div></div>
+        <label class="f5-menu-toggle"><span>Reprodução automática</span><input id="f5-autoplay-toggle" type="checkbox" checked><i></i></label>
     </div>
 
     <!-- ── LOADING SPINNER ── -->
@@ -249,17 +292,40 @@ $playback_url = $playback_token ? rest_url('f5tv/v1/playback/' . rawurlencode($p
     <?php endif; ?>
 </div>
 
+<?php if ($content_post && count($episode_cards) > 0): ?>
+<section class="f5-episode-shelf">
+    <div class="f5-shelf-inner">
+        <div class="f5-shelf-heading"><div><span class="f5-shelf-kicker">Continue assistindo</span><h2>Mais episódios de <?php echo esc_html($title); ?></h2></div><span class="f5-shelf-count"><?php echo count($episode_cards); ?> episódios</span></div>
+        <div class="f5-episode-grid">
+            <?php foreach ($episode_cards as $card): $card_number = f5tv_get_field('number', $card->ID) ?: 1; $card_thumb = f5tv_get_field('thumbnail_url', $card->ID) ?: get_the_post_thumbnail_url($card->ID, 'medium'); $is_current = $episode_id === $card->ID; ?>
+                <a href="<?php echo esc_url(home_url('/assista?id=' . $content_id . '&episodeId=' . $card->ID)); ?>" class="f5-episode-card <?php echo $is_current ? 'is-current' : ''; ?>">
+                    <div class="f5-episode-thumb"><?php if ($card_thumb): ?><img src="<?php echo esc_url($card_thumb); ?>" alt="<?php echo esc_attr($card->post_title); ?>"><?php endif; ?><span class="f5-episode-number">EP <?php echo esc_html($card_number); ?></span><span class="f5-episode-play">▶</span></div>
+                    <div class="f5-episode-copy"><strong><?php echo esc_html($card->post_title); ?></strong><span><?php echo esc_html(f5tv_get_field('duration', $card->ID) ?: 'Episódio'); ?></span></div>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
 <style>
 @keyframes f5spin { to { transform: rotate(360deg); } }
 
 .f5-ctrl-btn {
     display: flex; align-items: center; justify-content: center;
-    width: 40px; height: 40px; border-radius: 4px;
-    background: transparent; border: none; color: #d4d4d8;
+    min-width: 52px; height: 52px; border-radius: 8px;
+    background: rgba(8,12,24,.72); border: 1px solid rgba(255,255,255,.14); color: #fff;
     cursor: pointer; transition: color .15s, background .15s;
-    padding: 0; flex-shrink: 0;
+    padding: 0 11px; flex-shrink: 0; gap: 7px; text-decoration: none;
 }
-.f5-ctrl-btn:hover { color: #fff; background: rgba(255,255,255,.08); }
+.f5-ctrl-btn:hover, .f5-ctrl-btn:focus-visible { color: #fff; background: rgba(220,38,38,.85); outline: 3px solid rgba(255,255,255,.8); outline-offset: 2px; }
+.f5-ctrl-btn-primary { background: #dc2626; border-color: #f87171; }
+.f5-control-label { font-size: 13px; font-weight: 800; white-space: nowrap; }
+.f5-play-state { display: inline-flex; align-items: center; width: fit-content; margin-top: 5px; padding: 4px 9px; border-radius: 999px; background: rgba(0,0,0,.58); color: #fff; font-size: 12px; font-weight: 700; }
+.f5-play-state::before { content: ''; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: #f59e0b; }
+.f5-text-btn { min-width: 52px; }
+.f5-text-btn .f5-control-label { font-size: 12px; }
+#f5-menu-close { float: right; border: 0; background: transparent; color: #fff; font-size: 26px; line-height: 20px; cursor: pointer; }
 
 #f5-player-root { background: radial-gradient(circle at 50% 18%, #18233b 0%, #05070d 48%, #020204 100%); }
 #f5-video-layer { padding: clamp(12px, 3vw, 48px); }
@@ -274,7 +340,24 @@ $playback_url = $playback_token ? rest_url('f5tv/v1/playback/' . rawurlencode($p
     #f5-top-bar { padding-left: 16px; padding-right: 16px; }
     #f5-top-bar h2 { max-width: calc(100vw - 90px); }
     #f5-bottom-bar { padding-left: 10px; padding-right: 10px; }
-    .f5-ctrl-btn { width: 36px; height: 36px; }
+    .f5-ctrl-btn { min-width: 48px; height: 48px; padding: 0 9px; }
+    .f5-control-label { font-size: 12px; }
+    #f5-bottom-bar > div:last-child { align-items: flex-start !important; }
+    #f5-bottom-bar > div:last-child > div:first-child { flex-wrap: wrap; }
+    #f5-vol-slider-wrap { width: 84px !important; }
+    .f5-text-btn .f5-control-label { display: none; }
+    #f5-quality-btn { min-width: 48px; }
+}
+
+@media (max-width: 430px) {
+    .f5-control-label { display: none; }
+    .f5-ctrl-btn { min-width: 48px; padding: 0; }
+    #f5-vol-slider-wrap { width: 72px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .f5-ctrl-btn, #f5-center-btn, #f5-top-bar, #f5-bottom-bar { transition: none !important; }
+    #f5-spinner > div { animation: none; }
 }
 
 #f5-progress-area:hover #f5-track      { height: 5px; }
@@ -282,7 +365,21 @@ $playback_url = $playback_token ? rest_url('f5tv/v1/playback/' . rawurlencode($p
 #f5-progress-area:hover #f5-progress-fill { height: 5px; }
 #f5-progress-area:hover #f5-progress-thumb { opacity: 1; }
 
-#f5-vol-group:hover #f5-vol-slider-wrap { width: 88px; }
+#f5-vol-slider { height: 8px !important; }
+#f5-vol-slider:focus-visible, #f5-scrubber:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.f5-player-menu { position: absolute; right: 24px; bottom: 96px; z-index: 45; width: min(390px, calc(100vw - 32px)); padding: 18px; border: 1px solid rgba(255,255,255,.2); border-radius: 14px; background: rgba(9,14,29,.98); box-shadow: 0 18px 60px rgba(0,0,0,.65); color: #fff; opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity .2s, transform .2s, visibility .2s; }
+.f5-player-menu.is-open { opacity: 1; visibility: visible; transform: translateY(0); }
+.f5-menu-title { margin-bottom: 15px; font-size: 16px; font-weight: 900; }
+.f5-menu-row, .f5-menu-toggle { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 54px; border-top: 1px solid rgba(255,255,255,.1); font-size: 14px; font-weight: 700; }
+.f5-menu-options { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+.f5-menu-options button { min-width: 48px; min-height: 40px; padding: 7px 9px; border: 1px solid rgba(255,255,255,.22); border-radius: 7px; background: rgba(255,255,255,.07); color: #fff; font-weight: 800; cursor: pointer; }
+.f5-menu-options button:hover, .f5-menu-options button:focus-visible, .f5-menu-options button.active { background: #dc2626; border-color: #f87171; outline: 2px solid #fff; outline-offset: 1px; }
+.f5-menu-toggle { cursor: pointer; }
+.f5-menu-toggle input { position: absolute; opacity: 0; }
+.f5-menu-toggle i { position: relative; width: 48px; height: 26px; border-radius: 99px; background: #52525b; transition: background .2s; }
+.f5-menu-toggle i::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform .2s; }
+.f5-menu-toggle input:checked + i { background: #dc2626; }
+.f5-menu-toggle input:checked + i::after { transform: translateX(22px); }
 
 #f5-close-btn:hover { background: rgba(220,38,38,.25) !important; color: #fff !important; }
 </style>
@@ -320,6 +417,12 @@ $playback_url = $playback_token ? rest_url('f5tv/v1/playback/' . rawurlencode($p
     const fsBtn      = $('f5-fs-btn');
     const fsPath     = $('f5-fs-path');
     const spinner    = $('f5-spinner');
+    const playState  = $('f5-play-state-label');
+    const playText   = playBtn?.querySelector('.f5-control-label');
+    const settingsBtn = $('f5-settings-btn');
+    const qualityBtn  = $('f5-quality-btn');
+    const playerMenu  = $('f5-player-menu');
+    const menuClose   = $('f5-menu-close');
 
     /* ── state ── */
     let isPlaying  = false;
@@ -327,7 +430,7 @@ $playback_url = $playback_token ? rest_url('f5tv/v1/playback/' . rawurlencode($p
     let volume     = 0.85;
     let isMuted    = false;
     let hideTimer  = null;
-    const HIDE_MS  = 3500;
+    const HIDE_MS  = 7000;
 
     /* ── SVG paths ── */
     const PLAY_D    = 'M8 5v14l11-7z';
@@ -380,11 +483,41 @@ $playback_url = $playback_token ? rest_url('f5tv/v1/playback/' . rawurlencode($p
         isPlaying = playing;
         playIcon.querySelector('path')?.setAttribute('d', playing ? PAUSE_D : PLAY_D);
         centerIcon.setAttribute('d', playing ? '' : PLAY_D);
+        if (playText) playText.textContent = playing ? 'Pausar' : 'Reproduzir';
+        if (playBtn) playBtn.setAttribute('aria-label', playing ? 'Pausar reprodução' : 'Reproduzir conteúdo');
+        if (playState) {
+            playState.textContent = playing ? 'Reproduzindo' : 'Pausado';
+            playState.classList.toggle('is-playing', playing);
+        }
         centerBtn.style.opacity       = playing ? '0' : '1';
         centerBtn.style.pointerEvents = playing ? 'none' : 'auto';
         spinner.style.display = 'none';
         if (playing) hideTimer = setTimeout(hideUI, HIDE_MS);
     }
+
+    function setLoading(loading) {
+        spinner.style.display = loading ? 'flex' : 'none';
+        if (loading && playState) playState.textContent = 'Carregando vídeo';
+    }
+
+    function toggleSettings() {
+        const open = playerMenu.getAttribute('aria-hidden') === 'false';
+        playerMenu.setAttribute('aria-hidden', open ? 'true' : 'false');
+        playerMenu.classList.toggle('is-open', !open);
+        showUI(true);
+        if (!open) playerMenu.querySelector('button, input')?.focus();
+    }
+
+    settingsBtn?.addEventListener('click', toggleSettings);
+    qualityBtn?.addEventListener('click', toggleSettings);
+    menuClose?.addEventListener('click', toggleSettings);
+    document.addEventListener('click', e => {
+        if (!playerMenu?.classList.contains('is-open')) return;
+        if (!playerMenu.contains(e.target) && e.target !== settingsBtn && e.target !== qualityBtn) {
+            playerMenu.setAttribute('aria-hidden', 'true');
+            playerMenu.classList.remove('is-open');
+        }
+    });
 
     /* ── volume ── */
     function applyVolume(v, muted) {
@@ -640,6 +773,36 @@ $playback_url = $playback_token ? rest_url('f5tv/v1/playback/' . rawurlencode($p
         video.play().catch(() => {});
     }
     <?php endif; ?>
+
+    /* ── Playback settings ── */
+    document.querySelectorAll('.f5-speed-btn').forEach(btn => btn.addEventListener('click', () => {
+        const rate = parseFloat(btn.dataset.speed || '1');
+        <?php if ($is_vimeo): ?>
+        player?.setPlaybackRate?.(rate)?.catch?.(() => {});
+        <?php elseif ($is_youtube): ?>
+        ytPlayer?.setPlaybackRate?.(rate);
+        <?php else: ?>
+        const nativeVideo = $('f5-html5-video');
+        if (nativeVideo) nativeVideo.playbackRate = rate;
+        <?php endif; ?>
+        document.querySelectorAll('.f5-speed-btn').forEach(item => item.classList.toggle('active', item === btn));
+    }));
+
+    document.querySelectorAll('.f5-quality-option').forEach(btn => btn.addEventListener('click', () => {
+        document.querySelectorAll('.f5-quality-option').forEach(item => item.classList.toggle('active', item === btn));
+        const value = btn.textContent.trim();
+        const badge = qualityBtn?.querySelector('.f5-quality-value');
+        if (badge) badge.textContent = value === 'Auto' ? 'HD' : value;
+        <?php if ($is_youtube): ?>
+        if (ytPlayer?.setPlaybackQuality) ytPlayer.setPlaybackQuality(btn.dataset.quality === '1080p' ? 'hd1080' : btn.dataset.quality === '720p' ? 'hd720' : 'default');
+        <?php endif; ?>
+    }));
+
+    const autoplayToggle = $('f5-autoplay-toggle');
+    if (autoplayToggle) {
+        autoplayToggle.checked = localStorage.getItem('f5-autoplay') !== 'false';
+        autoplayToggle.addEventListener('change', () => localStorage.setItem('f5-autoplay', autoplayToggle.checked ? 'true' : 'false'));
+    }
 
     /* ── Keyboard shortcuts (universal) ── */
     document.addEventListener('keydown', e => {
