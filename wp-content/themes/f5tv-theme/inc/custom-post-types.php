@@ -214,6 +214,57 @@ function f5tv_register_post_types(): void
     register_post_type('f5tv_programacao', $programacao_args);
 }
 
+/** Keep the grouped WordPress submenu useful as content is added. */
+add_action('admin_menu', 'f5tv_refresh_content_menu_counts', 999);
+function f5tv_refresh_content_menu_counts(): void
+{
+    foreach (['f5tv_serie' => 'Todas as Séries', 'f5tv_temporada' => 'Todas as Temporadas', 'f5tv_episodio' => 'Todos os Episódios'] as $post_type => $label) {
+        $counts = wp_count_posts($post_type);
+        $total = 0;
+        if ($counts) {
+            foreach (['publish', 'draft', 'pending', 'future', 'private'] as $status) {
+                $total += (int) ($counts->{$status} ?? 0);
+            }
+        }
+        $object = get_post_type_object($post_type);
+        if ($object) {
+            $object->labels->all_items = sprintf('%s (%d)', $label, $total);
+        }
+    }
+}
+
+add_filter('manage_f5tv_episodio_posts_columns', 'f5tv_episode_admin_columns');
+function f5tv_episode_admin_columns(array $columns): array
+{
+    return [
+        'cb' => $columns['cb'] ?? '',
+        'title' => __('Episódio', 'f5tv-theme'),
+        'program' => __('Programa', 'f5tv-theme'),
+        'series' => __('Série', 'f5tv-theme'),
+        'season' => __('Temporada', 'f5tv-theme'),
+        'number' => __('Nº', 'f5tv-theme'),
+        'date' => $columns['date'] ?? __('Data', 'f5tv-theme'),
+    ];
+}
+
+add_action('manage_f5tv_episodio_posts_custom_column', 'f5tv_episode_admin_column_data', 10, 2);
+function f5tv_episode_admin_column_data(string $column, int $post_id): void
+{
+    if ($column === 'program') {
+        $program_id = absint(get_post_meta($post_id, 'content_id', true));
+        echo $program_id ? esc_html(get_the_title($program_id)) : '<span style="color:#9ca3af">—</span>';
+    } elseif ($column === 'season') {
+        $season_id = absint(get_post_meta($post_id, 'season_id', true));
+        echo $season_id ? esc_html(get_the_title($season_id)) : '<span style="color:#9ca3af">Episódio direto</span>';
+    } elseif ($column === 'series') {
+        $season_id = absint(get_post_meta($post_id, 'season_id', true));
+        $series_id = $season_id ? absint(get_post_meta($season_id, 'series_id', true)) : 0;
+        echo $series_id ? esc_html(get_the_title($series_id)) : '<span style="color:#9ca3af">—</span>';
+    } elseif ($column === 'number') {
+        echo esc_html(get_post_meta($post_id, 'number', true) ?: '1');
+    }
+}
+
 /**
  * Colunas Customizadas para o Admin (F5 Streaming e Séries)
  */
@@ -287,5 +338,4 @@ function f5tv_customize_row_actions(array $actions, WP_Post $post): array
     }
     return $actions;
 }
-
 
