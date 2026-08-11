@@ -34,6 +34,16 @@ class F5TV_Admin_Live_Schedule
             'posts_per_page' => -1,
             'post_status'    => 'publish',
         ]);
+        $today = current_time('Y-m-d');
+        $today_programs = get_posts([
+            'post_type' => 'f5tv_programacao',
+            'post_status' => 'publish',
+            'posts_per_page' => -1,
+            'meta_query' => [['key' => 'date', 'value' => $today, 'compare' => '=']],
+        ]);
+        $online_channels = array_filter($channels, static function ($channel) {
+            return get_post_meta($channel->ID, 'status', true) !== 'offline' && get_post_meta($channel->ID, 'active', true);
+        });
         ?>
         <style>
             .f5-admin-wrap { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; color: #f4f4f5; max-width: 1100px; margin: 20px 0; }
@@ -56,6 +66,12 @@ class F5TV_Admin_Live_Schedule
                 <a href="<?php echo esc_url(admin_url('post-new.php?post_type=f5tv_programacao')); ?>" class="f5-btn-action" style="padding: 0.65rem 1.25rem; font-size: 0.8rem;">
                     ➕ Novo Programa Ao Vivo
                 </a>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-bottom:1.5rem;">
+                <div class="f5-card" style="margin:0;padding:1.1rem;"><div style="color:#9ca3af;font-size:.68rem;text-transform:uppercase;font-family:monospace;font-weight:800;">Canais ativos</div><strong style="display:block;color:#fff;font-size:1.8rem;margin-top:.3rem;"><?php echo count($online_channels); ?><span style="font-size:.8rem;color:#6b7280;font-weight:600;"> / <?php echo count($channels); ?></span></strong></div>
+                <div class="f5-card" style="margin:0;padding:1.1rem;"><div style="color:#9ca3af;font-size:.68rem;text-transform:uppercase;font-family:monospace;font-weight:800;">Programas hoje</div><strong style="display:block;color:#fff;font-size:1.8rem;margin-top:.3rem;"><?php echo count($today_programs); ?></strong></div>
+                <div class="f5-card" style="margin:0;padding:1.1rem;"><div style="color:#9ca3af;font-size:.68rem;text-transform:uppercase;font-family:monospace;font-weight:800;">Operação</div><strong style="display:block;color:<?php echo $online_channels ? '#34d399' : '#f87171'; ?>;font-size:1rem;margin-top:.65rem;"><?php echo $online_channels ? 'PRONTA PARA EXIBIÇÃO' : 'SEM SINAL CONFIGURADO'; ?></strong></div>
             </div>
 
             <div class="f5-card">

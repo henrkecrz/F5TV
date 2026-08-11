@@ -76,6 +76,15 @@ while (have_posts()): the_post();
             'order'          => 'ASC',
         ]);
     }
+    $program_episodes = get_posts([
+        'post_type' => 'f5tv_episodio',
+        'posts_per_page' => -1,
+        'post_status' => 'publish',
+        'meta_query' => [['key' => 'content_id', 'value' => get_the_ID(), 'compare' => '=']],
+        'meta_key' => 'number',
+        'orderby' => 'meta_value_num',
+        'order' => 'ASC',
+    ]);
 
     // Reviews (WP comments used as reviews)
     $reviews = get_comments([
@@ -216,6 +225,20 @@ while (have_posts()): the_post();
 
                 <?php f5tv_render_minha_lista_button(get_the_ID()); ?>
             </div>
+
+            <?php if (!empty($program_episodes)): ?>
+                <div class="border-t border-zinc-900 pt-8 mt-4">
+                    <div class="flex items-center justify-between mb-4"><h3 class="text-xs font-mono font-black uppercase text-zinc-500 tracking-wider">Episódios do Programa</h3><span class="text-[10px] text-zinc-600 font-mono"><?php echo count($program_episodes); ?> episódios</span></div>
+                    <div class="flex flex-col gap-3">
+                        <?php foreach ($program_episodes as $ep): $ep_video = f5tv_get_field('video_url', $ep->ID); $ep_thumb = f5tv_get_field('thumbnail_url', $ep->ID) ?: get_the_post_thumbnail_url($ep->ID, 'medium'); ?>
+                            <a href="<?php echo esc_url($ep_video ? home_url('/assista?id=' . get_the_ID() . '&episodeId=' . $ep->ID) : '#'); ?>" class="bg-f5-blue-950/40 hover:bg-f5-blue-950 border border-zinc-900 p-3 rounded-xl flex gap-3 items-center group transition">
+                                <div class="w-24 md:w-32 aspect-video rounded-lg bg-f5-blue-900 overflow-hidden shrink-0 relative"><?php if ($ep_thumb): ?><img src="<?php echo esc_url($ep_thumb); ?>" alt="<?php echo esc_attr($ep->post_title); ?>" class="w-full h-full object-cover opacity-75 group-hover:opacity-100 transition"><?php endif; ?><div class="absolute inset-0 flex items-center justify-center"><span class="w-8 h-8 rounded-full bg-f5-red/90 flex items-center justify-center"><svg class="w-4 h-4 fill-white ml-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div></div>
+                                <div class="min-w-0"><span class="text-[10px] font-mono font-bold text-f5-red uppercase">Episódio <?php echo esc_html(f5tv_get_field('number', $ep->ID) ?: 1); ?></span><h4 class="text-sm font-bold text-zinc-200 group-hover:text-white truncate mt-1"><?php echo esc_html($ep->post_title); ?></h4><span class="text-[10px] text-zinc-600 font-mono"><?php echo esc_html(f5tv_get_field('duration', $ep->ID) ?: ''); ?></span></div>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <!-- SERIES EPISODES PANEL — idêntico ao ContentDetailsPage.tsx episodes panel -->
             <?php if ($has_series && !empty($all_seasons)): ?>

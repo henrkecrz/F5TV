@@ -19,6 +19,7 @@ class F5TV_Admin_Content_Studio
         add_action('admin_post_f5tv_add_season', [$this, 'add_season']);
         add_action('admin_post_f5tv_delete_content', [$this, 'delete_content']);
         add_action('admin_post_f5tv_create_content', [$this, 'create_content']);
+        add_action('admin_post_f5tv_delete_episode', [$this, 'delete_episode']);
     }
 
     public function enqueue_media_assets(): void
@@ -427,6 +428,18 @@ class F5TV_Admin_Content_Studio
             'f5tv-content-studio',
             [$this, 'render_page']
         );
+        add_submenu_page('f5tv-dashboard', __('Gestão de Programas', 'f5tv-admin-panel'), __('Programas', 'f5tv-admin-panel'), 'manage_options', 'f5tv-programs', [$this, 'render_programs_page']);
+        add_submenu_page('f5tv-dashboard', __('Gestão de Séries', 'f5tv-admin-panel'), __('Séries', 'f5tv-admin-panel'), 'manage_options', 'f5tv-series', [$this, 'render_series_page']);
+    }
+
+    public function render_programs_page(): void
+    {
+        $this->render_studio_grid('f5tv_conteudo');
+    }
+
+    public function render_series_page(): void
+    {
+        $this->render_studio_grid('f5tv_serie');
     }
 
     public function save_studio_content(): void
@@ -594,12 +607,14 @@ class F5TV_Admin_Content_Studio
         check_admin_referer('f5tv_save_episode');
 
         $series_id = intval($_POST['series_id'] ?? 0);
+        $content_id = intval($_POST['content_id'] ?? 0);
         $season_id = intval($_POST['season_id'] ?? 0);
         $episode_id = intval($_POST['episode_id'] ?? 0);
         $title = sanitize_text_field($_POST['ep_title'] ?? 'Novo Episódio');
         $video_url = sanitize_text_field($_POST['ep_video_url'] ?? '');
         $duration = sanitize_text_field($_POST['ep_duration'] ?? '45m');
         $number = intval($_POST['ep_number'] ?? 1);
+        $thumbnail_url = esc_url_raw($_POST['ep_thumbnail_url'] ?? '');
 
         if (!$episode_id) {
             $episode_id = wp_insert_post([
@@ -616,12 +631,28 @@ class F5TV_Admin_Content_Studio
 
         if ($episode_id) {
             update_post_meta($episode_id, 'season_id', $season_id);
+            update_post_meta($episode_id, 'content_id', $content_id);
             update_post_meta($episode_id, 'video_url', $video_url);
             update_post_meta($episode_id, 'duration', $duration);
             update_post_meta($episode_id, 'number', $number);
+            update_post_meta($episode_id, 'thumbnail_url', $thumbnail_url);
         }
 
-        wp_redirect(admin_url('admin.php?page=f5tv-content-studio&action=edit&id=' . $series_id . '&saved=1'));
+        $parent_id = $content_id ?: $series_id;
+        wp_redirect(admin_url('admin.php?page=f5tv-content-studio&action=edit&id=' . $parent_id . '&saved=1'));
+        exit;
+    }
+
+    public function delete_episode(): void
+    {
+        if (!current_user_can('manage_options')) wp_die('Sem permissao.');
+        check_admin_referer('f5tv_delete_episode');
+        $episode_id = absint($_POST['episode_id'] ?? 0);
+        $parent_id = absint($_POST['parent_id'] ?? 0);
+        if ($episode_id && get_post_type($episode_id) === 'f5tv_episodio') {
+            wp_delete_post($episode_id, true);
+        }
+        wp_safe_redirect(admin_url('admin.php?page=f5tv-content-studio&action=edit&id=' . $parent_id . '&saved=1'));
         exit;
     }
 
@@ -723,6 +754,18 @@ class F5TV_Admin_Content_Studio
         $linked_series_id = absint(get_post_meta($post_id, 'series_id', true));
         $related_content_ids = array_map('absint', (array) get_post_meta($post_id, 'related_content_ids', true));
         $related_series_ids = array_map('absint', (array) get_post_meta($post_id, 'related_series_ids', true));
+        $program_episodes = [];
+        if ($post->post_type === 'f5tv_conteudo') {
+            $program_episodes = get_posts([
+                'post_type' => 'f5tv_episodio',
+                'post_status' => ['publish', 'draft'],
+                'posts_per_page' => -1,
+                'meta_query' => [['key' => 'content_id', 'value' => $post_id, 'compare' => '=']],
+                'meta_key' => 'number',
+                'orderby' => 'meta_value_num',
+                'order' => 'ASC',
+            ]);
+        }
 
         // Buscar Temporadas da Série
         $seasons = get_posts([
@@ -1004,6 +1047,29 @@ class F5TV_Admin_Content_Studio
                 </div>
             </form>
 
+            <?php if ($post->post_type === 'f5tv_conteudo'): ?>
+            <!-- Episodios proprios do programa -->
+            <div class="f5-card" style="margin-top: 2rem;">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
+                    <div><h2 class="f5-title" style="font-size:1.25rem;">📺 Episódios do Programa</h2><p class="f5-subtitle">Gerencie os episódios publicados diretamente neste programa.</p></div>
+                    <span class="f5-badge"><?php echo count($program_episodes); ?> episódio(s)</span>
+                </div>
+                <?php foreach ($program_episodes as $ep): ?>
+                    <form method="post" action="admin-post.php" class="f5-episode-item">
+                        <?php wp_nonce_field('f5tv_save_episode'); ?><?php wp_nonce_field('f5tv_delete_episode'); ?><input type="hidden" name="action" value="f5tv_save_episode"><input type="hidden" name="content_id" value="<?php echo esc_attr($post_id); ?>"><input type="hidden" name="series_id" value="0"><input type="hidden" name="season_id" value="0"><input type="hidden" name="episode_id" value="<?php echo esc_attr($ep->ID); ?>">
+                        <div style="display:grid;grid-template-columns:80px 1fr 130px;gap:.75rem;align-items:center"><div><label class="f5-label">Nº</label><input type="number" name="ep_number" value="<?php echo esc_attr(f5tv_get_field('number',$ep->ID) ?: 1); ?>" class="f5-input"></div><div><label class="f5-label">Título</label><input type="text" name="ep_title" value="<?php echo esc_attr($ep->post_title); ?>" class="f5-input"></div><div><label class="f5-label">Duração</label><input type="text" name="ep_duration" value="<?php echo esc_attr(f5tv_get_field('duration',$ep->ID) ?: ''); ?>" class="f5-input"></div></div>
+                        <div style="display:grid;grid-template-columns:1fr auto;gap:.75rem;align-items:end"><div><label class="f5-label">URL do vídeo</label><input type="text" name="ep_video_url" value="<?php echo esc_attr(f5tv_get_field('video_url',$ep->ID) ?: ''); ?>" class="f5-input font-mono"></div><button type="submit" class="f5-btn-secondary">Salvar episódio</button></div>
+                        <div style="text-align:right"><button type="submit" formaction="admin-post.php" name="action" value="f5tv_delete_episode" class="f5-btn-secondary" onclick="return confirm('Deletar este episodio?');" style="background:#7f1d1d !important;color:#fecaca !important">Deletar</button></div>
+                    </form>
+                <?php endforeach; ?>
+                <form method="post" action="admin-post.php" class="f5-episode-item" style="border:1px dashed #e50914;background:rgba(229,9,20,.03)">
+                    <?php wp_nonce_field('f5tv_save_episode'); ?><input type="hidden" name="action" value="f5tv_save_episode"><input type="hidden" name="content_id" value="<?php echo esc_attr($post_id); ?>"><input type="hidden" name="series_id" value="0"><input type="hidden" name="season_id" value="0"><input type="hidden" name="episode_id" value="0">
+                    <strong style="color:#e50914;font-size:.8rem;text-transform:uppercase">Adicionar novo episódio</strong><div style="display:grid;grid-template-columns:80px 1fr 130px;gap:.75rem;align-items:center"><div><label class="f5-label">Nº</label><input type="number" name="ep_number" value="<?php echo count($program_episodes) + 1; ?>" class="f5-input"></div><div><label class="f5-label">Título</label><input type="text" name="ep_title" placeholder="Ex: Episódio <?php echo count($program_episodes) + 1; ?>" class="f5-input"></div><div><label class="f5-label">Duração</label><input type="text" name="ep_duration" placeholder="45m" class="f5-input"></div></div><input type="text" name="ep_video_url" placeholder="URL do vídeo" class="f5-input font-mono"><button type="submit" class="f5-btn-primary">Criar episódio</button>
+                </form>
+            </div>
+            <?php endif; ?>
+
+            <?php if ($post->post_type === 'f5tv_serie'): ?>
             <!-- 5. ESTRUTURA DE TEMPORADAS E EPISÓDIOS DA SÉRIE -->
             <div class="f5-card" style="margin-top: 2rem;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
@@ -1146,6 +1212,7 @@ class F5TV_Admin_Content_Studio
                     </div>
                 <?php endforeach; endif; ?>
             </div>
+            <?php endif; ?>
 
         </div>
         <?php
@@ -1154,10 +1221,10 @@ class F5TV_Admin_Content_Studio
     /**
      * Renderiza o Grid da Central de Conteúdos
      */
-    private function render_studio_grid(): void
+    private function render_studio_grid(string $forced_type = ''): void
     {
         $search = sanitize_text_field($_GET['s'] ?? '');
-        $type_filter = sanitize_text_field($_GET['type'] ?? '');
+        $type_filter = $forced_type ?: sanitize_text_field($_GET['type'] ?? '');
 
         $args = [
             'post_type'      => ['f5tv_conteudo', 'f5tv_serie'],
