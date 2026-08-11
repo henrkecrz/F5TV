@@ -28,7 +28,8 @@ while (have_posts()): the_post();
             'value'   => get_the_ID(),
             'compare' => '=',
         ]],
-        'orderby'  => 'menu_order',
+        'meta_key' => 'number',
+        'orderby'  => 'meta_value_num',
         'order'    => 'ASC',
     ]);
     // Fallback: tenta via post_parent
@@ -38,17 +39,8 @@ while (have_posts()): the_post();
             'posts_per_page' => -1,
             'post_status'    => 'publish',
             'post_parent'    => get_the_ID(),
-            'orderby'        => 'menu_order',
-            'order'          => 'ASC',
-        ]);
-    }
-    // Fallback final: busca qualquer temporada com qualquer relação
-    if (empty($all_seasons)) {
-        $all_seasons = get_posts([
-            'post_type'      => 'f5tv_temporada',
-            'posts_per_page' => -1,
-            'post_status'    => 'publish',
-            'orderby'        => 'menu_order',
+            'meta_key'       => 'number',
+            'orderby'        => 'meta_value_num',
             'order'          => 'ASC',
         ]);
     }
