@@ -113,6 +113,21 @@ while (have_posts()): the_post();
     } else {
         $avg = 5.0;
     }
+
+    $watch_url         = home_url('/assista?id=' . get_the_ID());
+    $watch_cta_url     = is_user_logged_in()
+        ? $watch_url
+        : add_query_arg('redirect_to', $watch_url, home_url('/login/'));
+    $trailer_watch_url = $trailer_url ? home_url('/assista?id=' . get_the_ID() . '&trailer=true') : '';
+    $content_type_labels = [
+        'programa'    => 'Programa',
+        'tv_show'     => 'Programa',
+        'documentary' => 'Documentário',
+        'documentario'=> 'Documentário',
+        'movie'       => 'Programa',
+        'video'       => 'Programa',
+    ];
+    $content_type_label = $content_type_labels[$content_type] ?? 'Programa';
 ?>
 
 <div id="content-details-page" class="min-h-screen bg-f5-blue text-zinc-300 font-sans animate-fade-in selection:bg-f5-red selection:text-white">
@@ -145,34 +160,115 @@ while (have_posts()): the_post();
         </div>
     </section>
 
-    <!-- Player de detalhes no estilo YouTube; o Play abre a reprodução em tela cheia. -->
-    <section class="max-w-7xl mx-auto px-6 md:px-8 mb-10">
-        <div class="relative aspect-video max-w-5xl mx-auto rounded-2xl overflow-hidden border border-white/10 bg-black shadow-2xl group" id="f5tv-details-player" aria-label="Player de vídeo">
+    <!-- Prévia editorial: ações reais substituem controles decorativos. -->
+    <section class="f5tv-detail-player-section max-w-7xl mx-auto px-6 md:px-8 mb-10">
+        <div class="f5tv-detail-player relative aspect-video max-w-5xl mx-auto overflow-hidden bg-black group" id="f5tv-details-player" aria-label="Prévia de <?php echo esc_attr(get_the_title()); ?>">
             <?php if ($banner_url || $cover_url): ?>
-                <img src="<?php echo esc_url($banner_url ?: $cover_url); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-75 transition duration-300">
+                <img src="<?php echo esc_url($banner_url ?: $cover_url); ?>" alt="<?php echo esc_attr(get_the_title()); ?>" class="f5tv-detail-player__image absolute inset-0 w-full h-full object-cover">
             <?php endif; ?>
-            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/10"></div>
-            <div class="absolute inset-0 flex items-center justify-center">
-                <a href="<?php echo esc_url(home_url('/assista?id=' . get_the_ID())); ?>" class="w-24 h-24 md:w-28 md:h-28 rounded-full bg-f5-red hover:bg-f5-red-700 flex items-center justify-center shadow-[0_0_45px_rgba(220,38,38,.65)] hover:scale-110 transition-transform" aria-label="Reproduzir <?php echo esc_attr(get_the_title()); ?>">
-                    <svg class="w-11 h-11 md:w-14 md:h-14 fill-white ml-1.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                </a>
+            <div class="f5tv-detail-player__shade absolute inset-0"></div>
+
+            <div class="f5tv-detail-player__top absolute inset-x-0 top-0 flex items-center justify-between gap-3">
+                <span class="f5tv-detail-player__brand"><strong>F5</strong> TV</span>
+                <div class="flex items-center gap-2">
+                    <span class="f5tv-detail-player__type"><?php echo esc_html($content_type_label); ?></span>
+                    <?php if ($trailer_url): ?>
+                        <span class="f5tv-detail-player__trailer-status"><i></i> Trailer disponível</span>
+                    <?php endif; ?>
+                </div>
             </div>
-            <div class="absolute inset-x-0 bottom-0 px-4 md:px-6 pb-4 pt-16 bg-gradient-to-t from-black/95 to-transparent">
-                <div class="h-1 rounded-full bg-white/25 mb-3 overflow-hidden"><div class="h-full w-0 bg-f5-red rounded-full"></div></div>
-                <div class="flex items-center justify-between text-white">
-                    <div class="flex items-center gap-2 md:gap-3">
-                        <a href="<?php echo esc_url(home_url('/assista?id=' . get_the_ID())); ?>" class="w-9 h-9 flex items-center justify-center hover:text-f5-red transition" aria-label="Play"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></a>
-                        <button type="button" class="w-9 h-9 hidden sm:flex items-center justify-center hover:text-f5-red transition" aria-label="Volume"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a3.5 3.5 0 00-2.5-3.35v6.7A3.5 3.5 0 0016.5 12zM14 3.23v2.06a7 7 0 010 13.42v2.06a9 9 0 000-17.54z"/></svg></button>
-                        <span class="text-[10px] font-mono text-white/70">0:00 / --:--</span>
-                    </div>
-                    <div class="flex items-center gap-1">
-                        <button type="button" class="w-9 h-9 hidden sm:flex items-center justify-center hover:text-f5-red transition" aria-label="Configurações"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.65.07-.98s-.02-.66-.07-.98l2.11-1.65-2-3.46-2.49 1a7.4 7.4 0 00-1.69-.98L15 3h-4l-.36 2.53c-.6.24-1.17.56-1.69.98l-2.49-1-2 3.46 2.11 1.65c-.04.32-.08.65-.08.98s.03.66.08.98l-2.11 1.65 2 3.46 2.49-1c.52.42 1.09.74 1.69.98L11 21h4l.36-2.53c.6-.24 1.17-.56 1.69-.98l2.49 1 2-3.46-2.11-1.65zM13 15.5A3.5 3.5 0 1113 8a3.5 3.5 0 010 7.5z"/></svg></button>
-                        <a href="<?php echo esc_url(home_url('/assista?id=' . get_the_ID())); ?>" class="w-9 h-9 flex items-center justify-center hover:text-f5-red transition" aria-label="Tela cheia"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg></a>
-                    </div>
+
+            <?php if ($video_url): ?>
+                <a href="<?php echo esc_url($watch_cta_url); ?>" class="f5tv-detail-player__main-action absolute inset-0 flex items-center justify-center" aria-label="Assistir <?php echo esc_attr(get_the_title()); ?>">
+                    <span class="f5tv-detail-player__play">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                    </span>
+                    <span class="f5tv-detail-player__play-label"><?php echo is_user_logged_in() ? 'Assistir agora' : 'Entrar grátis para assistir'; ?></span>
+                </a>
+            <?php endif; ?>
+
+            <div class="f5tv-detail-player__footer absolute inset-x-0 bottom-0 flex items-end justify-between gap-5">
+                <div class="f5tv-detail-player__copy min-w-0">
+                    <span><?php echo esc_html($content_type_label); ?> F5 TV</span>
+                    <h2><?php the_title(); ?></h2>
+                    <p>
+                        <?php if ($duration): ?><b><?php echo esc_html($duration); ?></b><?php endif; ?>
+                        <b><?php echo esc_html($age_rating); ?></b>
+                        <b>Acesso gratuito</b>
+                    </p>
+                </div>
+                <div class="f5tv-detail-player__actions flex items-center gap-2 shrink-0">
+                    <?php if ($trailer_url): ?>
+                        <a href="<?php echo esc_url($trailer_watch_url); ?>" class="f5tv-detail-player__button f5tv-detail-player__button--trailer" aria-label="Assistir trailer de <?php echo esc_attr(get_the_title()); ?>">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                            <span>Assistir trailer</span>
+                        </a>
+                    <?php endif; ?>
+                    <?php if ($video_url): ?>
+                        <a href="<?php echo esc_url($watch_cta_url); ?>" class="f5tv-detail-player__button f5tv-detail-player__button--watch">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                            <span>Assistir</span>
+                        </a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
+        <div class="f5tv-detail-player__hint max-w-5xl mx-auto flex items-center justify-between gap-4">
+            <span class="flex items-center gap-2">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1a5 5 0 00-5 5v3H6a2 2 0 00-2 2v10h16V11a2 2 0 00-2-2h-1V6a5 5 0 00-5-5zm-3 8V6a3 3 0 116 0v3H9z"/></svg>
+                Catálogo aberto. É necessário entrar somente para assistir ao conteúdo completo.
+            </span>
+            <?php if ($trailer_url): ?>
+                <a href="<?php echo esc_url($trailer_watch_url); ?>">Trailer livre, sem login</a>
+            <?php endif; ?>
+        </div>
     </section>
+
+    <style>
+    .f5tv-detail-player { border: 1px solid rgba(255,255,255,.14); border-radius: 24px; box-shadow: 0 32px 90px rgba(0,0,0,.48), 0 0 0 1px rgba(229,9,20,.08); isolation: isolate; }
+    .f5tv-detail-player::after { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255,255,255,.04); pointer-events: none; }
+    .f5tv-detail-player__image { opacity: .82; transform: scale(1.005); transition: opacity .5s ease, transform 1.2s ease; }
+    .f5tv-detail-player:hover .f5tv-detail-player__image { opacity: .93; transform: scale(1.025); }
+    .f5tv-detail-player__shade { z-index: 1; background: linear-gradient(180deg, rgba(2,7,18,.68) 0%, rgba(2,7,18,.05) 34%, rgba(2,7,18,.08) 48%, rgba(2,7,18,.96) 100%), linear-gradient(90deg, rgba(2,7,18,.32), transparent 55%); }
+    .f5tv-detail-player__top { z-index: 4; padding: clamp(14px, 2.3vw, 28px); }
+    .f5tv-detail-player__brand, .f5tv-detail-player__type, .f5tv-detail-player__trailer-status { display: inline-flex; align-items: center; min-height: 30px; padding: 0 11px; border: 1px solid rgba(255,255,255,.16); border-radius: 999px; background: rgba(2,7,18,.72); backdrop-filter: blur(12px); color: #fff; font: 800 10px/1 monospace; letter-spacing: .1em; text-transform: uppercase; }
+    .f5tv-detail-player__brand strong { margin-right: 4px; color: #f21f2b; font-size: 14px; }
+    .f5tv-detail-player__trailer-status i { width: 7px; height: 7px; margin-right: 7px; border-radius: 50%; background: #f21f2b; box-shadow: 0 0 0 5px rgba(242,31,43,.15); }
+    .f5tv-detail-player__main-action { z-index: 2; flex-direction: column; gap: 13px; color: #fff; }
+    .f5tv-detail-player__play { display: grid; place-items: center; width: clamp(68px, 8vw, 94px); height: clamp(68px, 8vw, 94px); border: 1px solid rgba(255,255,255,.65); border-radius: 50%; background: linear-gradient(145deg, #f5222d, #c80712); box-shadow: 0 18px 45px rgba(229,9,20,.42), 0 0 0 10px rgba(255,255,255,.08); transition: transform .2s ease, box-shadow .2s ease; }
+    .f5tv-detail-player__play svg { width: 42%; fill: #fff; margin-left: 5px; }
+    .f5tv-detail-player__main-action:hover .f5tv-detail-player__play { transform: scale(1.08); box-shadow: 0 22px 60px rgba(229,9,20,.55), 0 0 0 14px rgba(255,255,255,.1); }
+    .f5tv-detail-player__play-label { padding: 8px 13px; border-radius: 999px; background: rgba(2,7,18,.76); color: #fff; font: 800 11px/1 monospace; letter-spacing: .08em; text-transform: uppercase; backdrop-filter: blur(10px); }
+    .f5tv-detail-player__footer { z-index: 5; padding: clamp(18px, 2.7vw, 34px); pointer-events: none; }
+    .f5tv-detail-player__copy span { color: #ff3340; font: 900 10px/1 monospace; letter-spacing: .14em; text-transform: uppercase; }
+    .f5tv-detail-player__copy h2 { max-width: 580px; margin: 7px 0 9px; overflow: hidden; color: #fff; font-size: clamp(18px, 2.2vw, 30px); font-weight: 900; line-height: 1.05; text-overflow: ellipsis; white-space: nowrap; text-shadow: 0 3px 18px #000; }
+    .f5tv-detail-player__copy p { display: flex; flex-wrap: wrap; gap: 7px; margin: 0; }
+    .f5tv-detail-player__copy b { padding: 4px 7px; border: 1px solid rgba(255,255,255,.13); border-radius: 5px; background: rgba(8,15,30,.7); color: rgba(255,255,255,.76); font: 700 9px/1 monospace; text-transform: uppercase; }
+    .f5tv-detail-player__actions { pointer-events: auto; }
+    .f5tv-detail-player__button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 10px; color: #fff; font: 900 10px/1 monospace; letter-spacing: .06em; text-transform: uppercase; transition: transform .2s ease, background .2s ease, border-color .2s ease; }
+    .f5tv-detail-player__button:hover { transform: translateY(-2px); }
+    .f5tv-detail-player__button svg { width: 16px; fill: currentColor; }
+    .f5tv-detail-player__button--trailer { border: 1px solid rgba(255,255,255,.28); background: rgba(8,15,30,.8); backdrop-filter: blur(10px); }
+    .f5tv-detail-player__button--trailer:hover { background: rgba(25,35,55,.95); border-color: rgba(255,255,255,.5); }
+    .f5tv-detail-player__button--watch { border: 1px solid #f21f2b; background: #e50914; }
+    .f5tv-detail-player__button--watch:hover { background: #fa1c28; }
+    .f5tv-detail-player__hint { padding: 13px 6px 0; color: #7d879b; font: 700 10px/1.5 monospace; }
+    .f5tv-detail-player__hint span svg { width: 14px; flex: 0 0 auto; fill: currentColor; }
+    .f5tv-detail-player__hint a { color: #ff3340; font-weight: 900; text-transform: uppercase; white-space: nowrap; }
+    @media (max-width: 700px) {
+        .f5tv-detail-player-section { padding-left: 14px; padding-right: 14px; }
+        .f5tv-detail-player { min-height: 300px; border-radius: 16px; }
+        .f5tv-detail-player__top { align-items: flex-start; }
+        .f5tv-detail-player__trailer-status { display: none; }
+        .f5tv-detail-player__main-action { padding-bottom: 48px; }
+        .f5tv-detail-player__footer { align-items: flex-end; }
+        .f5tv-detail-player__copy p, .f5tv-detail-player__button--watch { display: none; }
+        .f5tv-detail-player__button { min-height: 42px; padding: 0 12px; }
+        .f5tv-detail-player__button span { display: none; }
+        .f5tv-detail-player__button svg { width: 20px; }
+        .f5tv-detail-player__hint { align-items: flex-start; flex-direction: column; }
+    }
+    </style>
 
     <!-- Core Split Grid — lg:grid-cols-3 — idêntico ao ContentDetailsPage.tsx -->
     <div class="max-w-7xl mx-auto px-6 md:px-8 grid grid-cols-1 lg:grid-cols-3 gap-12 mb-16">
@@ -218,8 +314,7 @@ while (have_posts()): the_post();
             <!-- CTA Action buttons — idêntico ao ContentDetailsPage.tsx -->
             <div class="flex flex-wrap gap-3.5">
                 <?php if ($video_url): ?>
-                    <?php $program_watch_url = home_url('/assista?id=' . get_the_ID()); $program_cta_url = is_user_logged_in() ? $program_watch_url : add_query_arg('redirect_to', $program_watch_url, home_url('/login/')); ?>
-                    <a href="<?php echo esc_url($program_cta_url); ?>"
+                    <a href="<?php echo esc_url($watch_cta_url); ?>"
                        class="bg-f5-red hover:bg-f5-red-700 text-white font-bold py-3.5 px-7 rounded-xl text-xs tracking-wider uppercase font-mono flex items-center justify-center gap-2 cursor-pointer transition shadow-lg shadow-f5-red-700/10">
                         <svg class="w-4 h-4 fill-white" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                         <span><?php echo is_user_logged_in() ? ($has_series ? 'Assistir Ep. 1' : 'Assistir Agora') : 'Entrar grátis para assistir'; ?></span>
@@ -227,7 +322,7 @@ while (have_posts()): the_post();
                 <?php endif; ?>
 
                 <?php if ($trailer_url): ?>
-                    <a href="<?php echo esc_url(home_url('/assista?id=' . get_the_ID() . '&trailer=true')); ?>"
+                    <a href="<?php echo esc_url($trailer_watch_url); ?>"
                        class="bg-f5-blue-900 border border-zinc-800 hover:bg-f5-blue-800 hover:border-zinc-700 text-white font-bold py-3.5 px-6 rounded-xl text-xs tracking-wider uppercase font-mono flex items-center justify-center gap-2 cursor-pointer transition">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/></svg>
                         <span>Assistir Trailer</span>
