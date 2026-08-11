@@ -18,6 +18,7 @@ class F5TV_Admin_Content_Studio
         add_action('admin_post_f5tv_save_episode', [$this, 'save_episode']);
         add_action('admin_post_f5tv_add_season', [$this, 'add_season']);
         add_action('admin_post_f5tv_delete_content', [$this, 'delete_content']);
+        add_action('admin_post_f5tv_create_content', [$this, 'create_content']);
     }
 
     public function enqueue_media_assets(): void
@@ -507,6 +508,45 @@ class F5TV_Admin_Content_Studio
         exit;
     }
 
+    public function create_content(): void
+    {
+        if (!current_user_can('manage_options')) {
+            wp_die('Sem permissao.');
+        }
+
+        check_admin_referer('f5tv_create_content');
+        $post_type = sanitize_key($_POST['post_type'] ?? 'f5tv_conteudo');
+        if (!in_array($post_type, ['f5tv_conteudo', 'f5tv_serie'], true)) {
+            $post_type = 'f5tv_conteudo';
+        }
+
+        $title = sanitize_text_field($_POST['post_title'] ?? '');
+        if ($title === '') {
+            wp_safe_redirect(admin_url('admin.php?page=f5tv-content-studio&action=new&type=' . $post_type . '&error=title'));
+            exit;
+        }
+
+        $post_id = wp_insert_post([
+            'post_title' => $title,
+            'post_excerpt' => sanitize_textarea_field($_POST['post_excerpt'] ?? ''),
+            'post_content' => wp_kses_post($_POST['post_content'] ?? ''),
+            'post_type' => $post_type,
+            'post_status' => 'draft',
+        ], true);
+
+        if (is_wp_error($post_id)) {
+            wp_die('Nao foi possivel criar o conteudo: ' . esc_html($post_id->get_error_message()));
+        }
+
+        update_post_meta($post_id, 'genre', sanitize_text_field($_POST['genre'] ?? ''));
+        update_post_meta($post_id, 'age_rating', sanitize_text_field($_POST['age_rating'] ?? 'L'));
+        update_post_meta($post_id, 'year', absint($_POST['year'] ?? date('Y')));
+        update_post_meta($post_id, 'content_type', $post_type === 'f5tv_serie' ? 'series' : 'movie');
+
+        wp_safe_redirect(admin_url('admin.php?page=f5tv-content-studio&action=edit&id=' . $post_id . '&new=1'));
+        exit;
+    }
+
     public function add_season(): void
     {
         if (!current_user_can('manage_options')) wp_die('Sem permissão.');
@@ -574,27 +614,11 @@ class F5TV_Admin_Content_Studio
         $post_id = intval($_GET['id'] ?? 0);
         $type = sanitize_text_field($_GET['type'] ?? 'f5tv_conteudo');
 
-        // Se a ação for criar novo conteúdo ou série no Estúdio
+        // A criação acontece em uma tela própria; não criamos posts em um GET.
         if ($action === 'new') {
             $post_type = in_array($type, ['f5tv_conteudo', 'f5tv_serie']) ? $type : 'f5tv_conteudo';
-            $title = $post_type === 'f5tv_serie' ? 'Nova Série F5 Streaming' : 'Novo Programa F5 Streaming';
-
-            $new_id = wp_insert_post([
-                'post_title'  => $title,
-                'post_type'   => $post_type,
-                'post_status' => 'draft',
-            ]);
-
-            if ($new_id && !is_wp_error($new_id)) {
-                update_post_meta($new_id, 'genre', 'Investigativo');
-                update_post_meta($new_id, 'age_rating', 'L');
-                update_post_meta($new_id, 'year', date('Y'));
-                if ($post_type === 'f5tv_conteudo') {
-                    update_post_meta($new_id, 'content_type', 'movie');
-                }
-                wp_redirect(admin_url('admin.php?page=f5tv-content-studio&action=edit&id=' . $new_id . '&new=1'));
-                exit;
-            }
+            $this->render_new_content_page($post_type);
+            return;
         }
 
         if ($action === 'edit' && $post_id) {
@@ -603,6 +627,37 @@ class F5TV_Admin_Content_Studio
         }
 
         $this->render_studio_grid();
+    }
+
+    private function render_new_content_page(string $post_type): void
+    {
+        $is_series = $post_type === 'f5tv_serie';
+        $title = $is_series ? 'Nova Série' : 'Novo Programa';
+        ?>
+        <style>
+            .f5-new-wrap{max-width:900px;margin:24px 0;color:#f4f4f5}.f5-new-card{background:#0c101d;border:1px solid #1f293d;border-radius:16px;padding:28px;box-shadow:0 12px 35px rgba(0,0,0,.35)}.f5-new-title{font-size:28px;font-weight:900;color:#fff;margin:8px 0}.f5-new-label{display:block;color:#d1d5db;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin:18px 0 6px}.f5-new-input{width:100%;box-sizing:border-box;background:#060913;border:1px solid #27344d;color:#fff;border-radius:8px;padding:11px}.f5-new-input:focus{outline:none;border-color:#e50914;box-shadow:0 0 0 3px rgba(229,9,20,.18)}.f5-new-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:700px){.f5-new-grid{grid-template-columns:1fr}}
+        </style>
+        <div class="wrap f5-new-wrap">
+            <a href="<?php echo esc_url(admin_url('admin.php?page=f5tv-content-studio')); ?>" style="color:#9ca3af;text-decoration:none;font-weight:700">&larr; Voltar para Central F5 Streaming</a>
+            <div class="f5-new-card" style="margin-top:16px;background:linear-gradient(135deg,#0c101d,#151b2e)">
+                <span style="font:800 10px monospace;letter-spacing:.14em;color:#e50914;text-transform:uppercase">F5 STREAMING STUDIO</span>
+                <h1 class="f5-new-title"><?php echo esc_html($title); ?></h1>
+                <p style="color:#9ca3af;margin:0">Crie o registro inicial e continue no editor completo para adicionar capas, vídeo, categorias e demais informações.</p>
+            </div>
+            <?php if (isset($_GET['error'])): ?><div class="notice notice-error"><p>Informe um título para continuar.</p></div><?php endif; ?>
+            <div class="f5-new-card">
+                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                    <?php wp_nonce_field('f5tv_create_content'); ?>
+                    <input type="hidden" name="action" value="f5tv_create_content"><input type="hidden" name="post_type" value="<?php echo esc_attr($post_type); ?>">
+                    <label class="f5-new-label">Título</label><input class="f5-new-input" name="post_title" required autofocus placeholder="<?php echo $is_series ? 'Ex: Investigação F5' : 'Ex: Jornal F5'; ?>">
+                    <div class="f5-new-grid"><div><label class="f5-new-label">Gênero</label><input class="f5-new-input" name="genre" placeholder="Ex: Jornalismo, Entrevistas"></div><div><label class="f5-new-label">Ano</label><input class="f5-new-input" type="number" name="year" value="<?php echo esc_attr(date('Y')); ?>"></div></div>
+                    <label class="f5-new-label">Resumo curto</label><textarea class="f5-new-input" name="post_excerpt" rows="3" placeholder="Apresente este conteúdo para o público."></textarea>
+                    <label class="f5-new-label">Descrição inicial</label><textarea class="f5-new-input" name="post_content" rows="5" placeholder="Descrição completa, sinopse ou contexto editorial."></textarea>
+                    <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:22px"><a href="<?php echo esc_url(admin_url('admin.php?page=f5tv-content-studio')); ?>" class="button button-secondary">Cancelar</a><button type="submit" class="button button-primary" style="background:#e50914;border-color:#e50914">Criar e abrir editor</button></div>
+                </form>
+            </div>
+        </div>
+        <?php
     }
 
     /**
