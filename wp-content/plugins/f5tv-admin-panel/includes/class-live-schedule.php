@@ -79,6 +79,9 @@ class F5TV_Admin_Live_Schedule
                                 'posts_per_page' => -1,
                                 'meta_key'       => 'channel_id',
                                 'meta_value'     => $channel->ID,
+                                'orderby'        => 'meta_value',
+                                'meta_key'       => 'start_time',
+                                'order'          => 'ASC',
                             ]);
                             $stream_status = get_field('status', $channel->ID) ?: 'online';
                         ?>
@@ -89,7 +92,10 @@ class F5TV_Admin_Live_Schedule
                                         ● <?php echo esc_html(strtoupper($stream_status)); ?>
                                     </span>
                                 </td>
-                                <td><span style="font-weight: 700; color: #e50914;"><?php echo count($programs); ?> programa(s)</span></td>
+                                <td>
+                                    <span style="font-weight: 700; color: #e50914;"><?php echo count($programs); ?> programa(s)</span>
+                                    <?php if ($programs): ?><div style="margin-top:0.45rem;color:#9ca3af;font-size:0.72rem;line-height:1.6;"><?php foreach (array_slice($programs, 0, 3) as $program): ?><div><strong style="color:#e4e4e7;"><?php echo esc_html(get_post_meta($program->ID, 'start_time', true) ?: '--:--'); ?></strong> <?php echo esc_html($program->post_title); ?><?php $date = get_post_meta($program->ID, 'date', true); if ($date) echo ' · ' . esc_html(date_i18n('d/m', strtotime($date))); ?></div><?php endforeach; ?></div><?php endif; ?>
+                                </td>
                                 <td style="display: flex; gap: 0.5rem;">
                                     <a href="<?php echo esc_url(get_edit_post_link($channel->ID)); ?>" class="f5-btn-action">
                                         ✏️ Editar Canal

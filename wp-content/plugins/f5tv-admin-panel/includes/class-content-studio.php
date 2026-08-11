@@ -17,6 +17,7 @@ class F5TV_Admin_Content_Studio
         add_action('admin_post_f5tv_save_studio_content', [$this, 'save_studio_content']);
         add_action('admin_post_f5tv_save_episode', [$this, 'save_episode']);
         add_action('admin_post_f5tv_add_season', [$this, 'add_season']);
+        add_action('admin_post_f5tv_delete_content', [$this, 'delete_content']);
     }
 
     public function enqueue_media_assets(): void
@@ -445,6 +446,7 @@ class F5TV_Admin_Content_Studio
         if (isset($_POST['post_title'])) {
             wp_update_post([
                 'ID'           => $post_id,
+                'post_status'  => 'publish',
                 'post_title'   => sanitize_text_field($_POST['post_title']),
                 'post_excerpt' => sanitize_text_field($_POST['post_excerpt'] ?? ''),
                 'post_content' => wp_kses_post($_POST['post_content'] ?? ''),
@@ -484,6 +486,24 @@ class F5TV_Admin_Content_Studio
         }
 
         wp_redirect(admin_url('admin.php?page=f5tv-content-studio&action=edit&id=' . $post_id . '&saved=1'));
+        exit;
+    }
+
+    public function delete_content(): void
+    {
+        if (!current_user_can('manage_options')) {
+            wp_die('Sem permissao.');
+        }
+
+        check_admin_referer('f5tv_delete_content');
+        $post_id = absint($_POST['post_id'] ?? 0);
+        $post = $post_id ? get_post($post_id) : null;
+
+        if ($post && in_array($post->post_type, ['f5tv_conteudo', 'f5tv_serie'], true)) {
+            wp_delete_post($post_id, true);
+        }
+
+        wp_safe_redirect(admin_url('admin.php?page=f5tv-content-studio&deleted=1'));
         exit;
     }
 
@@ -557,18 +577,21 @@ class F5TV_Admin_Content_Studio
         // Se a ação for criar novo conteúdo ou série no Estúdio
         if ($action === 'new') {
             $post_type = in_array($type, ['f5tv_conteudo', 'f5tv_serie']) ? $type : 'f5tv_conteudo';
-            $title = $post_type === 'f5tv_serie' ? 'Nova Série F5 Streaming' : 'Novo Conteúdo F5 Streaming';
+            $title = $post_type === 'f5tv_serie' ? 'Nova Série F5 Streaming' : 'Novo Programa F5 Streaming';
 
             $new_id = wp_insert_post([
                 'post_title'  => $title,
                 'post_type'   => $post_type,
-                'post_status' => 'publish',
+                'post_status' => 'draft',
             ]);
 
             if ($new_id && !is_wp_error($new_id)) {
                 update_post_meta($new_id, 'genre', 'Investigativo');
-                update_post_meta($new_id, 'age_rating', 'Livre');
+                update_post_meta($new_id, 'age_rating', 'L');
                 update_post_meta($new_id, 'year', date('Y'));
+                if ($post_type === 'f5tv_conteudo') {
+                    update_post_meta($new_id, 'content_type', 'movie');
+                }
                 wp_redirect(admin_url('admin.php?page=f5tv-content-studio&action=edit&id=' . $new_id . '&new=1'));
                 exit;
             }
@@ -664,6 +687,12 @@ class F5TV_Admin_Content_Studio
                         <button type="submit" form="f5-main-editor-form" class="f5-btn-primary">
                             💾 Salvar Alterações
                         </button>
+                        <form method="post" action="admin-post.php" onsubmit="return confirm('Excluir este conteudo permanentemente?');">
+                            <?php wp_nonce_field('f5tv_delete_content'); ?>
+                            <input type="hidden" name="action" value="f5tv_delete_content">
+                            <input type="hidden" name="post_id" value="<?php echo esc_attr($post_id); ?>">
+                            <button type="submit" class="f5-btn-secondary" style="background:#7f1d1d !important;color:#fecaca !important;">Deletar</button>
+                        </form>
                     </div>
                 </div>
             </div>

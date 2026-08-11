@@ -74,6 +74,15 @@ function f5tv_admin_add_menus(): void
         'f5tv-live-schedule',
         'f5tv_admin_render_live_schedule'
     );
+
+    add_submenu_page(
+        'f5tv-dashboard',
+        __('Gestão de Canais F5 TV', 'f5tv-admin-panel'),
+        __('Canais', 'f5tv-admin-panel'),
+        'manage_options',
+        'f5tv-channels',
+        'f5tv_admin_render_channels'
+    );
 }
 
 function f5tv_admin_render_dashboard(): void
@@ -130,6 +139,13 @@ function f5tv_admin_render_live_schedule(): void
     }
 }
 
+function f5tv_admin_render_channels(): void
+{
+    if (class_exists('F5TV_Admin_Channels')) {
+        (new F5TV_Admin_Channels())->render_page();
+    }
+}
+
 // Carregar classes do painel admin
 add_action('plugins_loaded', function () {
     $classes = [
@@ -139,6 +155,7 @@ add_action('plugins_loaded', function () {
         'includes/class-settings.php',
         'includes/class-coupons.php',
         'includes/class-live-schedule.php',
+        'includes/class-channels.php',
         'includes/class-content-studio.php',
     ];
 
@@ -151,5 +168,8 @@ add_action('plugins_loaded', function () {
 
     if (class_exists('F5TV_Admin_Content_Studio')) {
         new F5TV_Admin_Content_Studio();
+    }
+    if (class_exists('F5TV_Admin_Channels')) {
+        new F5TV_Admin_Channels();
     }
 });

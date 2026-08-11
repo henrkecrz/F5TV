@@ -124,7 +124,8 @@ if (!defined('ABSPATH')) {
             <!-- Navegação Principal -->
             <nav class="hidden lg:flex items-center gap-5 text-xs font-mono font-bold tracking-widest text-zinc-300 uppercase">
                 <a href="<?php echo esc_url(home_url('/')); ?>" class="hover:text-white transition">Início</a>
-                <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="hover:text-white transition">Catálogo</a>
+                <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="hover:text-white transition">Programas</a>
+                <a href="<?php echo esc_url(home_url('/series/')); ?>" class="hover:text-white transition">Séries</a>
                 <a href="<?php echo esc_url(home_url('/minha-lista/')); ?>" class="hover:text-white transition">Minha Lista</a>
                 <a href="<?php echo esc_url(home_url('/ao-vivo/')); ?>" class="hover:text-white transition">Ao Vivo</a>
                 <a href="<?php echo esc_url(home_url('/programacao/')); ?>" class="hover:text-white transition">Programação</a>
@@ -184,7 +185,7 @@ if (!defined('ABSPATH')) {
                             </a>
                             <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-f5-red/15 hover:text-white transition group/item">
                                 <svg class="w-4 h-4 text-f5-red group-hover/item:scale-110 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/></svg>
-                                <span>Catálogo</span>
+                                <span>Programas</span>
                             </a>
                             <a href="<?php echo esc_url(home_url('/ao-vivo/')); ?>" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-f5-red/15 hover:text-white transition group/item">
                                 <svg class="w-4 h-4 text-f5-red group-hover/item:scale-110 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
@@ -247,7 +248,7 @@ if (!defined('ABSPATH')) {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V10Z"/><path d="M9 21v-7h6v7"/></svg><span>Início</span>
         </a>
         <a href="<?php echo esc_url(home_url('/catalogo/')); ?>" class="f5tv-bottom-nav-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5M16 4v5"/></svg><span>Catálogo</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5M16 4v5"/></svg><span>Programas</span>
         </a>
         <a href="<?php echo esc_url(home_url('/ao-vivo/')); ?>" class="f5tv-bottom-nav-item">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="2.5" fill="currentColor"/><path d="M5.64 5.64a9 9 0 0 0 0 12.72M18.36 5.64a9 9 0 0 1 0 12.72M2.81 2.81a13 13 0 0 0 0 18.38M21.19 2.81a13 13 0 0 1 0 18.38"/></svg><span>Ao Vivo</span>

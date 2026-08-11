@@ -54,12 +54,19 @@ while (have_posts()): the_post();
     }
     $serie_video_url = f5tv_get_field('video_url');
 
-    // Related series
+    // Related series from the same category, with a fallback to any series.
+    $category_terms = get_the_terms(get_the_ID(), 'f5tv_categoria');
+    $category_id = ($category_terms && !is_wp_error($category_terms)) ? $category_terms[0]->term_id : 0;
     $related_series = get_posts([
         'post_type'      => 'f5tv_serie',
         'posts_per_page' => 4,
         'post_status'    => 'publish',
         'post__not_in'   => [get_the_ID()],
+        'tax_query'      => $category_id ? [[
+            'taxonomy' => 'f5tv_categoria',
+            'field' => 'term_id',
+            'terms' => $category_id,
+        ]] : [],
     ]);
 
     // Reviews

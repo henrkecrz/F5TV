@@ -31,20 +31,17 @@ while (have_posts()): the_post();
 
     // Related content from same category
     $cat_id = ($category && !is_wp_error($category)) ? $category[0]->term_id : 0;
-    $related_posts = [];
-    if ($cat_id) {
-        $related_posts = get_posts([
-            'post_type'      => 'f5tv_conteudo',
-            'posts_per_page' => 4,
-            'post_status'    => 'publish',
-            'post__not_in'   => [get_the_ID()],
-            'tax_query'      => [[
-                'taxonomy' => 'f5tv_categoria',
-                'field'    => 'term_id',
-                'terms'    => $cat_id,
-            ]],
-        ]);
-    }
+    $related_posts = get_posts([
+        'post_type'      => 'f5tv_conteudo',
+        'posts_per_page' => 6,
+        'post_status'    => 'publish',
+        'post__not_in'   => [get_the_ID()],
+        'tax_query'      => $cat_id ? [[
+            'taxonomy' => 'f5tv_categoria',
+            'field'    => 'term_id',
+            'terms'    => $cat_id,
+        ]] : [],
+    ]);
 
     // Series / Seasons / Episodes
     $series_posts = get_posts([
