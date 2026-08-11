@@ -9,8 +9,21 @@ class F5TV_Admin_Channels
 {
     public function __construct()
     {
+        add_action('admin_menu', [$this, 'register_live_pages'], 99);
         add_action('admin_post_f5tv_save_channel', [$this, 'save_channel']);
         add_action('admin_post_f5tv_delete_channel', [$this, 'delete_channel']);
+    }
+
+    public function register_live_pages(): void
+    {
+        $parent = 'edit.php?post_type=f5tv_canal';
+        remove_submenu_page($parent, $parent);
+        remove_submenu_page($parent, 'post-new.php?post_type=f5tv_canal');
+        remove_submenu_page($parent, 'edit.php?post_type=f5tv_programacao');
+
+        add_submenu_page($parent, __('Todos os Canais', 'f5tv-admin-panel'), __('Todos os Canais', 'f5tv-admin-panel'), 'manage_options', 'f5tv-live-channels', [$this, 'render_page']);
+        add_submenu_page($parent, __('Adicionar Novo Canal', 'f5tv-admin-panel'), __('Adicionar Novo Canal', 'f5tv-admin-panel'), 'manage_options', 'f5tv-live-channel-new', [$this, 'render_page']);
+        add_submenu_page($parent, __('Grade de Programação', 'f5tv-admin-panel'), __('Grade de Programação', 'f5tv-admin-panel'), 'manage_options', 'f5tv-live-schedule', 'f5tv_admin_render_live_schedule');
     }
 
     public function save_channel(): void
@@ -38,7 +51,7 @@ class F5TV_Admin_Channels
             update_post_meta($id, 'active', isset($_POST['active']) ? 1 : 0);
             update_post_meta($id, 'stream_url', esc_url_raw($_POST['stream_url'] ?? ''));
         }
-        wp_safe_redirect(admin_url('admin.php?page=f5tv-channels&saved=1'));
+        wp_safe_redirect(admin_url('admin.php?page=f5tv-live-channels&saved=1'));
         exit;
     }
 
@@ -52,13 +65,14 @@ class F5TV_Admin_Channels
         if ($id && get_post_type($id) === 'f5tv_canal') {
             wp_delete_post($id, true);
         }
-        wp_safe_redirect(admin_url('admin.php?page=f5tv-channels&deleted=1'));
+        wp_safe_redirect(admin_url('admin.php?page=f5tv-live-channels&deleted=1'));
         exit;
     }
 
     public function render_page(): void
     {
         $editing = absint($_GET['edit'] ?? 0);
+        $is_new_page = sanitize_key($_GET['page'] ?? '') === 'f5tv-live-channel-new';
         $channel = $editing ? get_post($editing) : null;
         $channels = get_posts([
             'post_type' => 'f5tv_canal',
@@ -93,13 +107,13 @@ class F5TV_Admin_Channels
                         <label class="f5-channel-label">Status</label><select class="f5-channel-input" name="status"><option value="online" <?php selected($value('status','online'),'online'); ?>>Online</option><option value="offline" <?php selected($value('status','online'),'offline'); ?>>Offline</option></select>
                         <label style="display:flex;gap:8px;align-items:center;margin:15px 0;color:#d1d5db"><input type="checkbox" name="active" value="1" <?php checked($value('active',1),1); ?>> Canal ativo</label>
                         <button class="f5-channel-btn" type="submit">Salvar canal</button>
-                        <?php if ($channel): ?><a href="<?php echo esc_url(admin_url('admin.php?page=f5tv-channels')); ?>" style="color:#9ca3af;margin-left:10px">Cancelar</a><?php endif; ?>
+                        <?php if ($channel): ?><a href="<?php echo esc_url(admin_url('admin.php?page=f5tv-live-channels')); ?>" style="color:#9ca3af;margin-left:10px">Cancelar</a><?php endif; ?>
                     </form>
                 </div>
-                <div class="f5-channel-card"><h2 style="color:#fff;margin-top:0">Canais cadastrados</h2><table class="f5-channel-table"><thead><tr><th>Canal</th><th>Sinal</th><th>Status</th><th>Acoes</th></tr></thead><tbody>
+                <?php if (!$is_new_page): ?><div class="f5-channel-card"><h2 style="color:#fff;margin-top:0">Canais cadastrados</h2><table class="f5-channel-table"><thead><tr><th>Canal</th><th>Sinal</th><th>Status</th><th>Acoes</th></tr></thead><tbody>
                 <?php if (!$channels): ?><tr><td colspan="4">Nenhum canal cadastrado.</td></tr><?php endif; ?>
-                <?php foreach ($channels as $item): ?><tr><td><strong><?php echo esc_html($item->post_title); ?></strong><br><small style="color:#6b7280"><?php echo esc_html(get_post_meta($item->ID,'logo_text',true)); ?></small></td><td><?php echo get_post_meta($item->ID,'stream_url',true) ? 'Configurado' : 'Pendente'; ?></td><td><span class="f5-channel-pill" style="<?php echo get_post_meta($item->ID,'status',true)==='offline'?'background:rgba(239,68,68,.15);color:#fca5a5':''; ?>"><?php echo esc_html(get_post_meta($item->ID,'status',true) ?: 'offline'); ?></span></td><td><a href="<?php echo esc_url(admin_url('admin.php?page=f5tv-channels&edit='.$item->ID)); ?>">Editar</a> <form method="post" action="admin-post.php" style="display:inline" onsubmit="return confirm('Remover este canal?')"><?php wp_nonce_field('f5tv_delete_channel'); ?><input type="hidden" name="action" value="f5tv_delete_channel"><input type="hidden" name="channel_id" value="<?php echo esc_attr($item->ID); ?>"><button type="submit" style="background:none;border:0;color:#f87171;cursor:pointer">Deletar</button></form></td></tr><?php endforeach; ?>
-                </tbody></table></div>
+                <?php foreach ($channels as $item): ?><tr><td><strong><?php echo esc_html($item->post_title); ?></strong><br><small style="color:#6b7280"><?php echo esc_html(get_post_meta($item->ID,'logo_text',true)); ?></small></td><td><?php echo get_post_meta($item->ID,'stream_url',true) ? 'Configurado' : 'Pendente'; ?></td><td><span class="f5-channel-pill" style="<?php echo get_post_meta($item->ID,'status',true)==='offline'?'background:rgba(239,68,68,.15);color:#fca5a5':''; ?>"><?php echo esc_html(get_post_meta($item->ID,'status',true) ?: 'offline'); ?></span></td><td><a href="<?php echo esc_url(admin_url('admin.php?page=f5tv-live-channel-new&edit='.$item->ID)); ?>">Editar</a> <form method="post" action="admin-post.php" style="display:inline" onsubmit="return confirm('Remover este canal?')"><?php wp_nonce_field('f5tv_delete_channel'); ?><input type="hidden" name="action" value="f5tv_delete_channel"><input type="hidden" name="channel_id" value="<?php echo esc_attr($item->ID); ?>"><button type="submit" style="background:none;border:0;color:#f87171;cursor:pointer">Deletar</button></form></td></tr><?php endforeach; ?>
+                </tbody></table></div><?php endif; ?>
             </div>
         </div>
         <?php
