@@ -946,6 +946,7 @@ add_action('template_redirect', function () {
 add_action('init', 'f5tv_seed_program_catalog', 30);
 add_action('init', 'f5tv_seed_program_episodes', 31);
 add_action('init', 'f5tv_seed_live_demo', 32);
+add_action('init', 'f5tv_seed_series_demo', 33);
 function f5tv_seed_program_catalog(): void
 {
     static $ran = false;
@@ -1203,6 +1204,67 @@ function f5tv_seed_live_demo(): void
             update_post_meta($post_id, 'is_featured', $show_index === 0 ? 1 : 0);
             update_post_meta($post_id, '_f5tv_demo_schedule', 1);
         }
+    }
+}
+
+/** Popula séries demonstrativas independentes, com temporadas e episódios próprios. */
+function f5tv_seed_series_demo(): void
+{
+    static $ran = false;
+    if ($ran || !post_type_exists('f5tv_serie') || !post_type_exists('f5tv_temporada') || !post_type_exists('f5tv_episodio')) return;
+    $ran = true;
+
+    $series = [
+        ['slug' => 'conexao-f5', 'title' => 'Conexão F5', 'genre' => 'Jornalismo Investigativo', 'description' => 'Investigações e histórias que revelam os bastidores da tecnologia, da sociedade e do Brasil.', 'cover' => 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=900'],
+        ['slug' => 'mundo-f5-kids', 'title' => 'Mundo F5 Kids', 'genre' => 'Infantil / Educativo', 'description' => 'Aventuras educativas para descobrir ciência, criatividade e o mundo de um jeito divertido.', 'cover' => 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?q=80&w=900'],
+        ['slug' => 'rastreadores-criminais', 'title' => 'Rastreadores Criminais', 'genre' => 'Investigação', 'description' => 'Casos, operações e pistas em uma série documental de investigação e ação.', 'cover' => 'https://images.unsplash.com/photo-1453873531674-2151bcd01707?q=80&w=900'],
+    ];
+    $sample_video = 'https://assets.mixkit.co/videos/preview/mixkit-software-developer-working-on-his-computer-34289-large.mp4';
+
+    foreach ($series as $series_data) {
+        $series_post = get_page_by_path($series_data['slug'], OBJECT, 'f5tv_serie');
+        if (!$series_post) {
+            $series_id = wp_insert_post(['post_type' => 'f5tv_serie', 'post_status' => 'publish', 'post_title' => $series_data['title'], 'post_name' => $series_data['slug'], 'post_content' => $series_data['description']]);
+            if (!$series_id || is_wp_error($series_id)) continue;
+            $series_post = get_post($series_id);
+        }
+        $series_id = absint($series_post->ID);
+        update_post_meta($series_id, 'cover_url', $series_data['cover']);
+        update_post_meta($series_id, 'banner_url', $series_data['cover']);
+        update_post_meta($series_id, 'content_type', 'serie');
+        update_post_meta($series_id, '_f5tv_demo_series', 1);
+        if (taxonomy_exists('f5tv_genero')) wp_set_object_terms($series_id, $series_data['genre'], 'f5tv_genero', false);
+
+        for ($season_number = 1; $season_number <= 2; $season_number++) {
+            $season_slug = $series_data['slug'] . '-temporada-' . $season_number;
+            $season = get_page_by_path($season_slug, OBJECT, 'f5tv_temporada');
+            if (!$season) {
+                $season_id = wp_insert_post(['post_type' => 'f5tv_temporada', 'post_status' => 'publish', 'post_title' => 'Temporada ' . $season_number, 'post_name' => $season_slug, 'post_parent' => $series_id]);
+                if (!$season_id || is_wp_error($season_id)) continue;
+                $season = get_post($season_id);
+            }
+            $season_id = absint($season->ID);
+            update_post_meta($season_id, 'series_id', $series_id);
+            update_post_meta($season_id, 'number', $season_number);
+
+            for ($episode_number = 1; $episode_number <= 4; $episode_number++) {
+                $episode_slug = $season_slug . '-episodio-' . $episode_number;
+                $episode = get_page_by_path($episode_slug, OBJECT, 'f5tv_episodio');
+                if (!$episode) {
+                    $episode_id = wp_insert_post(['post_type' => 'f5tv_episodio', 'post_status' => 'publish', 'post_title' => 'Episódio ' . $episode_number . ' - ' . $series_data['title'], 'post_name' => $episode_slug, 'post_parent' => $season_id]);
+                    if (!$episode_id || is_wp_error($episode_id)) continue;
+                    $episode = get_post($episode_id);
+                }
+                $episode_id = absint($episode->ID);
+                update_post_meta($episode_id, 'season_id', $season_id);
+                delete_post_meta($episode_id, 'content_id');
+                update_post_meta($episode_id, 'number', $episode_number);
+                update_post_meta($episode_id, 'duration', $series_data['slug'] === 'mundo-f5-kids' ? '18 min' : '45 min');
+                update_post_meta($episode_id, 'video_url', $sample_video);
+                update_post_meta($episode_id, 'thumbnail_url', $series_data['cover']);
+            }
+        }
+        f5tv_normalize_series_seasons($series_id);
     }
 }
 
