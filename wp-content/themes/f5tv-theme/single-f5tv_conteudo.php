@@ -31,7 +31,15 @@ while (have_posts()): the_post();
 
     // Related content from same category
     $cat_id = ($category && !is_wp_error($category)) ? $category[0]->term_id : 0;
-    $related_posts = get_posts([
+    $related_ids = array_values(array_filter(array_map('absint', (array) get_post_meta(get_the_ID(), 'related_content_ids', true))));
+    $related_posts = $related_ids ? get_posts([
+        'post_type' => 'f5tv_conteudo',
+        'post__in' => $related_ids,
+        'post__not_in' => [get_the_ID()],
+        'posts_per_page' => 6,
+        'post_status' => 'publish',
+        'orderby' => 'post__in',
+    ]) : get_posts([
         'post_type'      => 'f5tv_conteudo',
         'posts_per_page' => 6,
         'post_status'    => 'publish',
@@ -44,12 +52,14 @@ while (have_posts()): the_post();
     ]);
 
     // Series / Seasons / Episodes
-    $series_posts = get_posts([
+    $linked_series_id = absint(get_post_meta(get_the_ID(), 'series_id', true));
+    $series_posts = $linked_series_id ? [get_post($linked_series_id)] : get_posts([
         'post_type'      => 'f5tv_serie',
         'posts_per_page' => 1,
         'post_status'    => 'publish',
         's'              => get_the_title(),
     ]);
+    $series_posts = array_values(array_filter($series_posts));
     $has_series = !empty($series_posts);
     $all_seasons = [];
     if ($has_series) {
@@ -344,7 +354,7 @@ while (have_posts()): the_post();
                         ?>
                             <a href="<?php echo esc_url(get_permalink($related->ID)); ?>"
                                class="flex gap-3 bg-f5-blue-950 p-2 rounded-xl border border-zinc-900 hover:border-zinc-800 transition cursor-pointer group">
-                                <div class="w-28 aspect-video rounded bg-f5-blue-900 overflow-hidden shrink-0">
+                                <div class="w-20 md:w-24 aspect-video rounded bg-f5-blue-900 overflow-hidden shrink-0">
                                     <?php if ($rel_cover): ?>
                                         <img src="<?php echo esc_url($rel_cover); ?>" alt="<?php echo esc_attr($related->post_title); ?>"
                                              class="w-full h-full object-contain group-hover:opacity-100 opacity-70 transition">

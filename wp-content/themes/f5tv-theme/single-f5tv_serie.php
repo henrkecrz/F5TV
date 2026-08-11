@@ -57,7 +57,15 @@ while (have_posts()): the_post();
     // Related series from the same category, with a fallback to any series.
     $category_terms = get_the_terms(get_the_ID(), 'f5tv_categoria');
     $category_id = ($category_terms && !is_wp_error($category_terms)) ? $category_terms[0]->term_id : 0;
-    $related_series = get_posts([
+    $related_ids = array_values(array_filter(array_map('absint', (array) get_post_meta(get_the_ID(), 'related_series_ids', true))));
+    $related_series = $related_ids ? get_posts([
+        'post_type' => 'f5tv_serie',
+        'post__in' => $related_ids,
+        'post__not_in' => [get_the_ID()],
+        'posts_per_page' => 4,
+        'post_status' => 'publish',
+        'orderby' => 'post__in',
+    ]) : get_posts([
         'post_type'      => 'f5tv_serie',
         'posts_per_page' => 4,
         'post_status'    => 'publish',
@@ -361,7 +369,7 @@ while (have_posts()): the_post();
                         ?>
                             <a href="<?php echo esc_url(get_permalink($rel->ID)); ?>"
                                class="flex gap-3 bg-f5-blue-950 p-2 rounded-xl border border-zinc-900 hover:border-zinc-800 transition cursor-pointer group">
-                                <div class="w-16 h-20 rounded bg-f5-blue-900 overflow-hidden shrink-0">
+                               <div class="w-12 h-16 rounded bg-f5-blue-900 overflow-hidden shrink-0">
                                     <?php if ($rel_banner): ?>
                                         <img src="<?php echo esc_url($rel_banner); ?>" alt="<?php echo esc_attr($rel->post_title); ?>"
                                              class="w-full h-full object-cover group-hover:opacity-100 opacity-70 transition">

@@ -486,6 +486,23 @@ class F5TV_Admin_Content_Studio
             }
         }
 
+        if (get_post_type($post_id) === 'f5tv_conteudo') {
+            update_post_meta($post_id, 'series_id', absint($_POST['series_id'] ?? 0));
+            $related = array_map('absint', (array) ($_POST['related_content_ids'] ?? []));
+            $related = array_values(array_filter(array_unique($related), static function ($id) use ($post_id) {
+                return $id && $id !== $post_id && get_post_type($id) === 'f5tv_conteudo';
+            }));
+            update_post_meta($post_id, 'related_content_ids', $related);
+        }
+
+        if (get_post_type($post_id) === 'f5tv_serie') {
+            $related = array_map('absint', (array) ($_POST['related_series_ids'] ?? []));
+            $related = array_values(array_filter(array_unique($related), static function ($id) use ($post_id) {
+                return $id && $id !== $post_id && get_post_type($id) === 'f5tv_serie';
+            }));
+            update_post_meta($post_id, 'related_series_ids', $related);
+        }
+
         wp_redirect(admin_url('admin.php?page=f5tv-content-studio&action=edit&id=' . $post_id . '&saved=1'));
         exit;
     }
@@ -687,13 +704,35 @@ class F5TV_Admin_Content_Studio
         $is_featured  = f5tv_get_field('is_featured', $post_id);
         $is_free      = f5tv_get_field('is_free', $post_id);
         $is_exclusive = f5tv_get_field('is_exclusive', $post_id);
+        $all_series = get_posts([
+            'post_type' => 'f5tv_serie',
+            'post_status' => ['publish', 'draft'],
+            'posts_per_page' => -1,
+            'post__not_in' => [$post_id],
+            'orderby' => 'title',
+            'order' => 'ASC',
+        ]);
+        $all_contents = get_posts([
+            'post_type' => 'f5tv_conteudo',
+            'post_status' => ['publish', 'draft'],
+            'posts_per_page' => -1,
+            'post__not_in' => [$post_id],
+            'orderby' => 'title',
+            'order' => 'ASC',
+        ]);
+        $linked_series_id = absint(get_post_meta($post_id, 'series_id', true));
+        $related_content_ids = array_map('absint', (array) get_post_meta($post_id, 'related_content_ids', true));
+        $related_series_ids = array_map('absint', (array) get_post_meta($post_id, 'related_series_ids', true));
 
         // Buscar Temporadas da Série
         $seasons = get_posts([
             'post_type'      => 'f5tv_temporada',
             'posts_per_page' => -1,
-            'meta_key'       => 'series_id',
-            'meta_value'     => $post_id,
+            'meta_query'     => [[
+                'key' => 'series_id',
+                'value' => $post_id,
+                'compare' => '=',
+            ]],
             'orderby'        => 'meta_value_num',
             'meta_key'       => 'number',
             'order'          => 'ASC',
@@ -810,6 +849,45 @@ class F5TV_Admin_Content_Studio
                             <label class="f5-label">Descrição Completa</label>
                             <textarea name="post_content" class="f5-input" rows="4"><?php echo esc_textarea($post->post_content); ?></textarea>
                         </div>
+                    </div>
+                </div>
+
+                <!-- 2. Relacionamentos editoriais -->
+                <div class="f5-card">
+                    <h2 class="f5-title" style="font-size: 1.15rem;">🔗 Organização do Catálogo</h2>
+                    <p class="f5-subtitle">Defina a série deste programa e escolha recomendações específicas, como em uma experiência de streaming.</p>
+                    <div class="f5-form-grid">
+                        <?php if ($post->post_type === 'f5tv_conteudo'): ?>
+                            <div class="f5-field">
+                                <label class="f5-label">Série relacionada</label>
+                                <select name="series_id" class="f5-input">
+                                    <option value="0">Nenhuma série</option>
+                                    <?php foreach ($all_series as $series): ?>
+                                        <option value="<?php echo esc_attr($series->ID); ?>" <?php selected($linked_series_id, $series->ID); ?>><?php echo esc_html($series->post_title); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <small style="color:#6b7280;">Use quando este programa fizer parte de uma série.</small>
+                            </div>
+                            <div class="f5-field">
+                                <label class="f5-label">Programas semelhantes</label>
+                                <select name="related_content_ids[]" class="f5-input" multiple size="5">
+                                    <?php foreach ($all_contents as $related_item): ?>
+                                        <option value="<?php echo esc_attr($related_item->ID); ?>" <?php selected(in_array($related_item->ID, $related_content_ids, true), true); ?>><?php echo esc_html($related_item->post_title); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <small style="color:#6b7280;">Segure Ctrl/Cmd para selecionar mais de um.</small>
+                            </div>
+                        <?php else: ?>
+                            <div class="f5-field" style="grid-column: span 2;">
+                                <label class="f5-label">Séries semelhantes</label>
+                                <select name="related_series_ids[]" class="f5-input" multiple size="6">
+                                    <?php foreach ($all_series as $related_series): ?>
+                                        <option value="<?php echo esc_attr($related_series->ID); ?>" <?php selected(in_array($related_series->ID, $related_series_ids, true), true); ?>><?php echo esc_html($related_series->post_title); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <small style="color:#6b7280;">A página da série exibirá estas recomendações primeiro.</small>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -955,8 +1033,11 @@ class F5TV_Admin_Content_Studio
                     $episodes = get_posts([
                         'post_type'      => 'f5tv_episodio',
                         'posts_per_page' => -1,
-                        'meta_key'       => 'season_id',
-                        'meta_value'     => $season->ID,
+                        'meta_query'     => [[
+                            'key' => 'season_id',
+                            'value' => $season->ID,
+                            'compare' => '=',
+                        ]],
                         'orderby'        => 'meta_value_num',
                         'meta_key'       => 'number',
                         'order'          => 'ASC',
