@@ -53,7 +53,7 @@ while (have_posts()): the_post();
         ]);
     }
     $serie_video_url = f5tv_get_field('video_url');
-    $serie_trailer_url = f5tv_get_field('trailer_url');
+    $serie_trailer_url = f5tv_get_field('trailer_url') ?: get_post_meta(get_the_ID(), 'trailer_url', true);
 
     // Related series from the same category, with a fallback to any series.
     $category_terms = get_the_terms(get_the_ID(), 'f5tv_categoria');
@@ -227,7 +227,7 @@ while (have_posts()): the_post();
                 <a href="<?php echo esc_url(home_url('/assista?id=' . get_the_ID() . '&trailer=true')); ?>"
                    class="bg-f5-blue-900 border border-zinc-800 hover:bg-f5-blue-800 hover:border-zinc-700 text-white font-bold py-3.5 px-6 rounded-xl text-xs tracking-wider uppercase font-mono flex items-center justify-center gap-2 cursor-pointer transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001-1 1z"/></svg>
-                    <span>Ver Teaser</span>
+                    <span>Assistir Trailer</span>
                 </a>
                 <?php endif; ?>
                 <?php f5tv_render_minha_lista_button(get_the_ID()); ?>
