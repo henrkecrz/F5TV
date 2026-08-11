@@ -85,6 +85,16 @@ while (have_posts()): the_post();
         'orderby' => 'meta_value_num',
         'order' => 'ASC',
     ]);
+    if (empty($program_episodes)) {
+        $program_episodes = get_posts([
+            'post_type' => 'f5tv_episodio',
+            'post_status' => ['publish', 'private'],
+            'posts_per_page' => -1,
+            'post_parent' => get_the_ID(),
+            'orderby' => 'menu_order',
+            'order' => 'ASC',
+        ]);
+    }
 
     // Reviews (WP comments used as reviews)
     $reviews = get_comments([
@@ -216,7 +226,7 @@ while (have_posts()): the_post();
                 <?php endif; ?>
 
                 <?php if ($trailer_url): ?>
-                    <a href="<?php echo esc_url($trailer_url); ?>" target="_blank"
+                    <a href="<?php echo esc_url(home_url('/assista?id=' . get_the_ID() . '&trailer=true')); ?>"
                        class="bg-f5-blue-900 border border-zinc-800 hover:bg-f5-blue-800 hover:border-zinc-700 text-white font-bold py-3.5 px-6 rounded-xl text-xs tracking-wider uppercase font-mono flex items-center justify-center gap-2 cursor-pointer transition">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/></svg>
                         <span>Ver Teaser</span>
