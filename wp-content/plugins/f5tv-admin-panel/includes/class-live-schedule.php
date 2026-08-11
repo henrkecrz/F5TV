@@ -13,6 +13,7 @@ class F5TV_Admin_Live_Schedule
     public function __construct()
     {
         add_action('admin_menu', [$this, 'register_submenu']);
+        add_action('admin_post_f5tv_save_schedule', [$this, 'save_schedule']);
     }
 
     public function register_submenu(): void
@@ -44,6 +45,10 @@ class F5TV_Admin_Live_Schedule
         $online_channels = array_filter($channels, static function ($channel) {
             return get_post_meta($channel->ID, 'status', true) !== 'offline' && get_post_meta($channel->ID, 'active', true);
         });
+        if (isset($_GET['new'])) {
+            $this->render_form($channels);
+            return;
+        }
         ?>
         <style>
             .f5-admin-wrap { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; color: #f4f4f5; max-width: 1100px; margin: 20px 0; }
@@ -63,7 +68,7 @@ class F5TV_Admin_Live_Schedule
                     <h1 class="f5-title">📡 Grade de Programação ao Vivo</h1>
                     <p class="f5-subtitle">Gerencie as transmissões em tempo real, horários de exibição e canais da plataforma F5 TV.</p>
                 </div>
-                <a href="<?php echo esc_url(admin_url('post-new.php?post_type=f5tv_programacao')); ?>" class="f5-btn-action" style="padding: 0.65rem 1.25rem; font-size: 0.8rem;">
+                <a href="<?php echo esc_url(admin_url('admin.php?page=f5tv-live-schedule&new=1')); ?>" class="f5-btn-action" style="padding: 0.65rem 1.25rem; font-size: 0.8rem;">
                     ➕ Novo Programa Ao Vivo
                 </a>
             </div>
@@ -116,7 +121,7 @@ class F5TV_Admin_Live_Schedule
                                     <a href="<?php echo esc_url(get_edit_post_link($channel->ID)); ?>" class="f5-btn-action">
                                         ✏️ Editar Canal
                                     </a>
-                                    <a href="<?php echo esc_url(admin_url('post-new.php?post_type=f5tv_programacao')); ?>" class="f5-btn-action" style="background: #1f293d;">
+                                    <a href="<?php echo esc_url(admin_url('admin.php?page=f5tv-live-schedule&new=1&channel_id=' . $channel->ID)); ?>" class="f5-btn-action" style="background: #1f293d;">
                                         🗓️ Adicionar Horário
                                     </a>
                                 </td>
@@ -127,5 +132,49 @@ class F5TV_Admin_Live_Schedule
             </div>
         </div>
         <?php
+    }
+
+    private function render_form(array $channels): void
+    {
+        $channel_id = absint($_GET['channel_id'] ?? 0);
+        $status_options = ['scheduled' => 'Programado', 'live' => 'Ao Vivo', 'premiere' => 'Estreia', 'rerun' => 'Reprise', 'ended' => 'Encerrado'];
+        ?>
+        <style>
+            .f5-schedule-form{max-width:920px;margin:22px 0;color:#f4f4f5;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.f5-schedule-form h1{color:#fff;font-size:28px;font-weight:900;letter-spacing:-.04em;margin:0 0 6px}.f5-schedule-form p{color:#9ca3af}.f5-form-card{background:#0c101d;border:1px solid #1f293d;border-radius:16px;padding:24px;box-shadow:0 12px 34px rgba(0,0,0,.35)}.f5-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.f5-form-field{display:flex;flex-direction:column;gap:7px}.f5-form-field.full{grid-column:1/-1}.f5-form-field label{color:#cbd5e1;font-size:12px;font-weight:800}.f5-form-input,.f5-form-select,.f5-form-textarea{width:100%;box-sizing:border-box;background:#060913;border:1px solid #27344d;border-radius:9px;color:#fff;padding:11px 12px}.f5-form-textarea{min-height:100px;resize:vertical}.f5-form-actions{display:flex;align-items:center;gap:10px;margin-top:22px;padding-top:18px;border-top:1px solid #1f293d}.f5-form-primary{border:0;border-radius:9px;padding:11px 18px;background:#e50914;color:#fff;font-weight:900;cursor:pointer}.f5-form-secondary{color:#a1a1aa;text-decoration:none}.f5-form-tip{background:#121b2e;border:1px solid #253654;border-radius:10px;padding:12px 14px;color:#aebbd2;font-size:12px;margin-bottom:18px}@media(max-width:700px){.f5-form-grid{grid-template-columns:1fr}.f5-form-field.full{grid-column:auto}}
+        </style>
+        <div class="f5-schedule-form wrap">
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:20px"><div><h1>Novo programa ao vivo</h1><p>Monte a programação em poucos passos. O conteúdo ficará disponível na grade e na página ao vivo.</p></div><a class="f5-form-secondary" href="<?php echo esc_url(admin_url('admin.php?page=f5tv-live-schedule')); ?>">← Voltar para a grade</a></div>
+            <div class="f5-form-tip">Defina o canal e o horário para que a programação apareça no lugar certo. Você poderá ajustar o status depois sem editar o conteúdo.</div>
+            <form class="f5-form-card" method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                <input type="hidden" name="action" value="f5tv_save_schedule"><?php wp_nonce_field('f5tv_save_schedule'); ?>
+                <div class="f5-form-grid">
+                    <div class="f5-form-field full"><label for="f5-schedule-title">Nome do programa</label><input id="f5-schedule-title" class="f5-form-input" name="title" required placeholder="Ex.: F5 Notícias - Edição da Manhã"></div>
+                    <div class="f5-form-field"><label for="f5-schedule-channel">Canal</label><select id="f5-schedule-channel" class="f5-form-select" name="channel_id" required><option value="">Selecione um canal</option><?php foreach ($channels as $channel): ?><option value="<?php echo esc_attr($channel->ID); ?>" <?php selected($channel_id, $channel->ID); ?>><?php echo esc_html($channel->post_title); ?></option><?php endforeach; ?></select></div>
+                    <div class="f5-form-field"><label for="f5-schedule-host">Apresentador ou responsável</label><input id="f5-schedule-host" class="f5-form-input" name="host" placeholder="Ex.: Mariana Costa"></div>
+                    <div class="f5-form-field"><label for="f5-schedule-date">Data de exibição</label><input id="f5-schedule-date" class="f5-form-input" type="date" name="date" required value="<?php echo esc_attr(current_time('Y-m-d')); ?>"></div>
+                    <div class="f5-form-field"><label for="f5-schedule-status">Status</label><select id="f5-schedule-status" class="f5-form-select" name="status"><?php foreach ($status_options as $key => $label): ?><option value="<?php echo esc_attr($key); ?>"><?php echo esc_html($label); ?></option><?php endforeach; ?></select></div>
+                    <div class="f5-form-field"><label for="f5-schedule-start">Hora de início</label><input id="f5-schedule-start" class="f5-form-input" type="time" name="start_time" required></div>
+                    <div class="f5-form-field"><label for="f5-schedule-end">Hora de término</label><input id="f5-schedule-end" class="f5-form-input" type="time" name="end_time" required></div>
+                    <div class="f5-form-field full"><label for="f5-schedule-image">Imagem de capa (opcional)</label><input id="f5-schedule-image" class="f5-form-input" type="url" name="image_url" placeholder="https://.../capa.jpg"></div>
+                    <div class="f5-form-field full"><label for="f5-schedule-description">Descrição curta</label><textarea id="f5-schedule-description" class="f5-form-textarea" name="description" placeholder="O que o público encontrará neste programa?"></textarea></div>
+                    <label class="f5-form-field" style="flex-direction:row;align-items:center;gap:9px;color:#cbd5e1;font-size:12px"><input type="checkbox" name="is_featured" value="1"> Destacar na programação</label>
+                </div>
+                <div class="f5-form-actions"><button type="submit" class="f5-form-primary">Salvar programa ao vivo</button><a class="f5-form-secondary" href="<?php echo esc_url(admin_url('admin.php?page=f5tv-live-schedule')); ?>">Cancelar</a></div>
+            </form>
+        </div>
+        <?php
+    }
+
+    public function save_schedule(): void
+    {
+        if (!current_user_can('manage_options')) wp_die('Sem permissão.');
+        check_admin_referer('f5tv_save_schedule');
+        $title = sanitize_text_field(wp_unslash($_POST['title'] ?? ''));
+        $post_id = wp_insert_post(['post_type' => 'f5tv_programacao', 'post_status' => 'publish', 'post_title' => $title, 'post_content' => wp_kses_post(wp_unslash($_POST['description'] ?? ''))], true);
+        if (is_wp_error($post_id)) wp_die(esc_html($post_id->get_error_message()));
+        $meta = ['channel_id' => absint($_POST['channel_id'] ?? 0), 'host' => sanitize_text_field(wp_unslash($_POST['host'] ?? '')), 'date' => sanitize_text_field($_POST['date'] ?? ''), 'start_time' => sanitize_text_field($_POST['start_time'] ?? ''), 'end_time' => sanitize_text_field($_POST['end_time'] ?? ''), 'status' => sanitize_key($_POST['status'] ?? 'scheduled'), 'image_url' => esc_url_raw(wp_unslash($_POST['image_url'] ?? '')), 'is_featured' => !empty($_POST['is_featured']) ? 1 : 0];
+        foreach ($meta as $key => $value) update_post_meta($post_id, $key, $value);
+        wp_safe_redirect(admin_url('admin.php?page=f5tv-live-schedule&saved=1'));
+        exit;
     }
 }
