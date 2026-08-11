@@ -10,7 +10,7 @@ get_header();
 
 // Carregar a Landing Page oficial de alta fidelidade
 $contents = get_posts([
-    'post_type'      => ['f5tv_conteudo', 'f5tv_serie'],
+    'post_type'      => 'f5tv_conteudo',
     'posts_per_page' => 20,
     'post_status'    => 'publish',
 ]);

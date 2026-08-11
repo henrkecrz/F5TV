@@ -32,36 +32,6 @@ if ($series_query->have_posts()) {
 
 $featured = $series_list[0] ?? null;
 
-// The public catalog also includes the editorial programs seeded as f5tv_conteudo.
-if (empty($series_list)) {
-    $program_query = new WP_Query([
-        'post_type'      => 'f5tv_conteudo',
-        'posts_per_page' => -1,
-        'post_status'    => 'publish',
-        'orderby'        => 'title',
-        'order'          => 'ASC',
-    ]);
-
-    if ($program_query->have_posts()) {
-        while ($program_query->have_posts()) {
-            $program_query->the_post();
-            $program_id = get_the_ID();
-            $terms = get_the_terms($program_id, 'f5tv_genero');
-            $series_list[] = [
-                'id'          => $program_id,
-                'title'       => get_the_title(),
-                'description' => get_the_excerpt(),
-                'coverUrl'    => f5tv_get_field('cover_url', $program_id) ?: get_the_post_thumbnail_url($program_id, 'medium'),
-                'bannerUrl'   => f5tv_get_field('banner_url', $program_id) ?: f5tv_get_field('cover_url', $program_id),
-                'genre'       => f5tv_get_field('genre', $program_id) ?: (($terms && !is_wp_error($terms)) ? $terms[0]->name : 'F5 TV'),
-                'link'        => get_permalink($program_id),
-            ];
-        }
-        wp_reset_postdata();
-    }
-    $featured = $series_list[0] ?? null;
-}
-
 // Fetch categorized contents for category rows (identical to AppHomePage category sections)
 $all_categories = get_terms([
     'taxonomy'   => 'f5tv_categoria',

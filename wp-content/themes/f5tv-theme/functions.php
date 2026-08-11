@@ -1034,8 +1034,8 @@ function f5tv_seed_program_catalog(): void
 }
 
 /**
- * Cria uma estrutura demonstrativa de séries, temporadas e episódios para o catálogo editorial.
- * Usa slugs estáveis para ser seguro em novas execuções e não duplicar conteúdo.
+ * Popula episódios próprios dos programas sem transformá-los em séries.
+ * Séries são entidades independentes e usam temporadas próprias.
  */
 function f5tv_seed_program_episodes(): void
 {
@@ -1064,69 +1064,60 @@ function f5tv_seed_program_episodes(): void
         ]);
         $program_id = !empty($program_ids) ? absint($program_ids[0]) : 0;
         if (!$program_id) continue;
+        delete_post_meta($program_id, 'series_id');
 
-        $series_slug = 'serie-' . $program['slug'];
-        $series = get_page_by_path($series_slug, OBJECT, 'f5tv_serie');
-        if (!$series) {
-            $series_id = wp_insert_post([
-                'post_type' => 'f5tv_serie',
+        $episodes = get_posts([
+            'post_type' => 'f5tv_episodio',
+            'post_status' => ['publish', 'draft'],
+            'posts_per_page' => -1,
+            'meta_query' => [['key' => 'content_id', 'value' => $program_id, 'compare' => '=']],
+            'meta_key' => 'number',
+            'orderby' => 'meta_value_num',
+            'order' => 'ASC',
+        ]);
+        for ($episode_number = count($episodes) + 1; $episode_number <= 6; $episode_number++) {
+            $episode_id = wp_insert_post([
+                'post_type' => 'f5tv_episodio',
                 'post_status' => 'publish',
-                'post_title' => $program['title'] . ' - Série',
-                'post_name' => $series_slug,
-                'post_content' => 'Acompanhe todos os episódios de ' . $program['title'] . '.',
+                'post_title' => 'Episódio ' . $episode_number . ' - ' . $program['title'],
+                'post_name' => $program['slug'] . '-programa-episodio-' . $episode_number,
+                'post_parent' => $program_id,
             ]);
-            if (!$series_id || is_wp_error($series_id)) continue;
-            $series = get_post($series_id);
+            if (!$episode_id || is_wp_error($episode_id)) continue;
+            update_post_meta($episode_id, 'content_id', $program_id);
+            delete_post_meta($episode_id, 'season_id');
+            update_post_meta($episode_id, 'number', $episode_number);
+            update_post_meta($episode_id, 'duration', '45 min');
+            update_post_meta($episode_id, 'video_url', $sample_video);
+            update_post_meta($episode_id, 'thumbnail_url', get_post_meta($program_id, 'cover_url', true));
         }
-        $series_id = absint($series->ID);
-        update_post_meta($program_id, 'series_id', $series_id);
-        update_post_meta($series_id, 'cover_url', get_post_meta($program_id, 'cover_url', true));
-        update_post_meta($series_id, 'banner_url', get_post_meta($program_id, 'banner_url', true));
-
-        for ($season_number = 1; $season_number <= 2; $season_number++) {
-            $season_slug = $series_slug . '-temporada-' . $season_number;
-            $season = get_page_by_path($season_slug, OBJECT, 'f5tv_temporada');
-            if (!$season) {
-                $season_id = wp_insert_post([
-                    'post_type' => 'f5tv_temporada',
-                    'post_status' => 'publish',
-                    'post_title' => 'Temporada ' . $season_number,
-                    'post_name' => $season_slug,
-                    'post_parent' => $series_id,
-                ]);
-                if (!$season_id || is_wp_error($season_id)) continue;
-                $season = get_post($season_id);
-            }
-            $season_id = absint($season->ID);
-            update_post_meta($season_id, 'series_id', $series_id);
-            update_post_meta($season_id, 'number', $season_number);
-
-            for ($episode_number = 1; $episode_number <= 3; $episode_number++) {
-                $episode_slug = $season_slug . '-episodio-' . $episode_number;
-                $episode = get_page_by_path($episode_slug, OBJECT, 'f5tv_episodio');
-                if (!$episode) {
-                    $episode_id = wp_insert_post([
-                        'post_type' => 'f5tv_episodio',
-                        'post_status' => 'publish',
-                        'post_title' => 'Episódio ' . $episode_number . ' - ' . $program['title'],
-                        'post_name' => $episode_slug,
-                        'post_parent' => $season_id,
-                    ]);
-                    if (!$episode_id || is_wp_error($episode_id)) continue;
-                    $episode = get_post($episode_id);
-                }
-                $episode_id = absint($episode->ID);
-                update_post_meta($episode_id, 'season_id', $season_id);
-                update_post_meta($episode_id, 'content_id', $program_id);
-                update_post_meta($episode_id, 'number', $episode_number);
-                update_post_meta($episode_id, 'duration', '45 min');
-                update_post_meta($episode_id, 'video_url', $sample_video);
-                update_post_meta($episode_id, 'thumbnail_url', get_post_meta($program_id, 'cover_url', true));
-            }
-        }
-        f5tv_normalize_series_seasons($series_id);
     }
-    update_option('f5tv_program_episodes_seed_version', '1', false);
+    f5tv_detach_generated_program_series($programs);
+    update_option('f5tv_program_episodes_seed_version', '2', false);
+}
+
+/** Converte a série demonstrativa antiga em episódios diretos e remove apenas seus contêineres. */
+function f5tv_detach_generated_program_series(array $programs): void
+{
+    if (get_option('f5tv_program_series_cleanup_version') === '1') return;
+    foreach ($programs as $program) {
+        $series = get_page_by_path('serie-' . $program['slug'], OBJECT, 'f5tv_serie');
+        if (!$series) continue;
+        $program_ids = get_posts(['post_type' => 'f5tv_conteudo', 'name' => $program['slug'], 'post_status' => 'any', 'posts_per_page' => 1, 'fields' => 'ids']);
+        $program_id = !empty($program_ids) ? absint($program_ids[0]) : 0;
+        $seasons = get_posts(['post_type' => 'f5tv_temporada', 'post_status' => 'any', 'posts_per_page' => -1, 'fields' => 'ids', 'meta_query' => [['key' => 'series_id', 'value' => $series->ID, 'compare' => '=']]]);
+        foreach ($seasons as $season_id) {
+            $episodes = get_posts(['post_type' => 'f5tv_episodio', 'post_status' => 'any', 'posts_per_page' => -1, 'fields' => 'ids', 'meta_query' => [['key' => 'season_id', 'value' => $season_id, 'compare' => '=']]]);
+            foreach ($episodes as $episode_id) {
+                if ($program_id && !get_post_meta($episode_id, 'content_id', true)) update_post_meta($episode_id, 'content_id', $program_id);
+                delete_post_meta($episode_id, 'season_id');
+                if ($program_id) wp_update_post(['ID' => $episode_id, 'post_parent' => $program_id]);
+            }
+            wp_delete_post($season_id, true);
+        }
+        wp_delete_post($series->ID, true);
+    }
+    update_option('f5tv_program_series_cleanup_version', '1', false);
 }
 
 /** Mantém a numeração das temporadas contínua mesmo após importações anteriores. */

@@ -116,9 +116,10 @@ function f5tv_rest_handle_catalog(WP_REST_Request $request): WP_REST_Response
         return new WP_REST_Response($response, 200);
     }
 
-    // Default: Listar Conteúdos (Filmes/Episódios/Séries)
+    // Default: listar somente programas e documentários do catálogo.
+    // Séries possuem a ação explícita "series" para não misturar os CPTs.
     $args = [
-        'post_type'      => ['f5tv_conteudo', 'f5tv_serie'],
+        'post_type'      => 'f5tv_conteudo',
         'posts_per_page' => -1,
         'post_status'    => 'publish',
     ];
@@ -147,7 +148,7 @@ function f5tv_rest_handle_catalog(WP_REST_Request $request): WP_REST_Response
         
         // Categorias
         $cats = get_the_terms($post_id, 'f5tv_categoria');
-        $cat_id = ($cats && !is_wp_error($cats)) ? $cats[0]->slug : 'series';
+        $cat_id = ($cats && !is_wp_error($cats)) ? $cats[0]->slug : 'programas';
 
         // Elenco e diretores salvos como textarea (um por linha)
         $cast_raw = get_field('cast', $post_id);
@@ -158,7 +159,7 @@ function f5tv_rest_handle_catalog(WP_REST_Request $request): WP_REST_Response
 
         $response[] = [
             'id'               => get_post_field('post_name', $post_id),
-            'type'             => get_field('content_type', $post_id) ?: 'series',
+            'type'             => get_field('content_type', $post_id) ?: 'programa',
             'title'            => get_the_title(),
             'shortDescription' => get_the_excerpt() ?: get_field('short_description', $post_id) ?: get_the_title(),
             'fullDescription'  => get_the_content() ?: get_field('full_description', $post_id) ?: get_the_title(),
