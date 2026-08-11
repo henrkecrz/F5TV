@@ -85,6 +85,12 @@ while (have_posts()): the_post();
         }
         $avg = $cnt > 0 ? round($sum / $cnt, 1) : 5.0;
     }
+    $series_trailer_watch_url = $serie_trailer_url
+        ? home_url('/assista?id=' . get_the_ID() . '&trailer=true')
+        : '';
+    $series_trailer_admin_url = current_user_can('manage_options')
+        ? admin_url('admin.php?page=f5tv-content-studio&action=edit&id=' . get_the_ID() . '#f5_trailer_url')
+        : '';
 ?>
 
 <div id="serie-details-page" class="min-h-screen bg-f5-blue text-zinc-300 font-sans animate-fade-in selection:bg-f5-red selection:text-white">
@@ -126,6 +132,27 @@ while (have_posts()): the_post();
                     <span>👁 <?php echo number_format($views_count, 0, ',', '.'); ?> visualizações</span>
                     <span>•</span>
                     <span class="text-emerald-400">Classificação: <?php echo esc_html($age_rating); ?></span>
+                </div>
+                <div class="flex flex-wrap items-center gap-3 mt-3">
+                    <?php if ($serie_trailer_url): ?>
+                        <a href="<?php echo esc_url($series_trailer_watch_url); ?>"
+                           class="bg-white hover:bg-f5-red text-f5-blue hover:text-white font-black py-3 px-6 rounded-lg text-xs tracking-wider uppercase font-mono flex items-center justify-center gap-2 transition shadow-xl"
+                           aria-label="Assistir trailer de <?php echo esc_attr(get_the_title()); ?>">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <span>Assistir Trailer</span>
+                        </a>
+                    <?php elseif ($series_trailer_admin_url): ?>
+                        <a href="<?php echo esc_url($series_trailer_admin_url); ?>"
+                           class="bg-white/15 hover:bg-white/25 border border-white/30 text-white font-black py-3 px-6 rounded-lg text-xs tracking-wider uppercase font-mono flex items-center justify-center gap-2 transition backdrop-blur-md">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M11 4h2v7h7v2h-7v7h-2v-7H4v-2h7V4z"/></svg>
+                            <span>Cadastrar Trailer</span>
+                        </a>
+                    <?php else: ?>
+                        <span class="bg-black/35 border border-white/15 text-white/60 font-black py-3 px-6 rounded-lg text-xs tracking-wider uppercase font-mono flex items-center justify-center gap-2 cursor-not-allowed backdrop-blur-md" aria-disabled="true" title="Trailer ainda não cadastrado">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <span>Trailer em breve</span>
+                        </span>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -217,11 +244,22 @@ while (have_posts()): the_post();
                 </span>
                 <?php endif; ?>
                 <?php if ($serie_trailer_url): ?>
-                <a href="<?php echo esc_url(home_url('/assista?id=' . get_the_ID() . '&trailer=true')); ?>"
+                <a href="<?php echo esc_url($series_trailer_watch_url); ?>"
                    class="bg-f5-blue-900 border border-zinc-800 hover:bg-f5-blue-800 hover:border-zinc-700 text-white font-bold py-3.5 px-6 rounded-xl text-xs tracking-wider uppercase font-mono flex items-center justify-center gap-2 cursor-pointer transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001-1 1z"/></svg>
                     <span>Assistir Trailer</span>
                 </a>
+                <?php elseif ($series_trailer_admin_url): ?>
+                <a href="<?php echo esc_url($series_trailer_admin_url); ?>"
+                   class="bg-f5-blue-900 border border-zinc-800 hover:bg-f5-blue-800 hover:border-zinc-700 text-white font-bold py-3.5 px-6 rounded-xl text-xs tracking-wider uppercase font-mono flex items-center justify-center gap-2 cursor-pointer transition">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M11 4h2v7h7v2h-7v7h-2v-7H4v-2h7V4z"/></svg>
+                    <span>Cadastrar Trailer</span>
+                </a>
+                <?php else: ?>
+                <span class="bg-f5-blue-950 border border-zinc-900 text-zinc-500 font-bold py-3.5 px-6 rounded-xl text-xs tracking-wider uppercase font-mono flex items-center justify-center gap-2 cursor-not-allowed" aria-disabled="true" title="Trailer ainda não cadastrado">
+                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <span>Trailer em breve</span>
+                </span>
                 <?php endif; ?>
                 <?php f5tv_render_minha_lista_button(get_the_ID()); ?>
             </div>
