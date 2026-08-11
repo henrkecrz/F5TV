@@ -25,12 +25,37 @@ function f5tv_register_rest_routes(): void
         'permission_callback' => '__return_true',
     ]);
 
+    register_rest_route('f5tv/v1', '/live/stream/(?P<id>\d+)', [
+        'methods' => WP_REST_Server::READABLE,
+        'callback' => 'f5tv_rest_handle_live_stream',
+        'permission_callback' => '__return_true',
+    ]);
+
     // Rota: Planos e Cupons
     register_rest_route('f5tv/v1', '/billing', [
         'methods'             => [WP_REST_Server::READABLE, WP_REST_Server::CREATABLE],
         'callback'            => 'f5tv_rest_handle_billing',
         'permission_callback' => '__return_true',
     ]);
+}
+
+function f5tv_rest_handle_live_stream(WP_REST_Request $request)
+{
+    $channel_id = absint($request['id']);
+    $channel = get_post($channel_id);
+    $stream_url = $channel && $channel->post_type === 'f5tv_canal'
+        ? (string) get_post_meta($channel_id, 'stream_url', true)
+        : '';
+    $is_active = $channel && get_post_meta($channel_id, 'active', true) && get_post_meta($channel_id, 'status', true) !== 'offline';
+
+    if (!$is_active || !$stream_url) {
+        return new WP_Error('f5tv_live_unavailable', 'Canal indisponivel.', ['status' => 404]);
+    }
+
+    $response = new WP_REST_Response(null, 302);
+    $response->header('Location', esc_url_raw($stream_url));
+    $response->header('Cache-Control', 'no-store, private');
+    return $response;
 }
 
 /**
