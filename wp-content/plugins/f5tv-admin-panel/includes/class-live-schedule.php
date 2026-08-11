@@ -136,6 +136,7 @@ class F5TV_Admin_Live_Schedule
 
     private function render_form(array $channels): void
     {
+        wp_enqueue_media();
         $channel_id = absint($_GET['channel_id'] ?? 0);
         $status_options = ['scheduled' => 'Programado', 'live' => 'Ao Vivo', 'premiere' => 'Estreia', 'rerun' => 'Reprise', 'ended' => 'Encerrado'];
         ?>
@@ -155,13 +156,38 @@ class F5TV_Admin_Live_Schedule
                     <div class="f5-form-field"><label for="f5-schedule-status">Status</label><select id="f5-schedule-status" class="f5-form-select" name="status"><?php foreach ($status_options as $key => $label): ?><option value="<?php echo esc_attr($key); ?>"><?php echo esc_html($label); ?></option><?php endforeach; ?></select></div>
                     <div class="f5-form-field"><label for="f5-schedule-start">Hora de início</label><input id="f5-schedule-start" class="f5-form-input" type="time" name="start_time" required></div>
                     <div class="f5-form-field"><label for="f5-schedule-end">Hora de término</label><input id="f5-schedule-end" class="f5-form-input" type="time" name="end_time" required></div>
-                    <div class="f5-form-field full"><label for="f5-schedule-image">Imagem de capa (opcional)</label><input id="f5-schedule-image" class="f5-form-input" type="url" name="image_url" placeholder="https://.../capa.jpg"></div>
+                    <div class="f5-form-field full"><label for="f5-schedule-image">Imagem de capa (opcional)</label><div style="display:flex;gap:9px;align-items:center"><input id="f5-schedule-image" class="f5-form-input" type="url" name="image_url" placeholder="Selecione ou envie uma imagem" readonly><button type="button" id="f5-select-schedule-image" class="f5-form-primary" style="white-space:nowrap">Selecionar imagem</button></div><div id="f5-schedule-image-preview" style="display:none;margin-top:10px;max-width:280px;border-radius:10px;overflow:hidden;border:1px solid #27344d"><img src="" alt="Prévia da capa" style="display:block;width:100%;height:120px;object-fit:cover"></div></div>
                     <div class="f5-form-field full"><label for="f5-schedule-description">Descrição curta</label><textarea id="f5-schedule-description" class="f5-form-textarea" name="description" placeholder="O que o público encontrará neste programa?"></textarea></div>
                     <label class="f5-form-field" style="flex-direction:row;align-items:center;gap:9px;color:#cbd5e1;font-size:12px"><input type="checkbox" name="is_featured" value="1"> Destacar na programação</label>
                 </div>
                 <div class="f5-form-actions"><button type="submit" class="f5-form-primary">Salvar programa ao vivo</button><a class="f5-form-secondary" href="<?php echo esc_url(admin_url('admin.php?page=f5tv-live-schedule')); ?>">Cancelar</a></div>
             </form>
         </div>
+        <script>
+        jQuery(function($) {
+            let mediaFrame;
+            const input = $('#f5-schedule-image');
+            const preview = $('#f5-schedule-image-preview');
+            const previewImage = preview.find('img');
+            const showPreview = function(url) {
+                if (!url) { preview.hide(); return; }
+                previewImage.attr('src', url);
+                preview.show();
+            };
+            $('#f5-select-schedule-image').on('click', function(event) {
+                event.preventDefault();
+                if (mediaFrame) { mediaFrame.open(); return; }
+                mediaFrame = wp.media({ title: 'Selecionar capa do programa', button: { text: 'Usar esta imagem' }, multiple: false, library: { type: 'image' } });
+                mediaFrame.on('select', function() {
+                    const attachment = mediaFrame.state().get('selection').first().toJSON();
+                    input.val(attachment.url);
+                    showPreview(attachment.url);
+                });
+                mediaFrame.open();
+            });
+            input.on('change', function() { showPreview(input.val()); });
+        });
+        </script>
         <?php
     }
 
