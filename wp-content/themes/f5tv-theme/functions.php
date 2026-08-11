@@ -105,6 +105,62 @@ if (!function_exists('f5tv_get_youtube_id')) {
     }
 }
 
+/**
+ * Creates a short-lived signed playback token so the stored media URL is not
+ * printed in the initial player markup. The browser still needs the provider
+ * connection to play external media, but the admin URL is not exposed.
+ */
+if (!function_exists('f5tv_create_playback_token')) {
+    function f5tv_create_playback_token(int $content_id, int $episode_id = 0, bool $trailer = false): string {
+        $payload = wp_json_encode([
+            'content' => $content_id,
+            'episode' => $episode_id,
+            'trailer' => $trailer ? 1 : 0,
+            'expires' => time() + 900,
+        ]);
+        $encoded = rtrim(strtr(base64_encode($payload), '+/', '-_'), '=');
+        $signature = hash_hmac('sha256', $encoded, wp_salt('auth'));
+        return $encoded . '.' . $signature;
+    }
+}
+
+add_action('rest_api_init', function (): void {
+    register_rest_route('f5tv/v1', '/playback/(?P<token>[A-Za-z0-9_-]+\.[a-f0-9]{64})', [
+        'methods' => 'GET',
+        'permission_callback' => '__return_true',
+        'callback' => function (WP_REST_Request $request) {
+            $token = sanitize_text_field($request['token']);
+            [$encoded, $signature] = array_pad(explode('.', $token, 2), 2, '');
+            if (!$encoded || !$signature || !hash_equals(hash_hmac('sha256', $encoded, wp_salt('auth')), $signature)) {
+                return new WP_Error('f5tv_invalid_playback', 'Reproducao indisponivel.', ['status' => 403]);
+            }
+
+            $payload = json_decode(base64_decode(strtr($encoded, '-_', '+/')), true);
+            if (!is_array($payload) || empty($payload['expires']) || time() > (int) $payload['expires']) {
+                return new WP_Error('f5tv_expired_playback', 'Sessao expirada.', ['status' => 410]);
+            }
+
+            $content_id = absint($payload['content'] ?? 0);
+            $episode_id = absint($payload['episode'] ?? 0);
+            $url = $content_id ? (string) get_post_meta($content_id, 'video_url', true) : '';
+            if (!empty($payload['trailer'])) {
+                $url = $content_id ? (string) get_post_meta($content_id, 'trailer_url', true) : '';
+            } elseif ($episode_id) {
+                $url = (string) get_post_meta($episode_id, 'video_url', true);
+            }
+
+            if (!$url) {
+                return new WP_Error('f5tv_missing_playback', 'Video nao configurado.', ['status' => 404]);
+            }
+
+            $response = new WP_REST_Response(null, 302);
+            $response->header('Location', esc_url_raw($url));
+            $response->header('Cache-Control', 'private, no-store');
+            return $response;
+        },
+    ]);
+});
+
 if (!function_exists('f5tv_render_video_player')) {
     function f5tv_render_video_player(string $video_url, string $poster_url = '', string $title = ''): string {
         $vimeo_id = f5tv_get_vimeo_id($video_url);

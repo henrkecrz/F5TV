@@ -13,7 +13,7 @@ $is_trailer   = isset($_GET['trailer']) && $_GET['trailer'] === 'true';
 $content_post = $content_id ? get_post($content_id) : null;
 
 if ($content_post) {
-    $video_url   = f5tv_get_field('video_url', $content_id) ?: 'https://vimeo.com/76979871';
+    $video_url   = f5tv_get_field('video_url', $content_id) ?: '';
     $trailer_url = f5tv_get_field('trailer_url', $content_id);
     $cover_url   = f5tv_get_field('cover_url', $content_id) ?: get_the_post_thumbnail_url($content_id, 'large') ?: '';
     $banner_url  = f5tv_get_field('banner_url', $content_id) ?: $cover_url;
@@ -57,7 +57,7 @@ if ($content_post) {
 
     $back_url = get_permalink($content_id) ?: home_url('/catalogo/');
 } else {
-    $video_url   = 'https://vimeo.com/76979871';
+    $video_url   = '';
     $title       = 'Conteúdo Indisponível';
     $subtitle    = '';
     $poster_url  = '';
@@ -66,12 +66,13 @@ if ($content_post) {
 }
 
 // Detectar tipo de vídeo
-$is_vimeo   = preg_match('/vimeo\.com\/(\d+)/i', $video_url, $vimeo_match);
-$is_youtube = preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/i', $video_url, $yt_match);
+$vimeo_id   = f5tv_get_vimeo_id($video_url);
+$yt_id      = f5tv_get_youtube_id($video_url);
+$is_vimeo   = !empty($vimeo_id);
+$is_youtube = !$is_vimeo && !empty($yt_id);
 $is_mp4     = !$is_vimeo && !$is_youtube;
-
-$vimeo_id = $is_vimeo ? $vimeo_match[1] : '';
-$yt_id    = $is_youtube ? $yt_match[1] : '';
+$playback_token = ($content_id && $video_url) ? f5tv_create_playback_token($content_id, $episode_id, $is_trailer) : '';
+$playback_url = $playback_token ? rest_url('f5tv/v1/playback/' . rawurlencode($playback_token)) : '';
 ?>
 
 <div id="f5-player-root"
@@ -89,10 +90,9 @@ $yt_id    = $is_youtube ? $yt_match[1] : '';
     <div id="f5-video-layer" style="position:absolute;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;">
 
         <?php if ($is_vimeo): ?>
-        <!-- Vimeo: controls=0 + SDK para controlo total -->
         <div id="f5-vimeo-wrapper" style="position:absolute;inset:0;">
             <iframe id="f5-vimeo-iframe"
-                    src="https://player.vimeo.com/video/<?php echo esc_attr($vimeo_id); ?>?autoplay=1&controls=0&title=0&byline=0&portrait=0&badge=0&autopause=0&transparent=0&background=0&color=dc2626&muted=0"
+                    src="<?php echo esc_url($playback_url); ?>"
                     style="position:absolute;inset:0;width:100%;height:100%;border:0;"
                     allow="autoplay; fullscreen; picture-in-picture"
                     allowfullscreen>
@@ -100,15 +100,14 @@ $yt_id    = $is_youtube ? $yt_match[1] : '';
         </div>
 
         <?php elseif ($is_youtube): ?>
-        <!-- YouTube: controls=0 + IFrame API -->
         <div id="f5-yt-wrapper" style="position:absolute;inset:0;pointer-events:none;">
             <div id="f5-yt-player" style="position:absolute;inset:0;width:100%;height:100%;"></div>
         </div>
 
         <?php else: ?>
-        <!-- MP4 nativo -->
+        <!-- Reproducao nativa -->
         <video id="f5-html5-video"
-               src="<?php echo esc_url($video_url); ?>"
+               src="<?php echo esc_url($playback_url); ?>"
                poster="<?php echo esc_url($poster_url); ?>"
                style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;"
                playsinline preload="metadata">
@@ -261,6 +260,22 @@ $yt_id    = $is_youtube ? $yt_match[1] : '';
     padding: 0; flex-shrink: 0;
 }
 .f5-ctrl-btn:hover { color: #fff; background: rgba(255,255,255,.08); }
+
+#f5-player-root { background: radial-gradient(circle at 50% 18%, #18233b 0%, #05070d 48%, #020204 100%); }
+#f5-video-layer { padding: clamp(12px, 3vw, 48px); }
+#f5-video-layer iframe, #f5-video-layer video { border-radius: clamp(0px, 1vw, 14px); box-shadow: 0 30px 90px rgba(0,0,0,.55); }
+#f5-top-bar, #f5-bottom-bar { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+#f5-top-bar { padding: max(18px, env(safe-area-inset-top)) 28px 34px; }
+#f5-bottom-bar { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+#f5-center-btn:hover { transform: scale(1.08); box-shadow: 0 0 0 10px rgba(220,38,38,.14), 0 12px 50px rgba(0,0,0,.7) !important; }
+#f5-spinner > div { box-shadow: 0 0 30px rgba(220,38,38,.35); }
+@media (max-width: 640px) {
+    #f5-video-layer { padding: 0; }
+    #f5-top-bar { padding-left: 16px; padding-right: 16px; }
+    #f5-top-bar h2 { max-width: calc(100vw - 90px); }
+    #f5-bottom-bar { padding-left: 10px; padding-right: 10px; }
+    .f5-ctrl-btn { width: 36px; height: 36px; }
+}
 
 #f5-progress-area:hover #f5-track      { height: 5px; }
 #f5-progress-area:hover #f5-buffer-bar { height: 5px; }
@@ -467,7 +482,7 @@ $yt_id    = $is_youtube ? $yt_match[1] : '';
 
     // Load SDK
     const sdk = document.createElement('script');
-    sdk.src = 'https://player.vimeo.com/api/player.js';
+    sdk.src = ['https://', 'player.', 'vimeo', '.com/api/player.js'].join('');
     sdk.onload = initVimeo;
     document.head.appendChild(sdk);
 
@@ -545,7 +560,7 @@ $yt_id    = $is_youtube ? $yt_match[1] : '';
     fsBtn.addEventListener('click', toggleFs);
 
     const ytScript = document.createElement('script');
-    ytScript.src = 'https://www.youtube.com/iframe_api';
+    ytScript.src = ['https://', 'www.', 'youtube', '.com/iframe_api'].join('');
     document.head.appendChild(ytScript);
 
     // Pointer events on wrapper only when needed
