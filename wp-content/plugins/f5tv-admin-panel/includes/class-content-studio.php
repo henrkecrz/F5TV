@@ -17,6 +17,7 @@ class F5TV_Admin_Content_Studio
         add_action('admin_post_f5tv_save_studio_content', [$this, 'save_studio_content']);
         add_action('admin_post_f5tv_save_episode', [$this, 'save_episode']);
         add_action('admin_post_f5tv_add_season', [$this, 'add_season']);
+        add_action('admin_post_f5tv_delete_season', [$this, 'delete_season']);
         add_action('admin_post_f5tv_delete_content', [$this, 'delete_content']);
         add_action('admin_post_f5tv_create_content', [$this, 'create_content']);
         add_action('admin_post_f5tv_delete_episode', [$this, 'delete_episode']);
@@ -643,6 +644,32 @@ class F5TV_Admin_Content_Studio
         exit;
     }
 
+    public function delete_season(): void
+    {
+        if (!current_user_can('manage_options')) wp_die('Sem permissao.');
+        check_admin_referer('f5tv_delete_season');
+
+        $season_id = absint($_POST['season_id'] ?? 0);
+        $series_id = absint($_POST['series_id'] ?? 0);
+        $season = $season_id ? get_post($season_id) : null;
+        $belongs_to_series = $season && $season->post_type === 'f5tv_temporada' && absint(get_post_meta($season_id, 'series_id', true)) === $series_id;
+
+        if ($belongs_to_series) {
+            $episodes = get_posts([
+                'post_type' => 'f5tv_episodio',
+                'post_status' => 'any',
+                'posts_per_page' => -1,
+                'fields' => 'ids',
+                'meta_query' => [['key' => 'season_id', 'value' => $season_id, 'compare' => '=']],
+            ]);
+            foreach ($episodes as $episode_id) wp_delete_post($episode_id, true);
+            wp_delete_post($season_id, true);
+        }
+
+        wp_safe_redirect(admin_url('admin.php?page=f5tv-content-studio&action=edit&id=' . $series_id . '&saved=1'));
+        exit;
+    }
+
     public function delete_episode(): void
     {
         if (!current_user_can('manage_options')) wp_die('Sem permissao.');
@@ -1115,6 +1142,13 @@ class F5TV_Admin_Content_Studio
                                 📺 Temporada <?php echo esc_html($season_number); ?>
                                 <span style="font-size: 0.75rem; color: #e50914; font-weight: 700; font-family: monospace; margin-left: 0.5rem;"><?php echo count($episodes); ?> Episódio(s)</span>
                             </h3>
+                            <form method="post" action="admin-post.php" onsubmit="return confirm('Excluir esta temporada e todos os episódios vinculados?');">
+                                <?php wp_nonce_field('f5tv_delete_season'); ?>
+                                <input type="hidden" name="action" value="f5tv_delete_season">
+                                <input type="hidden" name="season_id" value="<?php echo esc_attr($season->ID); ?>">
+                                <input type="hidden" name="series_id" value="<?php echo esc_attr($post_id); ?>">
+                                <button type="submit" class="f5-btn-secondary" style="background:#7f1d1d !important;color:#fecaca !important;border-color:#991b1b !important;">Deletar temporada</button>
+                            </form>
                         </div>
 
                         <!-- Lista de Episódios Existentes -->
